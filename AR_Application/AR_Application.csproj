@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AR_Domain\AR_Domain.csproj" />
-    <ProjectReference Include="..\AR_Infrastructure\AR_Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
