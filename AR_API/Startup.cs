@@ -17,7 +17,8 @@ using AR_Application.Queries;
 using AR_Infrastructure.Data;
 using AR_Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
-using AR_Domain.SeedWork;
+using AR_Domain.AggregateModel.AccountAggregate;
+using AR_Domain.AggregateModel.AppointmentAggregate;
 
 namespace AR_API
 {
@@ -47,6 +48,7 @@ namespace AR_API
             services.AddMediatR(typeof(ApplicationLayerMediatREntryPoint).Assembly);
             services.AddScoped<AccountQueries>(x => new AccountQueries(Configuration["ConnectionString"]));
 
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
         }
 

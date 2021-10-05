@@ -20,10 +20,26 @@ namespace AR_Infrastructure.Repository
             _accountContext = accountContext;
         }
 
-
         public Account Add(Account account)
         {
             return _accountContext.Accounts.Add(account).Entity;
+        }
+
+        public async Task<Account> GetAsync(string username)
+        {
+            var account = await _accountContext
+                                .Accounts
+                                .Include(x => x.AccountDetails)
+                                .FirstOrDefaultAsync(o => o.Username == username);
+            if (account == null)
+            {
+                account = _accountContext
+                            .Accounts
+                            .Local
+                            .FirstOrDefault(o => o.Username == username);
+            }
+
+            return account;
         }
     }
 }

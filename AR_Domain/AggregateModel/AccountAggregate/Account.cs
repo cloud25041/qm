@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AR_Domain.SeedWork;
 
 namespace AR_Domain.AggregateModel.AccountAggregate
 {
-    public class Account
+    public class Account : IAggregateRoot
     {
         public Guid AccountID { get; private set; }
         public string Username { get; private set; }
