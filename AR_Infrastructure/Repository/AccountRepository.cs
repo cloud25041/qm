@@ -1,4 +1,4 @@
-﻿using AR_Domain.AggregateModel;
+﻿using AR_Domain.AggregateModel.AccountAggregate;
 using AR_Infrastructure.Data;
 using System;
 using System.Collections.Generic;
