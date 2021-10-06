@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AR_Domain.SeedWork;
+using AR_Domain.DomainEvents;
 
 namespace AR_Domain.AggregateModel.AppointmentAggregate
 {
-    public class Appointment : IAggregateRoot
+    public class Appointment : Entity, IAggregateRoot
     {
         public Guid AppointmentId { get; private set; }
         public Guid AccountId { get; private set; }
@@ -15,25 +16,48 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
 
-        public Appointment(Guid accountId, string agencyCode, DateTime startTime, DateTime endTime)
+        Appointment()
+        {
+
+        }
+
+        public Appointment(string username, string agencyCode, DateTime startTime, DateTime endTime)
         {
             AppointmentId = new Guid();
-            AccountId = accountId;
             AppointmentState = 0;
+            AgencyCode = agencyCode;
+            StartTime = startTime;
+            EndTime = endTime;
+
+            var appointmentCreationStartedDomainEvent = new AppointmentCreationStartedDomainEvent(username);
+            this.AddDomainEvent(appointmentCreationStartedDomainEvent);
+        }
+
+        public Appointment(Guid appointmentId, Guid accountId, int appointmentState, string agencyCode, DateTime startTime, DateTime endTime)
+        {
+            AppointmentId = appointmentId;
+            AccountId = accountId;
+            AppointmentState = appointmentState;
             AgencyCode = agencyCode;
             StartTime = startTime;
             EndTime = endTime;
         }
 
+        public Appointment SetAccountIdOnceUsernameIsVerified(Guid accountId)
+        {
+            AccountId = accountId;
+            return this;
+        }
+
         public Appointment CreateAppointment()
         {
-            return this;
+            throw new NotImplementedException();
         }
 
         public Appointment ChangeState(int state)
         {
             // update state
-            return this;
+            throw new NotImplementedException();
         }
     }
 }

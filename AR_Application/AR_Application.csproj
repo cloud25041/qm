@@ -20,4 +20,8 @@
     <ProjectReference Include="..\AR_Domain\AR_Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DomainEventHandlers\AppointmentCreationStarted\" />
+  </ItemGroup>
+
 </Project>

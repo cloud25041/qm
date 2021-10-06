@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AR_Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace AR_API
 {
@@ -27,9 +28,13 @@ namespace AR_API
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<AccountContext>();
-                    bool isCreated = context.Database.EnsureCreated();
-                    DbInitializer.Initialize(context);
+                    var accountContext = services.GetRequiredService<AccountContext>();
+                    bool isCreated = accountContext.Database.EnsureCreated();
+
+                    var appointmentContext = services.GetRequiredService<AppointmentContext>();
+                    bool isCreated2 = appointmentContext.Database.EnsureCreated();
+
+                    DbInitializer.Initialize(accountContext, appointmentContext);
                 }
                 catch (Exception ex)
                 {

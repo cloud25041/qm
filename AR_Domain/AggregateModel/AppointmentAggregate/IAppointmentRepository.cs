@@ -8,5 +8,6 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
 {
     public interface IAppointmentRepository : IRepository<Appointment>
     {
+        public Appointment Add(Appointment appointment);
     }
 }

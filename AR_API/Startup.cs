@@ -41,8 +41,12 @@ namespace AR_API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AR_API", Version = "v1" });
             });
 
+
+            services.AddDbContext<AppointmentContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("AppointmentContext")));
             services.AddDbContext<AccountContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("AccountContext")));
+            
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddMediatR(typeof(ApplicationLayerMediatREntryPoint).Assembly);
