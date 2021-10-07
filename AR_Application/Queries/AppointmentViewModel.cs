@@ -5,7 +5,13 @@ using System.Threading.Tasks;
 
 namespace AR_Application.Queries
 {
-    public class AppointmentViewModel
+    public record AppointmentViewModel
     {
+        public Guid AppointmentId { get; init; }
+        public Guid AccountId { get; init; }
+        public int AppointmentState { get; init; }
+        public string AgencyCode { get; init; }
+        public DateTime StartTime { get; init; }
+        public DateTime EndTime { get; init; }
     }
 }

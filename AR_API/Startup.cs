@@ -48,6 +48,7 @@ namespace AR_API
 
             services.AddMediatR(typeof(ApplicationLayerMediatREntryPoint).Assembly);
             services.AddScoped<AccountQueries>(x => new AccountQueries(Configuration["ConnectionString"]));
+            services.AddScoped<AppointmentQueries>(x => new AppointmentQueries(Configuration["ConnectionString"]));
 
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();

@@ -22,7 +22,7 @@ namespace AR_Application.Queries
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var result = await connection.QueryAsync<dynamic>("select * from \"Account\"");
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Account\"");
                 return MapQueryResultToListOfAccount(result);
             }
         }
