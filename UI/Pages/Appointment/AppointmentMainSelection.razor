@@ -1,0 +1,73 @@
+﻿@page "/appointment/appointmentmainselection/{accountId}/{username}/{password}"
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Routing
+
+
+
+<h3>Book or View your Appointments</h3>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalServiceButton))>Book Physical Appointment</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((ViewAppointmentButton))>View All Appointment</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualServiceButton))>Book Virtual Appointment</button>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@accountId" />
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@userName" />
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@password" />
+</div>
+
+
+
+
+@code
+{ #region Fields
+
+    #endregion
+    #region Properties
+
+
+
+
+    [Parameter]
+    public string accountId { get; set; }
+    [Parameter]
+    public string userName { get; set; }
+    [Parameter]
+    public string password { get; set; }
+    #endregion
+
+    #region Private Method
+    private void ViewAppointmentButton()
+    {
+       // accountId = accountId;
+        NavManager.NavigateTo($"/appointment/appointmentviewallappointment/{accountId}");
+    }
+    private void PhysicalServiceButton()
+    {
+        NavManager.NavigateTo($"/appointment/appointmentselectphysicalservice/{accountId}");
+    }
+    private void VirtualServiceButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentselectvirtualservice");
+    }
+
+    protected override void OnParametersSet()
+    {
+        //the param will be set now
+        //  var test = UserName;
+    }
+
+    #endregion
+}

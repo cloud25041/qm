@@ -1,0 +1,191 @@
+﻿
+@page "/feedback/feedbackpage"
+@inject IModalService modal
+@inject NavigationManager NavManager
+
+
+<h4>We value your feedback. Please fill in the following form to help us improve our services.</h4>
+@*Work In Progress*@
+
+<h5>Please fill in the following details about your appointment.</h5>
+<div class="col py-3 px-lg-5 border bg-light">
+    Agency <SfDropDownList TItem="AgencyData" TValue="string" DataSource="Agency" Placeholder="Select an Agency">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Services: <SfDropDownList TItem="ServiceData" TValue="string" DataSource="Service" Placeholder="Select a Service">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Type of Appointment: <SfDropDownList TItem="AppointmentTypeData" TValue="string" DataSource="AppointmentType" Placeholder="Select Appointment Type">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    How was your experience using the online appointment booking service? (select 1 to 5, 1 = very bad and 5 = very good) 
+    <SfDropDownList TItem="OnlineBookingExperienceData" TValue="string" DataSource="OnlineBookingExperience" Placeholder="Select 1 to 5">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Was the duration of your appointment: (select too short, just right, too long)
+    <SfDropDownList TItem="AppointmentDurationData" TValue="string" DataSource="AppointmentDuration" Placeholder="Select duration of appointment">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Please rate the customer service received during your appointment: (rate from 1 to 5, 1 = very bad and 5 = very good)
+    <SfDropDownList TItem="CustomerServiceExperienceData" TValue="string" DataSource="CustomerServiceExperience" Placeholder="Select 1 to 5">
+        <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+    </SfDropDownList>
+</div>
+
+
+<div class="col py-3 px-lg-5 border bg-light">
+    How can we improve? <input type="text" @bind="@OtherComments" />
+</div>
+
+
+@*<div class="col py-3 px-lg-5 border bg-light">
+        Zoom Link: <input type="text" name="zoomlink" @bind="@ZoomLink" />
+    </div>*@
+
+
+<div class="col py-3">
+    <button class="btn btn-primary" @onclick="SubmitButton">Submit</button>
+
+</div>
+
+@*<div class="col py-3">
+        <button class="btn btn-primary" @onclick="@(() => modal.Show<StaffVCCreationFail>("Add failed"))">Display Creation Fail Modal</button>
+    </div>*@
+
+
+@code
+{
+
+    //    //private bool _loading;
+
+    //    private string _zoomLink;
+
+    //    public string ZoomLink
+    //    {
+    //        get { return _zoomLink; }
+    //        set { _zoomLink = value; }
+    //    }
+
+
+    // set agency list
+    public class AgencyData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<AgencyData> Agency = new List<AgencyData>
+{
+            new AgencyData() {Id="agency1", Name="MOM"},
+            new AgencyData() {Id="agency2", Name="ICA"},
+            new AgencyData() {Id="agency3", Name="HDB"},
+            new AgencyData() {Id="agency3", Name="CPF"}
+
+    };
+
+    // set service list
+    public class ServiceData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<ServiceData> Service = new List<ServiceData>
+{
+            new ServiceData() {Id="service1", Name="Work Pass Card Registration"},
+            new ServiceData() {Id="service2", Name="Employer Services"},
+            new ServiceData() {Id="service3", Name="Passport Collection"}
+    };
+
+    // set appointment type list
+    public class AppointmentTypeData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<AppointmentTypeData> AppointmentType = new List<AppointmentTypeData>
+    {
+            new AppointmentTypeData() {Id="appttype1", Name="Virtual"},
+            new AppointmentTypeData() {Id="appttype2", Name="Physical"},
+    };
+
+    // set online booking experience list
+    public class OnlineBookingExperienceData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<OnlineBookingExperienceData> OnlineBookingExperience = new List<OnlineBookingExperienceData>
+    {
+            new OnlineBookingExperienceData() {Id="exp1", Name="1"},
+            new OnlineBookingExperienceData() {Id="exp2", Name="2"},
+            new OnlineBookingExperienceData() {Id="exp3", Name="3"},
+            new OnlineBookingExperienceData() {Id="exp4", Name="4"},
+            new OnlineBookingExperienceData() {Id="exp5", Name="5"},
+    };
+
+    // set appointment duration list
+    public class AppointmentDurationData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<AppointmentDurationData> AppointmentDuration = new List<AppointmentDurationData>
+    {
+            new AppointmentDurationData() {Id="apptduration1", Name="Too short"},
+            new AppointmentDurationData() {Id="apptduration2", Name="Just nice"},
+            new AppointmentDurationData() {Id="apptduration3", Name="Too long"},
+    };
+
+    // set online booking experience list
+    public class CustomerServiceExperienceData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<CustomerServiceExperienceData> CustomerServiceExperience = new List<CustomerServiceExperienceData>
+    {
+            new CustomerServiceExperienceData() {Id="cs1", Name="1"},
+            new CustomerServiceExperienceData() {Id="cs2", Name="2"},
+            new CustomerServiceExperienceData() {Id="cs3", Name="3"},
+            new CustomerServiceExperienceData() {Id="cs4", Name="4"},
+            new CustomerServiceExperienceData() {Id="cs5", Name="5"},
+    };
+
+    private void SubmitButton()
+    {
+        //NavManager.NavigateTo("/staff/staffvccreationsuccess");
+        modal.Show<FeedbackSubmissionSuccess>("Success");
+    }
+
+    private string _otherComments;
+
+    public string OtherComments
+    {
+        get { return _otherComments; }
+        set { _otherComments = value; }
+    }
+    //    private void CancelButton()
+    //    {
+    //        NavManager.NavigateTo("/staff/staffmainselection");
+    //    }
+
+
+}

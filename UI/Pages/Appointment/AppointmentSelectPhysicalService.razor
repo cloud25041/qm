@@ -1,0 +1,105 @@
+﻿
+@page "/appointment/appointmentselectphysicalservice/{accountId}"
+@inject NavigationManager NavManager
+@inject HttpClient HttpClient
+@using Newtonsoft.Json;
+@using UI.Models;
+
+<h3>Please select your desired Service</h3>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalServiceHDBButton))>HDB</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalServiceICAButton))>ICA</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalServiceMOMButton))>MOM</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalServiceCPFButton))>CPF</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-dark">Back</button>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((GetQueueServices))>test</button>
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@accountId" />
+</div>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@queueServiceType" />
+</div>
+
+
+
+@code
+{ #region Fields
+
+        [Parameter]
+        public string accountId { get; set; }
+
+    public string queueServiceType { get; set; }
+
+    #endregion
+    #region Properties
+
+
+    #endregion
+
+    #region Private Method
+
+    private void PhysicalServiceHDBButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+    }
+    private void PhysicalServiceICAButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+    }
+    private void PhysicalServiceMOMButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+    }
+    private void PhysicalServiceCPFButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+    }
+
+    private async Task GetQueueServices()
+    {
+        var responseMessage = await HttpClient.GetAsync("https://localhost:44355/api/UserQueue/GetQueueServiceType");
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IList<QueueService>>(content);
+            foreach (var eachResults in results)
+            {
+                queueServiceType = eachResults.QueueServiceType;
+            }
+        }
+
+    }
+
+
+    protected async override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if (firstRender)
+        {
+            // Do work to load page data and set properties
+
+            await GetQueueServices();
+
+            //  await GetAppointment();
+
+
+        }
+    }
+    #endregion
+}

@@ -1,0 +1,149 @@
+﻿
+@page "/account"
+@inject HttpClient HttpClient
+@inject IModalService modal
+@inject NavigationManager NavManager
+@using UI.Models;
+
+
+
+
+
+
+
+
+@*User page*@
+@if ((_isSignUp == true) && (IsUserClick == false && IsStaffClick == false))
+{
+    <h3>Account Page</h3>
+
+    <h5> Please select an Account type</h5>
+
+    <div class="col py-6 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick="UserButton">User</button>
+        <button class="btn btn-secondary" @onclick="StaffButton">Staff</button>
+    </div>
+
+}
+
+else if ((_isSignUp == true) && (IsUserClick == true && IsStaffClick == false))
+{
+    NavManager.NavigateTo("/usersignup");
+}
+
+
+else if ((_isSignUp == true) && (IsUserClick == false && IsStaffClick == true))
+{
+    NavManager.NavigateTo("/staffsignup");
+}
+
+@*Main Account page*@
+else
+{
+    <h3>Account Page</h3>
+
+    <h5> Please select a function</h5>
+
+    <div class="col py-6 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick="LoginButton">Login</button>
+        <button class="btn btn-secondary" @onclick="SignUpButton">Sign Up</button>
+    </div>
+
+}
+
+@code
+{
+    #region Fields
+    private string _username;
+    private string _password;
+    private string _mobileNo;
+    private string _email;
+
+    private bool _loading;
+    private bool _isUser;
+    private bool _isStaff;
+    private bool _isUserLoginPage;
+    private bool _isUserSignUp;
+    private bool _isStaffLoginPage;
+    private bool _isStaffSignUp;
+    private bool _isSignUp;
+
+
+    #endregion
+    #region Properties
+    public bool IsUserClick
+    {
+        get { return _isUser; }
+        set { _isUser = value; }
+    }
+    public bool IsStaffClick
+    {
+        get { return _isStaff; }
+        set { _isStaff = value; }
+    }
+
+    public bool UserLoginPageClick
+    {
+        get { return _isUserLoginPage; }
+        set { _isUserLoginPage = value; }
+    }
+
+    public bool StaffLoginPageClick
+    {
+        get { return _isStaffLoginPage; }
+        set { _isStaffLoginPage = value; }
+    }
+
+    public bool UserSignUpPageClick
+    {
+        get { return _isUserSignUp; }
+        set { _isUserSignUp = value; }
+    }
+
+    public bool StaffSignUpPageClick
+    {
+        get { return _isStaffSignUp; }
+        set { _isStaffSignUp = value; }
+    }
+
+    #endregion
+
+    #region Private Method
+
+    private void LoginButton()
+    {
+        NavManager.NavigateTo("/login");
+    }
+    private void SignUpButton()
+    {
+        _isSignUp = true;
+    }
+    private void UserButton()
+    {
+        IsUserClick = true;
+        IsStaffClick = false;
+    }
+    private void StaffButton()
+    {
+        IsUserClick = false;
+        IsStaffClick = true;
+    }
+
+   
+    private void UserSignupPage()
+    {
+        UserLoginPageClick = false;
+        UserSignUpPageClick = true;
+    }
+    private void StaffSignupPage()
+    {
+        StaffLoginPageClick = false;
+        StaffSignUpPageClick = true;
+    }
+    #endregion
+
+
+
+
+
+}

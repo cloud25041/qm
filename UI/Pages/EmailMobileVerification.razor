@@ -1,0 +1,70 @@
+﻿@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+@using UI.Models;
+
+@if (_verified)
+{
+    <h3>Account created.</h3>
+     <button class="btn btn-primary"@onclick="RedirectFunction">Next</button>
+}
+else if (_loading)
+{
+    <h3>Verifying...</h3>
+}
+else
+{
+    @if (_wrongCode)
+    {
+        <h3>Wrong Code. Please enter the 6 digit number shown at your email or mobile number again.</h3>
+    }
+    else
+    {
+        <h3>Please enter the 6 digit number shown at your email or mobile number.</h3>
+    }
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        6 digit number: <input type="text" @bind="@_verificationCode" />
+    </div>
+    <button class="btn btn-primary" @onclick="VerifiyCode">Verify Code</button>
+}
+
+@code
+{
+    [Parameter]
+    public Guid TransactionId { get; set; }
+
+    private string _verificationCode;
+    private bool _verified;
+    private bool _loading;
+    private bool _wrongCode;
+
+    private async Task RedirectFunction()
+    {
+        
+        NavManager.NavigateTo("/account");
+
+    }
+
+    private async Task VerifiyCode()
+    {
+        VerificationCodeDetails verificationCodeDetails = new VerificationCodeDetails()
+        {
+            TransactionId = TransactionId,
+            VerificationCode = _verificationCode
+        };
+        _loading = true;
+        this.StateHasChanged();
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.restApiUrl + "/api/account/verifycode", verificationCodeDetails);
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            _verified = true;
+        }
+        else
+        {
+            _verified = false;
+            _loading = false;
+            _wrongCode = true;
+        }
+        this.StateHasChanged();
+    }
+}

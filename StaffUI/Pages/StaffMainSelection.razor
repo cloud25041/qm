@@ -1,0 +1,54 @@
+﻿
+@page "/staffmainselection/{accountId}/{username}"
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Routing
+
+<h3>Please Select Counter Type</h3>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((PhysicalCounterButton))>Physical Counter</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualCounterButton))>Virtual Counter</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((UploadZoomLinkButton))>Upload Today's Zoom Link</button>
+</div>
+<div class="col py-3">
+    <button class="btn btn-dark" @onclick=@((SignOutButton))>Sign Out</button>
+</div>
+
+
+
+
+@code
+{
+    #region Field
+    [Parameter]
+    public string accountId { get; set; }
+    [Parameter]
+    public string userName { get; set; }
+
+    #endregion
+    //private bool _loading;
+
+    private void PhysicalCounterButton()
+    {
+        NavManager.NavigateTo("/staffphysicalcounterselection");
+    }
+    private void VirtualCounterButton()
+    {
+        NavManager.NavigateTo("/staffvcselection");
+    }
+    private void UploadZoomLinkButton()
+    {
+        NavManager.NavigateTo("/staffvccreation");
+    }
+
+    private void SignOutButton()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
+
+}

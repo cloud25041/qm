@@ -1,0 +1,38 @@
+﻿
+@page "/appointment/appointmentvirtualbookingsuccess"
+@inject NavigationManager NavManager
+
+<h3>Booked a virtual appointment successfully!</h3>
+
+@if (_loading)
+{
+    <h3>Loading Up Booking Results...</h3>
+}
+else
+{
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Appointment Date & Time.
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Queue No.
+    </div>
+
+    <div class="col py-3">
+        <button class="btn btn-primary" @onclick="Navigate">OK</button>
+    </div>
+}
+
+@code
+{
+
+    private bool _loading;
+
+    private void Navigate()
+        {
+            NavManager.NavigateTo("/appointment/appointmentviewallappointment");
+        }
+
+    
+}

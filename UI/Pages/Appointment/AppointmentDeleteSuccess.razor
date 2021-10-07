@@ -1,0 +1,20 @@
+﻿
+@page "/appointment/appointmentdeletesuccess"
+@inject IModalService modal
+@inject NavigationManager NavManager
+
+<center>
+    <h4>Your appointment has been successfully deleted.</h4>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentviewallappointment");
+    }
+
+}

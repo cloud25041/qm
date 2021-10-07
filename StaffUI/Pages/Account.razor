@@ -1,0 +1,59 @@
+﻿
+@page "/account"
+@inject HttpClient HttpClient
+
+@inject NavigationManager NavManager
+
+
+
+
+
+
+
+
+
+
+@*Main Account page*@
+
+
+    <h3>Staff Account Page</h3>
+
+    <h5> Please select a function</h5>
+
+    <div class="col py-6 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick="LoginButton">Login</button>
+        <button class="btn btn-secondary" @onclick="SignUpButton">Sign Up</button>
+    </div>
+
+
+
+@code
+{
+    #region Fields
+
+
+
+    #endregion
+    #region Properties
+
+
+    #endregion
+
+    #region Private Method
+
+    private void LoginButton()
+    {
+        NavManager.NavigateTo("/login");
+    }
+    private void SignUpButton()
+    {
+        NavManager.NavigateTo("/signup");
+    }
+
+    #endregion
+
+
+
+
+
+}

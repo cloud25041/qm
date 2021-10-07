@@ -1,0 +1,230 @@
+﻿
+@page "/appointment/appointmentviewallappointment/{accountId}"
+@inject IModalService modal
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+@inject NavigationManager UriHelper
+
+@using Newtonsoft.Json;
+@using UI.Models;
+
+
+
+
+<h3>All Existing Appointments</h3>
+
+@if (_loading)
+{
+<h3>Registering...</h3>
+}
+else
+{
+    if (i > 0)
+    {
+<thead class="table-primary">
+    <tr>
+        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
+        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Service</th>
+        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
+        <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
+        <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Time</th>
+        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+    </tr>
+</thead>
+        for (int j = 0; j <= i; j++)
+        {
+<div class="table-responsive">
+    <table class="table table-sm table-hover">
+
+        <tbody>
+            <tr>
+                <td>@agencyArray[j]</td>
+                <td> @serviceArray[j]</td>
+                <td>@locationArray[j]</td>
+                <td>25 Aug 2021</td>
+                <td>3.00pm</td>
+                <td style="display:none;"> 1 </td>
+                <td>
+                    <button class="btn btn-primary" @onclick=@((EditButton))>Edit</button>
+                    <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+        }
+
+    }
+    else
+    {
+
+<tr>
+    <td colspan="5">No Record Found.</td>
+</tr>
+
+    }
+
+
+}
+
+<button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
+<button class="btn btn-outline-dark" @onclick="@(() => modal.Show<AppointmentDeleteFail>("Delete Failed"))">Display Delete Fail Modal</button>
+<button class="btn btn-dark" @onclick=@GetAppointment>Appointment</button>
+<button class="btn btn-dark" @onclick=@EditAppointment>Appointment</button>
+@*<button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
+    <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
+
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@accountId" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@appointmentName" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@agencyArray[1]" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@service" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@location" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@appointmentTime" />
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Text: <input type="text" @bind="@appointmentId" />
+</div>
+
+
+
+
+@code
+{
+    int i = 0;
+
+    #region Field
+
+
+    [Parameter]
+    public string accountId { get; set; }
+    [Parameter]
+    public string userName { get; set; }
+
+    public string appointmentName { get; set; }
+
+
+
+    public IList<AppointmentDetails> AppointmentList { get; set; }
+    public string agency { get; set; }
+    public string service { get; set; }
+    public string location { get; set; }
+    public string appointmentTime { get; set; }
+    public string appointmentId { get; set; }
+
+
+    string[] agencyArray = new string[5];
+    string[] serviceArray = new string[5];
+    string[] locationArray = new string[5];
+
+
+    #endregion
+
+
+
+    private bool _loading;
+
+    private void BackButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentmainselection");
+    }
+
+    private void DeleteButton()
+    {
+        modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
+    }
+
+    private void EditButton()
+    {
+        // To add conditions, temporarily routing to appointment physical booking page
+
+        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+        //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+    }
+
+    private async Task EditAppointment()
+{
+string apptid = "7";
+NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+}
+
+
+    private async Task GetAppointment()
+    {
+        List<AppointmentDetails> AppointmentList = new List<AppointmentDetails>();
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/UserQueue/GetAppointmentDetails", accountId);
+        if (responseMessage != null)
+        {
+            // var results = new List<AppointmentDetails>();
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
+                var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+                foreach (var eachResults in results)
+                {
+
+                    appointmentName = appointmentName + eachResults.AppointmentName;
+                    //AppointmentList.Add(eachResults);
+                    i = AppointmentList.Count;
+                    // appointmentName = appointmentName + eachResults.AppointmentName;
+                    agency = eachResults.Agency;
+                    agencyArray[i] = agency + i.ToString();
+
+                    service = eachResults.Service;
+                    serviceArray[i] = service + i.ToString();
+
+                    location = eachResults.Location;
+                    locationArray[i] = location + i.ToString();
+
+                    appointmentTime = appointmentTime + eachResults.AppointmentTime;
+                    //appointmentId = appointmentId + eachResults.AppointmentId;
+                    AppointmentList.Add(eachResults);
+                }
+
+
+            }
+            else
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                accountId = "1234";
+            }
+
+
+        }
+        else
+        {
+        }
+
+    }
+
+
+
+    //protected async override void OnAfterRender(bool firstRender)
+    //{
+    // execute conditionally for loading data, otherwise this will load
+    // every time the page refreshes
+    //  if (firstRender)
+    //{
+    // Do work to load page data and set properties
+
+    //  await GetAppointment();
+
+
+    //}
+    //}
+
+}

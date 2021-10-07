@@ -1,0 +1,179 @@
+﻿
+@page "/signup"
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+@inject IModalService modal
+@using StaffUI.Models;
+
+<h3>Staff Signup</h3>
+
+@if (_loading)
+{
+    <h3>Registering...</h3>
+}
+else
+{
+    <div class="col py-3 px-lg-5 border bg-light">
+        First name: <input type="text" @bind="@FirstName" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Last name: <input type="text" @bind="@LastName" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Username: <input type="text" @bind="@Username" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Password: <input type="text" @bind="@Password" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Mobile number: <input type="text" @bind="@MobileNo" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Email: <input type="text" @bind="@Email" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Staff Sign Up Code: <input type="text" @bind="@StaffKey" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Kiosk Account: <input type="checkbox" @onclick="@IsKioskChecked" />
+    </div>
+    <button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
+    <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
+}
+
+@code
+{
+    #region Fields
+    private string _firstName;
+    private string _lastName;
+    private string _username;
+    private string _password;
+    private string _mobileNo;
+    private string _email;
+    private string _staffkey;
+    private bool _loading;
+    private bool _isKiosk = false;
+    #endregion
+
+
+    #region Properties
+
+
+    public string FirstName
+    {
+        get { return _firstName; }
+        set { _firstName = value; }
+    }
+
+    public string LastName
+    {
+        get { return _lastName; }
+        set { _lastName = value; }
+    }
+
+    public string Username
+    {
+        get { return _username; }
+        set { _username = value; }
+    }
+
+    public string Password
+    {
+        get { return _password; }
+        set { _password = value; }
+    }
+
+    public string MobileNo
+    {
+        get { return _mobileNo; }
+        set { _mobileNo = value; }
+    }
+
+    public string Email
+    {
+        get { return _email; }
+        set { _email = value; }
+    }
+    public string StaffKey
+    {
+        get { return _staffkey; }
+        set { _staffkey = value; }
+    }
+
+
+    #endregion
+
+    #region Private Method
+
+
+    private async Task BackFunction()
+    {
+        NavManager.NavigateTo("/account");
+    }
+
+    private async Task IsKioskChecked()
+    {
+        if (_isKiosk == false)
+        {
+            _isKiosk = true;
+        }
+
+        else
+        {
+            _isKiosk = false;
+        }
+
+    }
+    private async Task RegisterAccount()
+    {
+        SignUpAccountDetails accountDetails = new SignUpAccountDetails();
+        accountDetails.TransactionId = Guid.NewGuid();
+        accountDetails.FirstName = FirstName;
+        accountDetails.LastName = LastName;
+        accountDetails.Username = Username;
+        accountDetails.Password = Password;
+        accountDetails.MobileNo = MobileNo;
+        accountDetails.Email = Email;
+        accountDetails.StaffKey = StaffKey;
+        accountDetails.isKiosk = _isKiosk;
+        accountDetails.isUser = false;
+
+
+        _loading = true;
+        this.StateHasChanged();
+
+        // validation part
+
+        if (StaffKey != "")
+        {
+            //var checkingResponseMessage = await HttpClient.PostAsJsonAsync("");
+        }
+
+        else
+        {
+
+        }
+
+
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/staffaccountcreate", accountDetails);
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+
+            }
+            else
+            {
+                string reason = responseMessage.ReasonPhrase;
+
+            }
+        }
+        _loading = false;
+        this.StateHasChanged();
+    }
+    #endregion
+
+
+
+
+}

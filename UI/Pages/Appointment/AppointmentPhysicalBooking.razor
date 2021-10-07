@@ -1,0 +1,73 @@
+﻿
+@page "/appointment/appointmentphysicalbooking"
+@inject IModalService modal
+@inject NavigationManager NavManager
+
+<h3>Physical Appointment Booking</h3>
+
+@if (_loading)
+{
+    <h3>Loading Up Appointment Slots...</h3>
+}
+else
+{
+    <div class="col py-3 px-lg-5 border bg-light">
+        Physical Appointment Date: <SfDatePicker TValue="DateTime?" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate"></SfDatePicker>
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Physical Appointment Time: <SfTimePicker TValue="DateTime?" Placeholder="Select a Time" Min="@MinTime" Max="@MaxTime" Format="HH:mm" Step="30"></SfTimePicker>
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Physical Location: <SfDropDownList TItem="LocationData" TValue="string" DataSource="Location" Placeholder="Select a Location">
+            <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+        </SfDropDownList>
+    </div>
+
+    <div class="col py-3">
+        <button class="btn btn-primary" @onclick="NavigateBook">Book</button>
+        <button class="btn btn-secondary" @onclick="NavigateCancel">Cancel</button>
+    </div>
+    <button class="btn btn-secondary" @onclick="@(() => modal.Show<AppointmentBookingFail>("Booking has Failed"))">Display Fail Modal</button>
+}
+
+@code
+{
+    private bool _loading;
+
+    // set minimum & maximum time
+    public DateTime MaxTime { get; set; } = new DateTime(2021, 02, 20, 18, 00, 00);
+    public DateTime MinTime { get; set; } = new DateTime(2021, 02, 20, 08, 00, 00);
+    // set min & max dates
+    public DateTime MaxDate { get; set; } = new DateTime(2021, 08, 28);
+    public DateTime MinDate { get; set; } = new DateTime(2021, 08, 03);
+
+    // set location list
+    public class LocationData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<LocationData> Location = new List<LocationData>
+{
+        new LocationData() {Id="location1", Name="Pasir Ris CC"},
+        new LocationData() {Id="location2", Name="Yishun CC"},
+        new LocationData() {Id="location3", Name="Bishan CC"}
+    };
+
+
+
+    private void NavigateBook()
+    {
+        NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess");
+    }
+
+    private void NavigateCancel()
+    {
+        NavManager.NavigateTo("/appointment/appointmentmainselection");
+    }
+
+
+}

@@ -1,0 +1,38 @@
+﻿@page "/errorlogin"
+@inject NavigationManager NavManager
+@inject NavigationManager UriHelper
+
+
+   
+
+    <h1>Error In Login</h1>
+
+
+    <button class="btn-outline-primary" @onclick="RedirectToLoginPage" data-dismiss="modal">Back</button>
+
+    @code 
+{
+        [Parameter]
+        public string UserName { get; set; }
+
+        public bool ShowDialog
+        {
+            get;
+            set;
+        }
+
+        private async Task RedirectToLoginPage()
+        {
+
+            NavManager.NavigateTo("/login");
+
+
+        }
+
+        public void Close()
+        {
+            ShowDialog = false;
+            StateHasChanged();
+        }
+    }
+ 

@@ -1,0 +1,63 @@
+﻿
+@page "/appointment/appointmentselectvirtualservice"
+@inject NavigationManager NavManager
+
+
+<h3>Please select your desired service</h3>
+
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualServiceHDBButton))>HDB</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualServiceICAButton))>ICA</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualServiceMOMButton))>MOM</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((VirtualServiceCPFButton))>CPF</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-dark">Back</button>
+</div>
+
+
+
+
+@code
+{
+    #region Fields
+    
+
+
+    #endregion
+    #region Properties
+    
+
+    #endregion
+
+    #region Private Method
+    
+    private void VirtualServiceHDBButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+    }
+    private void VirtualServiceICAButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+    }
+    private void VirtualServiceMOMButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+    }
+    private void VirtualServiceCPFButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+    }
+    #endregion
+
+
+
+
+
+}

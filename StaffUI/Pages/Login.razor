@@ -1,0 +1,85 @@
+﻿
+@page "/login"
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+@inject NavigationManager UriHelper
+@inject IModalService modal
+@using StaffUI.Models;
+@using Newtonsoft.Json;
+
+@using Microsoft.AspNetCore.Components.Routing
+
+<h3>Login Page</h3>
+
+@if (_loading)
+{
+    <h3>Login...</h3> }
+else
+{
+    if (_error == true)
+    {
+        <h5> Error login, Please try again</h5>
+    }
+    else
+    {
+
+    }
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Username: <input type="text" placeholder="Username" @bind="@_username" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Password: <input type="password" placeholder="Password" @bind="@_password" />
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick="LoginAccount">LogIn</button>
+        <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
+    </div>
+}
+
+@code
+    { private string _username;
+    private string _password;
+    private bool _error;
+    private bool _loading;
+
+    private async Task BackFunction()
+    {
+        NavManager.NavigateTo("/account");
+    }
+
+    private async Task LoginAccount()
+    {
+        LoginDetails accountDetails = new LoginDetails();
+        accountDetails.TransactionId = Guid.NewGuid();
+        accountDetails.Username = _username;
+        accountDetails.Password = _password;
+
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/logintest", accountDetails);
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<LoginDetails>(content);
+
+                if (results.IsLoginSuccessful == true && results.IsUserAccount == false)
+                {
+                    NavManager.NavigateTo($"/staffmainselection/{results.AccountId}/{results.Username}");
+                    _error = false;
+                }
+                else
+                {
+                    _error = true;
+                }
+            }
+            else
+            {
+                string reason = responseMessage.ReasonPhrase;
+                _error = true;
+
+            }
+        }
+    }
+}

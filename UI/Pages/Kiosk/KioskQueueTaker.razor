@@ -1,0 +1,53 @@
+﻿@page "/kiosk/kioskqueuetaker"
+@inject IModalService modal
+
+<h3 style="text-align:center;">KioskQueueTaker</h3>
+<p style="text-align:center;">Click on service name to obtain a q number!</p>
+@if (_loading)
+{
+    <h3 style="text-align:center;">Fetching services for this account...</h3>
+}
+else
+{
+    @foreach (string service in _listOfAllowedServices)
+    {
+        <button class="btn btn-primary" @onclick="() => TakeQueueNo(service)">@service</button>
+    }
+}
+
+@code {
+    private List<string> _listOfAllowedServices = new List<string>();
+    private bool _loading = true;
+    protected override void OnInitialized()
+    {
+        // User = AccountService.User;
+        // obtain the list of services allowed for this user based on User.Id using restApi
+        // once the list of services is obtain
+        // populate the layout based on these services
+
+        // hardcoded 5 services to simulate 5 services
+        for (int i = 1; i <= 5; i++)
+        {
+            _listOfAllowedServices.Add("Service " + i);
+        }
+        _loading = false;
+        this.StateHasChanged();
+    }
+
+    private void TakeQueueNo(string serviceName)
+    {
+        // request a slot using rest api
+        // it should return the estimated timing and queue number to customers
+        ModalParameters modalParameters = new ModalParameters();
+        modalParameters.Add("ServiceName", serviceName);
+        if (true)
+        {
+            modal.Show<KioskQSuccess>("Your q details is shown below", modalParameters);
+        }
+        else
+        {
+            // unreachable code is because i have yet to implemented the logic
+            modal.Show<KioskQFail>("Too many ppl, cannot obtain q", modalParameters);
+        }
+    }
+}

@@ -1,0 +1,198 @@
+﻿
+@page "/usersignup"
+@inject HttpClient HttpClient
+@inject IModalService modal
+@inject NavigationManager NavManager
+@using UI.Models;
+@using Newtonsoft.Json;
+
+<h3>Sign up an account now!</h3>
+
+@if (_loading)
+{
+    <h3>Registering...</h3>
+}
+else
+{
+    <div class="col py-3 px-lg-5 border bg-light">
+        First name: <input type="text" @bind="@_firstname" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Last name: <input type="text" @bind="@_lastname" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Username: <input type="text" @bind="@_username" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Password: <input type="password" @bind="@_password" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Mobile number: <input type="text" @bind="@_mobileNo" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Email: <input type="text" @bind="@_email" />
+    </div>
+    <button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
+    <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
+}
+
+@code
+{
+    private string _firstname;
+    private string _lastname;
+    private string _username;
+    private string _password;
+    private string _mobileNo;
+    private string _email;
+
+    private bool _loading;
+
+
+
+    private async Task BackFunction()
+    {
+        NavManager.NavigateTo("/account");
+    }
+
+    private async Task RegisterAccount()
+    {
+
+        string validationMessage;
+
+        validationMessage = ValidationCheck(_username, _password, _mobileNo, _email, _firstname, _lastname);
+
+        if (validationMessage != null || validationMessage == "")
+        {
+            modal.Show<FailedValidation>(validationMessage);
+        }
+        else
+        {
+            SignUpAccountDetails accountDetails = new SignUpAccountDetails();
+            accountDetails.TransactionId = Guid.NewGuid();
+            accountDetails.FirstName = _firstname;
+            accountDetails.LastName = _lastname;
+            accountDetails.Username = _username;
+            accountDetails.Password = _password;
+            accountDetails.MobileNo = _mobileNo;
+            accountDetails.Email = _email;
+            accountDetails.isUser = true;
+            accountDetails.isKiosk = null;
+            accountDetails.StaffKey = null;
+
+
+            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/useraccountcheckdetails", accountDetails.Username);
+
+            if (checkResponseMessage.IsSuccessStatusCode)
+            {
+
+                var contentForCheck = await checkResponseMessage.Content.ReadAsStringAsync();
+                var resultsForCheck = JsonConvert.DeserializeObject<ValidationDetails>(contentForCheck);
+                if (resultsForCheck.UsernameTaken == false)
+                {
+                    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/useraccountcreateTest", accountDetails);
+                    if (responseMessage != null)
+                    {
+                        if (responseMessage.IsSuccessStatusCode)
+                        {
+
+                            //pop up something
+                            //ModalParameters modalParameters = new ModalParameters();
+                            // modalParameters.Add("TransactionId", accountDetails.TransactionId);
+                            //modal.Show(typeof(EmailMobileVerification), "Email & Mobile Verification", modalParameters);
+
+                            // Check username taken or not
+
+
+
+                            // if(true) contoinue to save
+                            // else send back error message
+
+                            _loading = true;
+                            this.StateHasChanged();
+
+                            modal.Show<SuccessLogin>("Account created");
+
+
+
+                        }
+                        else
+                        {
+                            string reason = responseMessage.ReasonPhrase;
+                            modal.Show<SuccessLogin>("Account not created");
+                        }
+                    }
+                }
+                else
+                {
+                    //ModalParameters modalParameters = new ModalParameters();
+                    //modalParameters.Add("TransactionId", accountDetails.TransactionId);
+
+                    modal.Show<FailedValidation>("Username taken");
+                    // username taken
+                }
+
+
+
+            }
+            else
+            {
+
+            }
+
+
+            _loading = false;
+            this.StateHasChanged();
+        }
+
+
+    }
+
+
+    private string ValidationCheck(string username, string password, string mobileno, string email, string firstname, string lastname)
+    {
+        string errorMessage = "Please enter your ";
+
+        if (firstname == "" || firstname == null)
+        {
+            errorMessage = errorMessage + "First Name, ";
+        }
+
+        if (lastname == "" || lastname == null)
+        {
+            errorMessage = errorMessage + "Last Name, ";
+        }
+
+
+        if (username == "" || username == null)
+        {
+            errorMessage = errorMessage + "Username, ";
+
+        }
+
+        if (password == "" || password == null)
+        {
+            errorMessage = errorMessage + "Password, ";
+        }
+
+        if (mobileno == "" || mobileno == null)
+        {
+            errorMessage = errorMessage + "Mobile Number, ";
+
+        }
+
+        if (email == "" || email == null)
+        {
+            errorMessage = errorMessage + "Email, ";
+        }
+
+        else
+        {
+            errorMessage = null;
+        }
+
+        return errorMessage;
+
+
+
+    }
+}

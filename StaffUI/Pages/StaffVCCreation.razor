@@ -1,0 +1,64 @@
+﻿
+@page "/staffvccreation"
+
+@inject NavigationManager NavManager
+
+
+<h3>Please Create Virtual Meeting Room (Zoom) Link for [today's date]</h3>
+
+
+
+<div class="col py-3 px-lg-5 border bg-light">
+    Zoom Link: <input type="url" name="zoomlink" @bind="@ZoomLink" />
+</div>
+
+
+<div class="col py-3">
+    <button class="btn btn-primary" @onclick="AddButton">Add</button>
+    <button class="btn btn-secondary" @onclick="CancelButton">Cancel</button>
+</div>
+
+
+
+@code
+{
+
+    //private bool _loading;
+
+    private string _zoomLink;
+    
+    public string ZoomLink
+    {
+        get { return _zoomLink; }
+        set { _zoomLink = value; }
+    }
+
+
+
+    // set location list
+    public class ServicesData
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    List<ServicesData> Services = new List<ServicesData>
+{
+        new ServicesData() {Id="service1", Name="Work Pass Card Registration"},
+        new ServicesData() {Id="service2", Name="Employer Services"},
+        new ServicesData() {Id="service3", Name="Passport Collection"}
+    };
+
+    private void AddButton()
+    {
+        //NavManager.NavigateTo("/staff/staffvccreationsuccess");
+       // modal.Show<StaffVCCreationSuccess>("Success");
+    }
+
+    private void CancelButton()
+    {
+        NavManager.NavigateTo("/staffmainselection");
+    }
+
+
+}

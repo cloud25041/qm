@@ -1,0 +1,21 @@
+﻿
+@page "/appointment/appointmentdeletefail"
+@inject IModalService modal
+@inject NavigationManager NavManager
+
+<center>
+    <h4>Failed to delete appointment.</h4>
+    <div>Could not connect to server. [reason for failure]</div>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/appointment/appointmentviewallappointment");
+    }
+
+}

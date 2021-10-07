@@ -1,0 +1,20 @@
+﻿
+@page "/feedback/feedbacksubmissionsuccess"
+@inject IModalService modal
+@inject NavigationManager NavManager
+
+<center>
+    <h4>Thank you for your feedback. We hope to serve you again soon!</h4>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/feedback/feedbackpage");
+    }
+
+}

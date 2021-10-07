@@ -8,11 +8,17 @@
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
-    <link href="UI.styles.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
+
+    <link href="_content/Syncfusion.Blazor.Themes/bootstrap4.css" rel="stylesheet" />
+    <link href="https://cdn.syncfusion.com/blazor//styles/.css" rel="stylesheet" />
+    <link href="_content/Syncfusion.Blazor/styles/material.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <app>Loading...</app>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -20,6 +26,9 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_content/Blazored.Modal/blazored.modal.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="https://cdn.syncfusion.com/blazor/19.2.49/syncfusion-blazor.min.js"></script>
 </body>
 
 </html>
