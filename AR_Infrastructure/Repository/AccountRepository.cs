@@ -1,39 +1,37 @@
 ﻿using AR_Domain.AggregateModel.AccountAggregate;
+using AR_Domain.SeedWork;
 using AR_Infrastructure.Data;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using AR_Domain.SeedWork;
 
 namespace AR_Infrastructure.Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        private AccountContext _accountContext;
+        private CustomerContext _customerContext;
 
-        public IUnitOfWork UnitOfWork { get { return _accountContext; } }
+        public IUnitOfWork UnitOfWork { get { return _customerContext; } }
 
-        public AccountRepository(AccountContext accountContext)
+        public AccountRepository(CustomerContext customerContext)
         {
-            _accountContext = accountContext;
+            _customerContext = customerContext;
         }
 
         public Account Add(Account account)
         {
-            return _accountContext.Accounts.Add(account).Entity;
+            return _customerContext.Accounts.Add(account).Entity;
         }
 
         public async Task<Account> GetAsync(string username)
         {
-            var account = await _accountContext
+            var account = await _customerContext
                                 .Accounts
                                 .Include(x => x.AccountDetails)
                                 .FirstOrDefaultAsync(o => o.Username == username);
             if (account == null)
             {
-                account = _accountContext
+                account = _customerContext
                             .Accounts
                             .Local
                             .FirstOrDefault(o => o.Username == username);

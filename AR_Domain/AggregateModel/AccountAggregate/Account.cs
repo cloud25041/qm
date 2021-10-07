@@ -13,9 +13,6 @@ namespace AR_Domain.AggregateModel.AccountAggregate
         public string Password { get; private set; }
         public AccountDetail AccountDetails { get; private set; }
 
-        public event Action<Account> AccountCreated;
-        public event Action<Account> AccountDeleted;
-
         Account()
         {
 
@@ -31,15 +28,11 @@ namespace AR_Domain.AggregateModel.AccountAggregate
 
         public Account CreateAccount()
         {
-            // create account
-            AccountCreated(this);
-            return this;
+            throw new NotImplementedException();
         }
         public Account DeleteAccount()
         {
-            // delete account
-            AccountDeleted(this);
-            return this;
+            throw new NotImplementedException();
         }
     }
 }

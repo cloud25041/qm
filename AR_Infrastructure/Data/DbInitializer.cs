@@ -9,25 +9,18 @@ namespace AR_Infrastructure.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(AccountContext accountContext, AppointmentContext appointmentContext)
+        public static void Initialize(CustomerContext customerContext)
         {
-            if (accountContext.Accounts.Any())
+            if (customerContext.Accounts.Any())
             {
             }
             else
             {
                 Account account = new Account("testUsername", "testPassword", "testName", "testEmail", 12345678);
-                accountContext.Add(account);
-                accountContext.SaveChanges();
-            }
-            if (appointmentContext.Appointments.Any())
-            {
-            }
-            else
-            {
                 Appointment appointment = new Appointment(Guid.NewGuid(), Guid.NewGuid(), 999, "testAgencyCode", DateTime.Now, DateTime.Now);
-                appointmentContext.Add(appointment);
-                appointmentContext.SaveChanges();
+                customerContext.Add(account);
+                customerContext.Add(appointment);
+                customerContext.SaveChanges();
             }
         }
     }

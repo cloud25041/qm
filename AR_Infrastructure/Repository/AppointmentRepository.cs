@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AR_Domain.AggregateModel.AppointmentAggregate;
+﻿using AR_Domain.AggregateModel.AppointmentAggregate;
 using AR_Domain.SeedWork;
 using AR_Infrastructure.Data;
+using System;
 
 namespace AR_Infrastructure.Repository
 {
     public class AppointmentRepository : IAppointmentRepository
     {
-        public AppointmentRepository(AppointmentContext appointmentContext)
+        public AppointmentRepository(CustomerContext customerContext)
         {
-            _appointmentContext = appointmentContext;
+            _customerContext = customerContext;
         }
 
-        private readonly AppointmentContext _appointmentContext;
-        public IUnitOfWork UnitOfWork { get { return _appointmentContext; } }
+        private readonly CustomerContext _customerContext;
+        public IUnitOfWork UnitOfWork { get { return _customerContext; } }
 
         public Appointment Add(Appointment appointment)
         {
-            throw new NotImplementedException();
+            return _customerContext.Appointments.Add(appointment).Entity;
         }
     }
 }

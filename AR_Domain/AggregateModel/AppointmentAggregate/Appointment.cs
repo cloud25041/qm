@@ -29,8 +29,6 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
             StartTime = startTime;
             EndTime = endTime;
 
-            var appointmentCreationStartedDomainEvent = new AppointmentCreationStartedDomainEvent(username);
-            this.AddDomainEvent(appointmentCreationStartedDomainEvent);
         }
 
         public Appointment(Guid appointmentId, Guid accountId, int appointmentState, string agencyCode, DateTime startTime, DateTime endTime)

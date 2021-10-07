@@ -28,13 +28,10 @@ namespace AR_API
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var accountContext = services.GetRequiredService<AccountContext>();
-                    bool isCreated = accountContext.Database.EnsureCreated();
+                    var customerContext = services.GetRequiredService<CustomerContext>();
+                    bool isCreated = customerContext.Database.EnsureCreated();
 
-                    var appointmentContext = services.GetRequiredService<AppointmentContext>();
-                    bool isCreated2 = appointmentContext.Database.EnsureCreated();
-
-                    DbInitializer.Initialize(accountContext, appointmentContext);
+                    DbInitializer.Initialize(customerContext);
                 }
                 catch (Exception ex)
                 {
