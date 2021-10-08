@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ZoomNet.Models;
 
 namespace ZoomApiTryoutProject.Controllers
 {
@@ -17,15 +18,20 @@ namespace ZoomApiTryoutProject.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        public ZoomMeeting ZoomMeeting { get; private set; }
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ZoomMeeting zoomMeeting)
         {
             _logger = logger;
+            ZoomMeeting = zoomMeeting;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
+            InstantMeeting meeting = await ZoomMeeting.CreateZoomMeeting();
+
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

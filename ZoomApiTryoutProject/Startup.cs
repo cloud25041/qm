@@ -32,6 +32,7 @@ namespace ZoomApiTryoutProject
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ZoomApiTryoutProject", Version = "v1" });
             });
+            services.AddSingleton<ZoomMeeting>(new ZoomMeeting("YTSC6LCbSie7esfbu7U9OA", "m3I99R88FgP3x3DIxJl4zOEgLeVLVzO1jtNS"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
