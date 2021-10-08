@@ -7,6 +7,7 @@
 @using UI.Models;
 @using Newtonsoft.Json;
 @using Microsoft.AspNetCore.Components.Routing
+@inject LocalStorage.ILocalStorageService localStorage;
 
 <h3>Login Page</h3>
 
@@ -83,6 +84,11 @@ else
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
                 var results = JsonConvert.DeserializeObject<LoginDetails>(content);
+
+                //Added By Eric Start
+                await localStorage.SetItem<LoginDetails>(results.Username, results);
+                LoginDetails result2 = await localStorage.GetItem<LoginDetails>(results.Username);
+                //Added By Eric End
 
                 if (results.IsLoginSuccessful == true && results.IsUserAccount == true)
                 {
