@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
-using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UI.LocalStorage
 {
@@ -12,19 +12,24 @@ namespace UI.LocalStorage
             _jsRuntime = jSRuntime;
         }
 
-        public Task<T> GetItem<T>(string username)
+        public async Task<T> GetItem<T>(string key)
         {
-            throw new NotImplementedException();
+            var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
+
+            if (json == null)
+                return default;
+
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
-        public Task RemoveItem(string username)
+        public async Task SetItem<T>(string key, T value)
         {
-            throw new NotImplementedException();
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, JsonConvert.SerializeObject(value));
         }
 
-        public Task SetItem<T>(string username, T userDetails)
+        public async Task RemoveItem(string key)
         {
-            throw new NotImplementedException();
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
     }
 }
