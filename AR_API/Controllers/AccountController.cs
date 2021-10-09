@@ -43,12 +43,19 @@ namespace AR_API.Controllers
         }
 
         [Route("api/account/GetAccountByUsernameAndVerifyPassword")]
-        [HttpGet]
-        public async Task<AccountViewModel> GetAccountByUsernameAndVerifyPassword(LoginDetails loginDetails)
+        [HttpPost]
+        [ProducesResponseType(typeof(AccountViewModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<AccountViewModel>> GetAccountByUsernameAndVerifyPassword(LoginDetails loginDetails)
         {
             AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(loginDetails.Username, loginDetails.Password);
-
-            return account;
+            if (account != null)
+            {
+                return Ok(account);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [Route("api/account/createaccount")]
