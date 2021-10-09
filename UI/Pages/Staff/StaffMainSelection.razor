@@ -3,9 +3,23 @@
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Routing
 
-<h3>Please Select Counter Type</h3>
+<h3>Please Select Action:</h3>
+
 
 <div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((SelectAppointmentButton))>Select Appointments For Today</button>
+</div>
+<div class="col py-3 px-lg-5 border bg-light">
+    <button class="btn btn-primary" @onclick=@((JoinZoomAppointmentButton))>Join Zoom Appointment</button>
+</div>
+<div class="col py-3">
+    <button class="btn btn-dark" @onclick=@((SignOutButton))>Sign Out</button>
+</div>
+<div class="col py-3">
+    <button class="btn btn-dark" @onclick=@((ClosePhysicalAppointmentButton))>Close Physical Appointment</button>
+</div>
+
+@*<div class="col py-3 px-lg-5 border bg-light">
     <button class="btn btn-primary" @onclick=@((PhysicalCounterButton))>Physical Counter</button>
 </div>
 <div class="col py-3 px-lg-5 border bg-light">
@@ -16,7 +30,7 @@
 </div>
 <div class="col py-3">
     <button class="btn btn-dark" @onclick=@((SignOutButton))>Sign Out</button>
-</div>
+</div>*@
 
 
 
@@ -31,6 +45,17 @@
 
     #endregion
     //private bool _loading;
+
+    private void SelectAppointmentButton()
+    {
+        NavManager.NavigateTo("/staff/staffappointmentselection/{accountId}/{username}");
+    }
+
+    private void JoinZoomAppointmentButton()
+    {
+        NavManager.NavigateTo("/staff/staffjoinzoomappointment/{accountId}/{username}");
+    }
+
 
     private void PhysicalCounterButton()
     {
@@ -48,6 +73,11 @@
     private void SignOutButton()
     {
         NavManager.NavigateTo("/login");
+    }
+
+    private void ClosePhysicalAppointmentButton()
+    {
+        //NavManager.NavigateTo("/staff/closephysicalappointment");
     }
 
 
