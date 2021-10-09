@@ -1,7 +1,13 @@
 ﻿
-@page "/appointment/appointmentphysicalbooking"
+@page "/appointment/appointmentphysicalbooking/{accountId}/{serviceId}"
 @inject IModalService modal
 @inject NavigationManager NavManager
+@inject HttpClient HttpClient
+@inject NavigationManager UriHelper
+@using UI.Models;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Components.Routing
+@using System.ComponentModel.DataAnnotations;
 
 <h3>Physical Appointment Booking</h3>
 
@@ -11,20 +17,32 @@
 }
 else
 {
-    <div class="col py-3 px-lg-5 border bg-light">
-        Physical Appointment Date: <SfDatePicker TValue="DateTime?" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate"></SfDatePicker>
-    </div>
+    <p class=" alert-danger"><strong>@errorMessage</strong></p>
 
-    <div class="col py-3 px-lg-5 border bg-light">
-        Physical Appointment Time: <SfTimePicker TValue="DateTime?" Placeholder="Select a Time" Min="@MinTime" Max="@MaxTime" Format="HH:mm" Step="30"></SfTimePicker>
-    </div>
+    if (_detailPickClickFlag)
+    {
+        <div class="col py-3 px-lg-5 border bg-light">
+            Physical Appointment Date: <SfDatePicker TValue="DateTime?" @bind-Value="@SelectedDate" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate">
+                <DatePickerEvents TValue="DateTime?" ValueChange="DateSelectedHandler"></DatePickerEvents>
+            </SfDatePicker>
+        </div>
+    }
+    if (SelectedDate != null)
+    {
+        <p>DropDownList value is:<strong>@SelectedDate.Value.Date</strong></p>
+        <div class="col py-3 px-lg-5 border bg-light">
+            Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@DropVal" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
+                <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+        <p>DropDownList value is:<strong>@DropVal</strong></p>
 
-    <div class="col py-3 px-lg-5 border bg-light">
-        Physical Location: <SfDropDownList TItem="LocationData" TValue="string" DataSource="Location" Placeholder="Select a Location">
-            <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
-        </SfDropDownList>
-    </div>
-
+    }
+    if (_display == true)
+    {
+        <p>Date is: @test1</p>
+        <p>Time slot is: @test2</p>
+    }
     <div class="col py-3">
         <button class="btn btn-primary" @onclick="NavigateBook">Book</button>
         <button class="btn btn-secondary" @onclick="NavigateCancel">Cancel</button>
@@ -34,40 +52,123 @@ else
 
 @code
 {
-    private bool _loading;
-
-    // set minimum & maximum time
-    public DateTime MaxTime { get; set; } = new DateTime(2021, 02, 20, 18, 00, 00);
-    public DateTime MinTime { get; set; } = new DateTime(2021, 02, 20, 08, 00, 00);
-    // set min & max dates
-    public DateTime MaxDate { get; set; } = new DateTime(2021, 08, 28);
-    public DateTime MinDate { get; set; } = new DateTime(2021, 08, 03);
-
-    // set location list
-    public class LocationData
+    protected override async void OnInitialized()
     {
-        public string Name { get; set; }
-        public string Id { get; set; }
+        var response = await HttpClient.GetAsync("https://localhost:44355/api/userqueue/getagencyappointmentinformation");
+        if (response != null)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
+            availableSlotList = resultList;
+            _detailPickClickFlag = true;
+            this.StateHasChanged();
+        }
     }
 
-    List<LocationData> Location = new List<LocationData>
-{
-        new LocationData() {Id="location1", Name="Pasir Ris CC"},
-        new LocationData() {Id="location2", Name="Yishun CC"},
-        new LocationData() {Id="location3", Name="Bishan CC"}
-    };
+    #region Fields
+
+    private bool _loading;
+    private bool _detailPickClickFlag = false;
+    public int? DropVal;
+
+    public DateTime? test1;
+    public string test2;
+    private string errorMessage;
+    private bool _display = false;
+
+    #endregion
+
+    #region Properties
+
+    [Parameter]
+    public string accountId { get; set; }
+    [Parameter]
+    public string userName { get; set; }
+    [Parameter]
+    public string password { get; set; }
+    [Parameter]
+    public string appointmentDate { get; set; }
+    [Parameter]
+    public string appointmentTime { get; set; }
+    [Parameter]
+    public string queueNo { get; set; }
+    [Parameter]
+    public string serviceId { get; set; }
+
+    // set min & max dates
+    public DateTime MaxDate { get; set; } = DateTime.Now.AddDays(31).Date;
+    public DateTime MinDate { get; set; } = DateTime.Now.Date;
+
+    public DateTime? SelectedDate { get; set; } = null;
+    public int SelectedSlot { get; set; }
+
+    public class AvailableSlots
+    {
+        public DateTime Date { get; set; }
+
+        public string Time { get; set; }
+
+        public int SlotId { get; set; }
+    }
+
+    public IList<AvailableSlots> availableSlotList { get; set; }
+    public IList<AvailableSlots> selectedDateSlotList { get; set; }
 
 
+    #endregion
+
+    #region Private Method
+    //ChangedEventArgs<DateTime?> args
+    private void DateSelectedHandler()
+    {
+        selectedDateSlotList = new List<AvailableSlots>();
+        if (SelectedDate.HasValue == true)
+        {
+            foreach (var availableSlot in availableSlotList)
+            {
+                if (availableSlot.Date == SelectedDate)
+                {
+                    selectedDateSlotList.Add(availableSlot);
+                }
+            }
+            this.StateHasChanged();
+        }
+    }
 
     private void NavigateBook()
     {
-        NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess");
+        if (SelectedDate == null || DropVal == null)
+        {
+            errorMessage = "Please Select a Valid Appointent Date & Time from the dropdown selection.";
+            this.StateHasChanged();
+        }
+        else
+        {
+            //Testing
+            _display = true;
+            test1 = SelectedDate;
+            foreach (var availableSlot in availableSlotList)
+            {
+                if (availableSlot.SlotId == DropVal && availableSlot.Date == SelectedDate)
+                {
+                    test2 = availableSlot.Time;
+                    this.StateHasChanged();
+                    break;
+                }
+            }
+            appointmentDate = SelectedDate.Value.Date.ToString("dd MMM yyyy");
+            appointmentTime = test2;
+            queueNo = "Q100";
+        }
+        NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}");
     }
 
     private void NavigateCancel()
     {
-        NavManager.NavigateTo("/appointment/appointmentmainselection");
+        NavManager.NavigateTo("/appointment/appointmentmainselection/{accountId}/{username}/{password}");
     }
 
+
+    #endregion
 
 }
