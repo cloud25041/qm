@@ -52,6 +52,9 @@ namespace AR_API
 
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddCors(options =>
+                options.AddDefaultPolicy(builder =>
+                    builder.WithOrigins("https://localhost:44361").WithOrigins("https://localhost:44362").AllowAnyMethod().AllowAnyHeader()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +65,7 @@ namespace AR_API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AR_API v1"));
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();
