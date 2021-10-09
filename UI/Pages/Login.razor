@@ -59,14 +59,14 @@ else
 
     private async Task LoginAccount()
     {
-        LoginDetails accountDetails = new LoginDetails();
-        accountDetails.TransactionId = Guid.NewGuid();
-        accountDetails.Username = Username;
-        accountDetails.Password = Password;
+        LoginDetails loginDetails = new LoginDetails();
+        loginDetails.TransactionId = Guid.NewGuid();
+        loginDetails.Username = Username;
+        loginDetails.Password = Password;
         //accountDetails.AccountId = "12345";
 
 
-        numberNames.Add(1, accountDetails);
+        numberNames.Add(1, loginDetails);
         _loading = true;
         this.StateHasChanged();
 
@@ -77,97 +77,106 @@ else
                 };
 
 
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/logintest", accountDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAccountByUsernameAndVerifyPassword", loginDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
-                var results = JsonConvert.DeserializeObject<LoginDetails>(content);
+                var results = JsonConvert.DeserializeObject<AccountInfo>(content);
 
-                //Added By Eric Start
-                await localStorage.SetItem<LoginDetails>(results.Username, results);
-                LoginDetails result2 = await localStorage.GetItem<LoginDetails>(results.Username);
-                //Added By Eric End
-
-                if (results.IsLoginSuccessful == true && results.IsUserAccount == true)
+                if (results != null)
                 {
-                    NavManager.NavigateTo($"/appointment/appointmentmainselection/{results.AccountId}/{results.Username}/{results.Password}");
-                }
 
-                else if (results.IsLoginSuccessful == true && results.IsUserAccount == false)
-                {
-                    NavManager.NavigateTo($"/staff/staffmainselection/{results.AccountId}/{results.Username}");
+                    //Added By Eric Start
+                    await localStorage.SetItem<AccountInfo>(results.username, results);
+                    AccountInfo result2 = await localStorage.GetItem<AccountInfo>(results.username);
+                    //Added By Eric End
+
+
+                    NavManager.NavigateTo($"/appointment/appointmentmainselection/{result2.accountId}/{result2.username}");
+
                 }
 
                 else
                 {
-                    string reason = responseMessage.ReasonPhrase;
-                    modal.Show<SuccessLogin>("Invaild Account");
+                    //
                 }
 
-
-                // if (accountDetails.Username == "John" && accountDetails.Password == "123456") //hardcoded user account
-                //{
-                // modal.Show<SuccessLogin>("Success User Login");
-
-                //}
             }
+
             else
             {
                 string reason = responseMessage.ReasonPhrase;
                 modal.Show<SuccessLogin>("Invaild Account");
             }
+
+
+            // if (accountDetails.Username == "John" && accountDetails.Password == "123456") //hardcoded user account
+            //{
+            // modal.Show<SuccessLogin>("Success User Login");
+
+            //}
         }
-
-
-        // test
-
-
-        /*if (accountDetails.Username == "John" && accountDetails.Password == "123456") //hardcoded user account
+        else
         {
-            // ModalParameters modalParameters = new ModalParameters();
-            // modalParameters.Add("UserName", accountDetails);
-            //modal.Show<SuccessLogin>("Success User Login", modalParameters);
-            // UriHelper.NavigateTo($"appointment/appointmentmainselection/{accountDetails}");
-
-
-
-            NavManager.NavigateTo($"/appointment/appointmentmainselection/{accountDetails.AccountId}/{accountDetails.Username}/{accountDetails.Password}");
+            string reason = responseMessage.ReasonPhrase;
+            modal.Show<SuccessLogin>("Invaild Account");
         }
 
-       else if (accountDetails.Username == "James" && accountDetails.Password == "123456") //hardcoded user account
-        {
-            // ModalParameters modalParameters = new ModalParameters();
-            // modalParameters.Add("UserName", accountDetails);
-            //modal.Show<SuccessLogin>("Success User Login", modalParameters);
-            // UriHelper.NavigateTo($"appointment/appointmentmainselection/{accountDetails}");
-            NavManager.NavigateTo($"/staff/staffmainselection");
-        }
-
-           */
-        /* else
-         {
-             modal.Show<SuccessLogin>("Invaild Account");
-         }
-        */
-
-        /* comment out for some testing (29/08)
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/create", accountDetails);
-        if (responseMessage != null)
-        {
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                //pop up something
-                modal.Show<Counter>("Account created");
-            }
-            else
-            {
-                string reason = responseMessage.ReasonPhrase;
-                modal.Show<Counter>("Account not created");
-            }
-        }
-        */
         _loading = false;
         this.StateHasChanged();
-    } }
+    }
+
+
+    // test
+
+
+    /*if (accountDetails.Username == "John" && accountDetails.Password == "123456") //hardcoded user account
+    {
+        // ModalParameters modalParameters = new ModalParameters();
+        // modalParameters.Add("UserName", accountDetails);
+        //modal.Show<SuccessLogin>("Success User Login", modalParameters);
+        // UriHelper.NavigateTo($"appointment/appointmentmainselection/{accountDetails}");
+
+
+
+        NavManager.NavigateTo($"/appointment/appointmentmainselection/{accountDetails.AccountId}/{accountDetails.Username}/{accountDetails.Password}");
+    }
+
+   else if (accountDetails.Username == "James" && accountDetails.Password == "123456") //hardcoded user account
+    {
+        // ModalParameters modalParameters = new ModalParameters();
+        // modalParameters.Add("UserName", accountDetails);
+        //modal.Show<SuccessLogin>("Success User Login", modalParameters);
+        // UriHelper.NavigateTo($"appointment/appointmentmainselection/{accountDetails}");
+        NavManager.NavigateTo($"/staff/staffmainselection");
+    }
+
+       */
+    /* else
+     {
+         modal.Show<SuccessLogin>("Invaild Account");
+     }
+    */
+
+    /* comment out for some testing (29/08)
+    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/create", accountDetails);
+    if (responseMessage != null)
+    {
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            //pop up something
+            modal.Show<Counter>("Account created");
+        }
+        else
+        {
+            string reason = responseMessage.ReasonPhrase;
+            modal.Show<Counter>("Account not created");
+        }
+    }
+    */
+
+} 
+
+

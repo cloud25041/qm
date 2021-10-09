@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using AR_Application.Queries;
+using AR_Application.Commands;
+using AR_API.Models;
 
 namespace AR_API.Controllers
 {
@@ -39,12 +44,11 @@ namespace AR_API.Controllers
 
         [Route("api/account/GetAccountByUsernameAndVerifyPassword")]
         [HttpGet]
-        [ProducesResponseType(typeof(AccountViewModel),(int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<AccountViewModel>> GetAccountByUsernameAndVerifyPassword(string username, string password)
+        public async Task<AccountViewModel> GetAccountByUsernameAndVerifyPassword(LoginDetails loginDetails)
         {
-            AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(username, password);
-            return Ok(account);
+            AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(loginDetails.Username, loginDetails.Password);
+
+            return account;
         }
 
         [Route("api/account/createaccount")]
