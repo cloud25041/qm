@@ -26,6 +26,11 @@ namespace AR_Domain.AggregateModel.AccountAggregate
             this.AccountDetails = new AccountDetail(name, email, mobile);
         }
 
+        public Account ChangeUsername(string newUsername)
+        {
+            throw new NotImplementedException();
+        }
+
         public Account CreateAccount()
         {
             throw new NotImplementedException();

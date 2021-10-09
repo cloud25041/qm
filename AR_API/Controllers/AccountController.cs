@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
+﻿using AR_Application.Commands;
 using AR_Application.Queries;
-using AR_Application.Commands;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace AR_API.Controllers
 {
@@ -40,10 +39,12 @@ namespace AR_API.Controllers
 
         [Route("api/account/GetAccountByUsernameAndVerifyPassword")]
         [HttpGet]
-        public async Task<AccountViewModel> GetAccountByUsernameAndVerifyPassword(string username, string password)
+        [ProducesResponseType(typeof(AccountViewModel),(int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<AccountViewModel>> GetAccountByUsernameAndVerifyPassword(string username, string password)
         {
             AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(username, password);
-            return account;
+            return Ok(account);
         }
 
         [Route("api/account/createaccount")]
