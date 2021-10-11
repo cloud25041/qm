@@ -7,5 +7,14 @@ namespace Staff_Domain.AggregateModel.AccountAggregate
 {
     public class Schedule
     {
+        public List<bool> AvailableSlots { get; private set; }
+
+        public Schedule()
+        {
+            for (int i=1; i <= 24; i++)
+            {
+                AvailableSlots.Add(true);
+            }
+        }
     }
 }
