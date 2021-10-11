@@ -73,23 +73,23 @@ else
             accountDetails.LastName = _lastname;
             accountDetails.Username = _username;
             accountDetails.Password = _password;
-            accountDetails.MobileNo = _mobileNo;
+            accountDetails.MobileNo = Convert.ToInt32(_mobileNo);
             accountDetails.Email = _email;
             accountDetails.isUser = true;
             accountDetails.isKiosk = null;
             accountDetails.StaffKey = null;
 
 
-            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/useraccountcheckdetails", accountDetails.Username);
+            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/checkUsernameAndEmailAvail", accountDetails);
 
             if (checkResponseMessage.IsSuccessStatusCode)
             {
 
                 var contentForCheck = await checkResponseMessage.Content.ReadAsStringAsync();
                 var resultsForCheck = JsonConvert.DeserializeObject<ValidationDetails>(contentForCheck);
-                if (resultsForCheck.UsernameTaken == false)
+                if (resultsForCheck.IsUsernameTaken == false && resultsForCheck.IsEmailTaken == false)
                 {
-                    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/useraccountcreateTest", accountDetails);
+                    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/createaccount", accountDetails);
                     if (responseMessage != null)
                     {
                         if (responseMessage.IsSuccessStatusCode)
@@ -122,7 +122,7 @@ else
                         }
                     }
                 }
-                else
+                else if(resultsForCheck.IsUsernameTaken == true && resultsForCheck.IsEmailTaken == false)
                 {
                     //ModalParameters modalParameters = new ModalParameters();
                     //modalParameters.Add("TransactionId", accountDetails.TransactionId);
@@ -131,6 +131,15 @@ else
                     // username taken
                 }
 
+                else if(resultsForCheck.IsUsernameTaken == false && resultsForCheck.IsEmailTaken == true)
+                {
+                    modal.Show<FailedValidation>("Email taken");
+                }
+
+                else
+                {
+                    modal.Show<FailedValidation>("Username and Email taken");
+                }
 
 
             }
@@ -150,42 +159,49 @@ else
 
     private string ValidationCheck(string username, string password, string mobileno, string email, string firstname, string lastname)
     {
+        bool errorflag = false;
         string errorMessage = "Please enter your ";
 
         if (firstname == "" || firstname == null)
         {
             errorMessage = errorMessage + "First Name, ";
+            errorflag = true;
         }
 
         if (lastname == "" || lastname == null)
         {
             errorMessage = errorMessage + "Last Name, ";
+            errorflag = true;
         }
 
 
         if (username == "" || username == null)
         {
             errorMessage = errorMessage + "Username, ";
+            errorflag = true;
 
         }
 
         if (password == "" || password == null)
         {
             errorMessage = errorMessage + "Password, ";
+            errorflag = true;
         }
 
-        if (mobileno == "" || mobileno == null)
+        if (mobileno == ""|| mobileno == null)
         {
             errorMessage = errorMessage + "Mobile Number, ";
+            errorflag = true;
 
         }
 
         if (email == "" || email == null)
         {
             errorMessage = errorMessage + "Email, ";
+            errorflag = true;
         }
 
-        else
+        if(errorflag == false)
         {
             errorMessage = null;
         }

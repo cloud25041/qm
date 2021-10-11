@@ -1,7 +1,8 @@
-﻿@page "/appointment/appointmentmainselection/{accountId}/{username}/{password}"
+﻿@page "/appointment/appointmentmainselection"
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Routing
-
+@using UI.Models;
+@inject LocalStorage.ILocalStorageService localStorage;
 
 
 <h3>Book or View your Appointments</h3>
@@ -16,23 +17,16 @@
     <button class="btn btn-primary" @onclick=@((VirtualServiceButton))>Book Virtual Appointment</button>
 </div>
 
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@accountId" />
-</div>
-
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@userName" />
-</div>
-
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@password" />
-</div>
 
 
 
 
 @code
-{ #region Fields
+{ 
+
+   
+
+    #region Fields
 
     #endregion
     #region Properties
@@ -51,7 +45,7 @@
     #region Private Method
     private void ViewAppointmentButton()
     {
-       // accountId = accountId;
+        // accountId = accountId;
         NavManager.NavigateTo($"/appointment/appointmentviewallappointment/{accountId}");
     }
     private void PhysicalServiceButton()

@@ -7,9 +7,10 @@ namespace UI.Models
 {
     public class ValidationDetails
     {
-       public bool UsernameTaken { get; set; }
-        public bool? IsStaffKeyCorrect { get; set; }
+       public bool IsUsernameTaken { get; set; }
 
+    
+        public bool IsEmailTaken { get; set; }
 
     }
 }

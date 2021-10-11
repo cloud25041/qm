@@ -33,6 +33,32 @@ namespace AR_API.Controllers
             return listOfAccounts;
         }
 
+        [Route("api/account/checkUsernameAndEmailAvail")]
+        [HttpPost]
+        public async Task<ValidationDetails> checkUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
+        {
+            List<AccountViewModel> listOfAccounts = await _accountQueries.GetAllAccounts();
+            ValidationDetails validationDetails = new ValidationDetails();
+            validationDetails.IsEmailTaken = false;
+            validationDetails.IsUsernameTaken = false;
+
+            foreach(var account in listOfAccounts)
+            {
+                if(account.email == signUpAccountDetails.Email)
+                {
+                    validationDetails.IsEmailTaken = true;
+                    
+                }
+
+                if(account.username == signUpAccountDetails.Username)
+                {
+                    validationDetails.IsUsernameTaken = true;
+                }
+            }
+
+            return validationDetails;
+        }
+
 
         [Route("api/account/getaccountbyusername")]
         [HttpGet]
@@ -60,9 +86,10 @@ namespace AR_API.Controllers
 
         [Route("api/account/createaccount")]
         [HttpPost]
-        public async Task<bool> CreateAccount(string username, string password, string name, string email, int mobileNo)
+        public async Task<bool> CreateAccount(SignUpAccountDetails signUpAccountDetails)
         {
-            return await _mediator.Send(new CreateAccountCommand(username, password, name, email, mobileNo));
+            string name = signUpAccountDetails.FirstName + " " + signUpAccountDetails.LastName;
+            return await _mediator.Send(new CreateAccountCommand(signUpAccountDetails.Username, signUpAccountDetails.Password, name, signUpAccountDetails.Email, signUpAccountDetails.MobileNo));
         }
     }
 }
