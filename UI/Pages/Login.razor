@@ -89,8 +89,8 @@ else
                 {
 
                     //Added By Eric Start
-                    await localStorage.SetItem<AccountInfo>(results.username, results);
-                    AccountInfo result2 = await localStorage.GetItem<AccountInfo>(results.username);
+                    localStorage.SetAccountInfo(results);
+                    AccountInfo result2 = localStorage.GetAccountInfo();
                     //Added By Eric End
 
 
