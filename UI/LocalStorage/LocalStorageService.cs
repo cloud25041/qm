@@ -16,7 +16,7 @@ namespace UI.LocalStorage
 
         public void SetAccountInfo(AccountInfo accountInfo)
         {
-            JsonConvert.SerializeObject(accountInfo);
+            _serializedObject = JsonConvert.SerializeObject(accountInfo);
         }
     }
 }

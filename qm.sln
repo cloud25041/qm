@@ -8,14 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{D2229FE7-9F38-422A-852A-B2EC736B8937}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{B4221AE2-979F-4ABC-9D71-8CB27C2CADEB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BFB431B9-31D0-40C1-86A7-23FC643DE233} = {BFB431B9-31D0-40C1-86A7-23FC643DE233}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaffUI", "StaffUI\StaffUI.csproj", "{C764CF5E-6938-4A61-8C25-6AEA393DCDD4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BFB431B9-31D0-40C1-86A7-23FC643DE233} = {BFB431B9-31D0-40C1-86A7-23FC643DE233}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppointmentRegistry", "AppointmentRegistry", "{89B21538-48BB-427A-8585-ACD6536A48F8}"
 EndProject
@@ -38,13 +32,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Staff", "Staff", "{7CC1EE71
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MeetingOrchestrator", "MeetingOrchestrator", "{426E4162-13F6-44B4-8FF3-39B89A4AFD63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Staff_API", "Staff_API\Staff_API.csproj", "{C09737F7-1000-4215-9857-95ADC7367905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Staff_API", "Staff_API\Staff_API.csproj", "{C09737F7-1000-4215-9857-95ADC7367905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Staff_Application", "Staff_Application\Staff_Application.csproj", "{934C360A-7F65-423E-9F9C-E0D33BF3D4B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Staff_Application", "Staff_Application\Staff_Application.csproj", "{934C360A-7F65-423E-9F9C-E0D33BF3D4B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Staff_Domain", "Staff_Domain\Staff_Domain.csproj", "{A4BA7C77-0BF3-417E-B017-D792FE29EE62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Staff_Domain", "Staff_Domain\Staff_Domain.csproj", "{A4BA7C77-0BF3-417E-B017-D792FE29EE62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Staff_Infrastructure", "Staff_Infrastructure\Staff_Infrastructure.csproj", "{E880C4C0-4624-4788-9464-83299AB1E58A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Staff_Infrastructure", "Staff_Infrastructure\Staff_Infrastructure.csproj", "{E880C4C0-4624-4788-9464-83299AB1E58A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

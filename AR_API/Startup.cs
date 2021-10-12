@@ -1,24 +1,18 @@
+using AR_Application;
+using AR_Application.Behaviours;
+using AR_Application.Queries;
+using AR_Domain.AggregateModel.AccountAggregate;
+using AR_Domain.AggregateModel.AppointmentAggregate;
+using AR_Infrastructure.Data;
+using AR_Infrastructure.Repository;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
-using AR_Application;
-using AR_Application.Queries;
-using AR_Infrastructure.Data;
-using AR_Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore;
-using AR_Domain.AggregateModel.AccountAggregate;
-using AR_Domain.AggregateModel.AppointmentAggregate;
 
 namespace AR_API
 {
@@ -52,6 +46,9 @@ namespace AR_API
 
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
                     builder.WithOrigins("https://localhost:44361").WithOrigins("https://localhost:44362").AllowAnyMethod().AllowAnyHeader()));
