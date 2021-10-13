@@ -46,7 +46,7 @@ namespace AR_API.Controllers
 
         [Route("api/account/GetAppointmentByAppointmentId")]
         [HttpPost]
-        public async Task<AppointmentViewModel> GetAppointmentByAppointmentId(int appointmentId)
+        public async Task<AppointmentViewModel> GetAppointmentByAppointmentId(Guid appointmentId)
         {
             AppointmentViewModel Appointment = new AppointmentViewModel();
             Appointment = await _appointmentQueries.GetAppointmentByAppointmentId(appointmentId);
