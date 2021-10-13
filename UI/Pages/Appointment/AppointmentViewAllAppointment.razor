@@ -157,7 +157,7 @@ else
 
     private async Task EditAppointment()
     {
-        string apptid = "7";
+        int apptid = 7;
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
 
         if (responseMessage != null)
@@ -172,6 +172,7 @@ else
                     NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
                 }
             }
+             
         }
     }
 
