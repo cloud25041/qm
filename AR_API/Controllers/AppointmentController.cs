@@ -43,5 +43,14 @@ namespace AR_API.Controllers
         {
             return await _mediator.Send(new CreateAppointmentCommand(username, agencyCode, startTime, endTime));
         }
+
+        [Route("api/account/GetAppointmentByAppointmentId")]
+        [HttpPost]
+        public async Task<AppointmentViewModel> GetAppointmentByAppointmentId(int appointmentId)
+        {
+            AppointmentViewModel Appointment = new AppointmentViewModel();
+            Appointment = await _appointmentQueries.GetAppointmentByAppointmentId(appointmentId);
+            return Appointment;
+        }
     }
 }

@@ -35,6 +35,16 @@ namespace AR_Application.Queries
             }
         }
 
+        public async Task <AppointmentViewModel> GetAppointmentByAppointmentId(int appointmentId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AppointmentId\" = @appointmentId ", new { appointmentId });
+                return MapQueryResultToListOfAppointment(result)[0];
+            }
+        }
+
         private List<AppointmentViewModel> MapQueryResultToListOfAppointment (dynamic result)
         {
             List<AppointmentViewModel> listOfAppointment = new();
