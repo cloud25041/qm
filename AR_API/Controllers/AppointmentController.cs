@@ -31,7 +31,7 @@ namespace AR_API.Controllers
 
         [Route("api/account/getallappointmentsbyaccountid")]
         [HttpGet]
-        public async Task<List<AppointmentViewModel>> GetAllAccountsByAccountId(Guid accountId)
+        public async Task<List<AppointmentViewModel>> GetAllAppointmentsByAccountId(Guid accountId)
         {
             List<AppointmentViewModel> listOfAppointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
             return listOfAppointment;
