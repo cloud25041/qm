@@ -1,5 +1,5 @@
 ﻿
-@page "/appointment/appointmentviewallappointment/{accountId}"
+@page "/appointment/appointmentviewallappointment"
 @inject IModalService modal
 @inject HttpClient HttpClient
 @inject NavigationManager NavManager
@@ -104,15 +104,15 @@ else
 
 @code
 {
-    int i = 0;
+        int i = 0;
 
-    #region Field
+        #region Field
 
 
-    [Parameter]
-    public string accountId { get; set; }
-    [Parameter]
-    public string userName { get; set; }
+        [Parameter]
+        public string accountId { get; set; }
+        [Parameter]
+        public string userName { get; set; }
 
     public string appointmentName { get; set; }
 
@@ -156,10 +156,24 @@ else
     }
 
     private async Task EditAppointment()
-{
-string apptid = "7";
-NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-}
+    {
+        string apptid = "7";
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
+
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
+
+                if (results != null)
+                {
+                    NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+                }
+            }
+        }
+    }
 
 
     private async Task GetAppointment()
