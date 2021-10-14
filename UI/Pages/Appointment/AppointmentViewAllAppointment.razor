@@ -181,7 +181,7 @@ else
     private async Task GetAppointment()
     {
         List<AppointmentDetails> AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/UserQueue/GetAppointmentDetails", accountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
         if (responseMessage != null)
         {
             // var results = new List<AppointmentDetails>();
