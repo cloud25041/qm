@@ -15,54 +15,60 @@
 
 @if (_loading)
 {
-<h3>Registering...</h3>
+    <h3>Registering...</h3>
 }
 else
 {
-    if (i > 0)
+
+    if (gotAppointmentFlag)
     {
-<thead class="table-primary">
-    <tr>
-        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
-        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Service</th>
-        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
-        <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
-        <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Time</th>
-        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
-    </tr>
-</thead>
-        for (int j = 0; j <= i; j++)
-        {
-<div class="table-responsive">
-    <table class="table table-sm table-hover">
-
-        <tbody>
+        <thead class="table-primary">
             <tr>
-                <td>@agencyArray[j]</td>
-                <td> @serviceArray[j]</td>
-                <td>@locationArray[j]</td>
-                <td>25 Aug 2021</td>
-                <td>3.00pm</td>
-                <td style="display:none;"> 1 </td>
-                <td>
-                    <button class="btn btn-primary" @onclick=@((EditButton))>Edit</button>
-                    <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
-                </td>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
+                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Service</th>
+                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
+                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
+                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Time</th>
+                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
             </tr>
+        </thead>
+        if (AppointmentList != null)
+        {   
+            foreach (var appointment in AppointmentList)
+            {           
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
 
-        </tbody>
-    </table>
-</div>
+                        <tbody>
+                            <tr>
+                                <td>@appointment.Agency</td>
+                                <td> @appointment.Service</td>
+                                <td>@appointment.Location</td>
+                                <td>25 Aug 2021</td>
+                                <td>3.00pm</td>
+                                <td style="display:none;"> 1 </td>
+                                <td style="display:none;">@appointment.AppointmentId</td>
+                                <td>
+                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
+                                    <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
+                                </td>
+                            </tr>
 
+                        </tbody>
+                    </table>
+                </div>
+
+            }
         }
+
 
     }
     else
     {
 
-<tr>
-    <td colspan="5">No Record Found.</td>
-</tr>
+        <tr>
+            <td colspan="5">No Record Found.</td>
+        </tr>
 
     }
 
@@ -71,7 +77,7 @@ else
 
 <button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
 <button class="btn btn-outline-dark" @onclick="@(() => modal.Show<AppointmentDeleteFail>("Delete Failed"))">Display Delete Fail Modal</button>
-<button class="btn btn-dark" @onclick=@GetAppointment>Appointment</button>
+@*<button class="btn btn-dark" @onclick=@GetAppointment>Appointment</button>*@
 <button class="btn btn-dark" @onclick=@EditAppointment>Appointment</button>
 @*<button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
     <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
@@ -130,8 +136,62 @@ else
     string[] serviceArray = new string[5];
     string[] locationArray = new string[5];
 
-
+    private bool gotAppointmentFlag = false;
     #endregion
+
+    protected override async void OnInitialized()
+    {
+        accountId = "1234";
+        AppointmentList = new List<AppointmentDetails>();
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
+        if (responseMessage != null)
+        {
+            // var results = new List<AppointmentDetails>();
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
+                var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+                if (results.Count > 0)
+                {
+                    gotAppointmentFlag = true;
+                }
+                foreach (var eachResults in results)
+                {
+
+                    appointmentName = appointmentName + eachResults.AppointmentName;
+                    //AppointmentList.Add(eachResults);
+                    i = AppointmentList.Count;
+                    // appointmentName = appointmentName + eachResults.AppointmentName;
+                    agency = eachResults.Agency;
+                    agencyArray[i] = agency + i.ToString();
+
+                    service = eachResults.Service;
+                    serviceArray[i] = service + i.ToString();
+
+                    location = eachResults.Location;
+                    locationArray[i] = location + i.ToString();
+
+                    appointmentTime = appointmentTime + eachResults.AppointmentTime;
+                    //appointmentId = appointmentId + eachResults.AppointmentId;
+                    AppointmentList.Add(eachResults);
+                    this.StateHasChanged();
+                }
+                this.StateHasChanged();
+
+            }
+            else
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                accountId = "1234";
+            }
+        }
+
+
+    }
+
+
+
 
 
 
@@ -147,12 +207,15 @@ else
         modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
     }
 
-    private void EditButton()
+    private void EditButton(int AppointmentId)
     {
         // To add conditions, temporarily routing to appointment physical booking page
 
-        NavManager.NavigateTo("/appointment/appointmentphysicalbooking");
+        //NavManager.NavigateTo("/appointment/appointmenteditbooking");
         //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+
+        modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
+
     }
 
     private async Task EditAppointment()
@@ -178,54 +241,54 @@ else
     }
 
 
-    private async Task GetAppointment()
-    {
-        List<AppointmentDetails> AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
-        if (responseMessage != null)
-        {
-            // var results = new List<AppointmentDetails>();
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var content = await responseMessage.Content.ReadAsStringAsync();
-                Console.WriteLine(content);
-                var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
-                foreach (var eachResults in results)
-                {
+    //private async Task GetAppointment()
+    //{
+    //    List<AppointmentDetails> AppointmentList = new List<AppointmentDetails>();
+    //    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
+    //    if (responseMessage != null)
+    //    {
+    //        // var results = new List<AppointmentDetails>();
+    //        if (responseMessage.IsSuccessStatusCode)
+    //        {
+    //            var content = await responseMessage.Content.ReadAsStringAsync();
+    //            Console.WriteLine(content);
+    //            var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+    //            foreach (var eachResults in results)
+    //            {
 
-                    appointmentName = appointmentName + eachResults.AppointmentName;
-                    //AppointmentList.Add(eachResults);
-                    i = AppointmentList.Count;
-                    // appointmentName = appointmentName + eachResults.AppointmentName;
-                    agency = eachResults.Agency;
-                    agencyArray[i] = agency + i.ToString();
+    //                appointmentName = appointmentName + eachResults.AppointmentName;
+    //                //AppointmentList.Add(eachResults);
+    //                i = AppointmentList.Count;
+    //                // appointmentName = appointmentName + eachResults.AppointmentName;
+    //                agency = eachResults.Agency;
+    //                agencyArray[i] = agency + i.ToString();
 
-                    service = eachResults.Service;
-                    serviceArray[i] = service + i.ToString();
+    //                service = eachResults.Service;
+    //                serviceArray[i] = service + i.ToString();
 
-                    location = eachResults.Location;
-                    locationArray[i] = location + i.ToString();
+    //                location = eachResults.Location;
+    //                locationArray[i] = location + i.ToString();
 
-                    appointmentTime = appointmentTime + eachResults.AppointmentTime;
-                    //appointmentId = appointmentId + eachResults.AppointmentId;
-                    AppointmentList.Add(eachResults);
-                }
-
-
-            }
-            else
-            {
-                var content = await responseMessage.Content.ReadAsStringAsync();
-                accountId = "1234";
-            }
+    //                appointmentTime = appointmentTime + eachResults.AppointmentTime;
+    //                //appointmentId = appointmentId + eachResults.AppointmentId;
+    //                AppointmentList.Add(eachResults);
+    //            }
 
 
-        }
-        else
-        {
-        }
+    //        }
+    //        else
+    //        {
+    //            var content = await responseMessage.Content.ReadAsStringAsync();
+    //            accountId = "1234";
+    //        }
 
-    }
+
+    //    }
+    //    else
+    //    {
+    //    }
+
+    //}
 
 
 
