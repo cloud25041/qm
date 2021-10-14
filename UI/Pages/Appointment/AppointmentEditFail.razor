@@ -1,0 +1,25 @@
+﻿
+@page "/appointment/appointmenteditfail"
+@inject NavigationManager NavManager
+
+<center>
+    <h4>No changes made to current Appointment!</h4>
+
+    <div class="col py-3 px-lg-5">
+        The Reason here.
+    </div>
+
+    <button class="btn btn-danger mt-3" @onclick="Navigate">OK</button>
+</center>
+
+
+@code
+{
+
+    private void Navigate()
+    {
+        NavManager.NavigateTo("/appointment/appointmentmainselection");
+    }
+
+
+}

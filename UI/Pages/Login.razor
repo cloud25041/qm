@@ -13,21 +13,21 @@
 
 @if (_loading)
 {
-<h3>Login...</h3> }
+    <h3>Login...</h3> }
 else
 {
-<div class="col py-3 px-lg-5 border bg-light">
-    Username: <input type="text" placeholder="Username" @bind="@Username" />
-</div>
-                <div class="col py-3 px-lg-5 border bg-light">
-                    Password: <input type="password" placeholder="Password" @bind="@Password" />
-                </div>
-                 
+    <div class="col py-3 px-lg-5 border bg-light">
+        Username: <input type="text" placeholder="Username" @bind="@Username" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Password: <input type="password" placeholder="Password" @bind="@Password" />
+    </div>
 
-                                                <div class="col py-3 px-lg-5 border bg-light">
-                                                    <button class="btn btn-primary" @onclick="LoginAccount">LogIn</button>
-                                                    <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
-                                                </div>}
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick="LoginAccount">LogIn</button>
+        <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
+    </div>}
 
 @code
     { private string _username;
@@ -89,12 +89,12 @@ else
                 {
 
                     //Added By Eric Start
-                    await localStorage.SetItem<AccountInfo>(results.username, results);
-                    AccountInfo result2 = await localStorage.GetItem<AccountInfo>(results.username);
+                 //   localStorage.SetAccountInfo(results);
+                   // AccountInfo result2 = localStorage.GetAccountInfo();
                     //Added By Eric End
 
 
-                    NavManager.NavigateTo($"/appointment/appointmentmainselection/{result2.accountId}/{result2.username}");
+                    NavManager.NavigateTo($"/appointment/appointmentmainselection");
 
                 }
 
@@ -177,6 +177,6 @@ else
     }
     */
 
-} 
+}
 
 
