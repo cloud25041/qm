@@ -1,5 +1,5 @@
 ﻿
-@page "/appointment/appointmentphysicalbooking/{accountId}/{serviceId}"
+@page "/appointment/appointmentphysicalbooking"
 @inject IModalService modal
 @inject NavigationManager NavManager
 @inject HttpClient HttpClient
@@ -8,6 +8,7 @@
 @using Newtonsoft.Json;
 @using Microsoft.AspNetCore.Components.Routing
 @using System.ComponentModel.DataAnnotations;
+
 
 <h3>Physical Appointment Booking</h3>
 
@@ -18,6 +19,26 @@
 else
 {
     <p class=" alert-danger"><strong>@errorMessage</strong></p>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Appointment Type: <SfDropDownList TItem="AppointmentType" TValue="int?" @bind-Value="@TypeVal" DataSource="@AppointmentTypeList" Placeholder="Select a Time">
+            <DropDownListFieldSettings Text="Type" Value="TypeId"></DropDownListFieldSettings>
+            <DropDownListEvents TItem="AppointmentType" TValue="int?" ValueChange="TypeSelectedHandler"></DropDownListEvents>
+        </SfDropDownList>
+    </div>
+    if (AppointmentTypeList != null)
+    {
+
+    }
+
+    if (_agencyPickClickFlag)
+    {
+        <div class="col py-3 px-lg-5 border bg-light">
+            Agency Name: <SfDropDownList TItem="Agency" TValue="int?" @bind-Value="@AgencyVal" DataSource="@AgencyList" Placeholder="Select a Time">
+                <DropDownListFieldSettings Text="AgencyName" Value="AgencyId"></DropDownListFieldSettings>
+                <DropDownListEvents TItem="Agency" TValue="int?" ValueChange="AgencySelectedHandler"></DropDownListEvents>
+            </SfDropDownList>
+        </div>
+    }
 
     if (_detailPickClickFlag)
     {
@@ -31,11 +52,11 @@ else
     {
         <p>DropDownList value is:<strong>@SelectedDate.Value.Date</strong></p>
         <div class="col py-3 px-lg-5 border bg-light">
-            Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@DropVal" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
+            Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@SlotVal" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
                 <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
             </SfDropDownList>
         </div>
-        <p>DropDownList value is:<strong>@DropVal</strong></p>
+        <p>DropDownList value is:<strong>@SlotVal</strong></p>
 
     }
     if (_display == true)
@@ -54,22 +75,32 @@ else
 {
     protected override async void OnInitialized()
     {
-        var response = await HttpClient.GetAsync("https://localhost:44355/api/userqueue/getagencyappointmentinformation");
-        if (response != null)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-            var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
-            availableSlotList = resultList;
-            _detailPickClickFlag = true;
-            this.StateHasChanged();
-        }
+        AppointmentTypeList = new List<AppointmentType>();
+        AppointmentTypeList.Add(new AppointmentType() { Type = "Physical", TypeId = 1 });
+        AppointmentTypeList.Add(new AppointmentType() { Type = "Virtual", TypeId = 2 });
+
+
+        //var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/userqueue/getagencyappointmentinformation", agencyId);
+        ////var response = await HttpClient.GetAsync("https://localhost:44355/api/userqueue/getagencyappointmentinformation");
+        //if (response != null)
+        //{
+        //    string content = await response.Content.ReadAsStringAsync();
+        //    var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
+        //    availableSlotList = resultList;
+        //    _detailPickClickFlag = true;
+        //    this.StateHasChanged();
+
+        //}
     }
 
     #region Fields
 
+    private bool _agencyPickClickFlag = false;
     private bool _loading;
     private bool _detailPickClickFlag = false;
-    public int? DropVal;
+    public int? SlotVal;
+    public int? TypeVal;
+    public int? AgencyVal;
 
     public DateTime? test1;
     public string test2;
@@ -94,6 +125,8 @@ else
     public string queueNo { get; set; }
     [Parameter]
     public string serviceId { get; set; }
+    [Parameter]
+    public string agencyId { get; set; }
 
     // set min & max dates
     public DateTime MaxDate { get; set; } = DateTime.Now.AddDays(31).Date;
@@ -102,17 +135,23 @@ else
     public DateTime? SelectedDate { get; set; } = null;
     public int SelectedSlot { get; set; }
 
-    public class AvailableSlots
+    public class AppointmentType
     {
-        public DateTime Date { get; set; }
+        public string Type { get; set; }
 
-        public string Time { get; set; }
-
-        public int SlotId { get; set; }
+        public int TypeId { get; set; }
     }
 
+    public class Agency
+    {
+        public string AgencyName { get; set; }
+        public int AgencyId { get; set; }
+
+    }
     public IList<AvailableSlots> availableSlotList { get; set; }
     public IList<AvailableSlots> selectedDateSlotList { get; set; }
+    public IList<AppointmentType> AppointmentTypeList { get; set; }
+    public IList<Agency> AgencyList { get; set; }
 
 
     #endregion
@@ -135,11 +174,53 @@ else
         }
     }
 
+    private async void TypeSelectedHandler()
+    {
+        var response = await HttpClient.GetAsync("https://localhost:44351/api/userqueue/getagencylist");
+        if (response != null)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            var resultList = JsonConvert.DeserializeObject<IList<Agency>>(content);
+            AgencyList = resultList;
+            _agencyPickClickFlag = true;
+            this.StateHasChanged();
+
+        }
+        if (_detailPickClickFlag == true)
+        {
+            AgencySelectedHandler();
+            DateSelectedHandler();
+            this.StateHasChanged();
+        }
+    }
+
+    private async void AgencySelectedHandler()
+    {
+        UserAgencyInput userAgencyInput = new UserAgencyInput();
+        userAgencyInput.AgencyId = AgencyVal;
+        userAgencyInput.AppointmentTypeId = TypeVal;
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/userqueue/getagencyappointmentinformation", userAgencyInput);
+        if (response != null)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
+            availableSlotList = resultList;
+            _detailPickClickFlag = true;
+            this.StateHasChanged();
+        }
+        if (_detailPickClickFlag == true)
+        {
+            AgencySelectedHandler();
+            DateSelectedHandler();
+            this.StateHasChanged();
+        }
+    }
+
     private void NavigateBook()
     {
-        if (SelectedDate == null || DropVal == null)
+        if (SelectedDate == null || SlotVal == null || TypeVal == null || AgencyVal == null)
         {
-            errorMessage = "Please Select a Valid Appointent Date & Time from the dropdown selection.";
+            errorMessage = "Please Select a Valid Option from the dropdown selection.";
             this.StateHasChanged();
         }
         else
@@ -149,7 +230,7 @@ else
             test1 = SelectedDate;
             foreach (var availableSlot in availableSlotList)
             {
-                if (availableSlot.SlotId == DropVal && availableSlot.Date == SelectedDate)
+                if (availableSlot.SlotId == SlotVal && availableSlot.Date == SelectedDate)
                 {
                     test2 = availableSlot.Time;
                     this.StateHasChanged();
@@ -159,8 +240,9 @@ else
             appointmentDate = SelectedDate.Value.Date.ToString("dd MMM yyyy");
             appointmentTime = test2;
             queueNo = "Q100";
+            NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}");
         }
-        NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}");
+
     }
 
     private void NavigateCancel()
