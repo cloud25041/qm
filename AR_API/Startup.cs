@@ -47,7 +47,7 @@ namespace AR_API
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
