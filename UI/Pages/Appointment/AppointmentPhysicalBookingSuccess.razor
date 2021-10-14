@@ -2,6 +2,9 @@
 @page "/appointment/appointmentphysicalbookingsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}"
 @inject HttpClient HttpClient
 @inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Routing
+@using UI.Models;
+@inject LocalStorage.ILocalStorageService localStorage;
 
 <h3>Booked a physical appointment successfully!</h3>
 
@@ -13,7 +16,7 @@ else
 {
 
     <div class="col py-3 px-lg-5 border bg-light">
-        Appointment Date: @appointmentDate
+        Appointment Date: @appointmentDate 
     </div>
 
     <div class="col py-3 px-lg-5 border bg-light">
@@ -31,6 +34,10 @@ else
 
 @code
 {
+    protected override async void OnInitialized()
+    {
+        AccountInfo result2 = localStorage.GetAccountInfo();
+    }
     #region Fields
 
     #endregion
