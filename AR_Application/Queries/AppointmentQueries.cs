@@ -35,7 +35,7 @@ namespace AR_Application.Queries
             }
         }
 
-        public async Task <AppointmentViewModel> GetAppointmentByAppointmentId(int appointmentId)
+        public async Task <AppointmentViewModel> GetAppointmentByAppointmentId(Guid appointmentId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
