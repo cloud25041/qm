@@ -1,5 +1,5 @@
 ﻿
-@page "/appointment/appointmentviewallappointment/{accountId}"
+@page "/appointment/appointmentviewallappointment"
 @inject IModalService modal
 @inject HttpClient HttpClient
 @inject NavigationManager NavManager
@@ -156,10 +156,26 @@ else
     }
 
     private async Task EditAppointment()
-{
-string apptid = "7";
-NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-}
+    {
+        int apptid = 7;
+        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
+
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
+
+                if (results != null)
+                {
+                    NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+                }
+            }
+
+        }
+    }
 
 
     private async Task GetAppointment()

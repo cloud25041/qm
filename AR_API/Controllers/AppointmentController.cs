@@ -32,7 +32,7 @@ namespace AR_API.Controllers
 
         [Route("api/account/getallappointmentsbyaccountid")]
         [HttpGet]
-        public async Task<List<AppointmentViewModel>> GetAllAccountsByAccountId(Guid accountId)
+        public async Task<List<AppointmentViewModel>> GetAllAppointmentsByAccountId(Guid accountId)
         {
             List<AppointmentViewModel> listOfAppointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
             return listOfAppointment;
@@ -105,5 +105,14 @@ namespace AR_API.Controllers
             return AgencyList;
         }
 
+
+        [Route("api/account/GetAppointmentByAppointmentId")]
+        [HttpPost]
+        public async Task<AppointmentViewModel> GetAppointmentByAppointmentId(Guid appointmentId)
+        {
+            AppointmentViewModel Appointment = new AppointmentViewModel();
+            Appointment = await _appointmentQueries.GetAppointmentByAppointmentId(appointmentId);
+            return Appointment;
+        }
     }
 }
