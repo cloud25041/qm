@@ -10,15 +10,16 @@ namespace Staff_Domain.AggregateModel.AccountAggregate
 
     public class Account: IAggregateRoot
     {
-        public Account(string username, string password, string name, string email, int mobile)
+        public Account(Guid accountId, string name, string username, string password, string email, int mobile, int agencyId)
         {
-           
+            AccountId = accountId;
+            Name = name;
             Username = username;
             Password = password;
-            Name = name;
             Email = email;
             Mobile = mobile;
-           
+            AgencyId = agencyId;
+            Schedule = new Schedule();
         }
 
         public Guid AccountId { get; private set; }
@@ -27,7 +28,7 @@ namespace Staff_Domain.AggregateModel.AccountAggregate
         public string Password { get; private set; }
         public string Email { get; private set; }
         public int Mobile { get; private set; }
-        public Agency Agency { get; private set; }
+        public int AgencyId { get; private set; }
         public Schedule Schedule { get; private set; }
 
 
