@@ -1,0 +1,20 @@
+﻿
+@page "/staffappointmentselectionsuccess"
+
+@inject NavigationManager NavManager
+
+<center>
+    <h4>You have successfully selected an appointment!</h4>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/staffmainselection");
+    }
+
+}

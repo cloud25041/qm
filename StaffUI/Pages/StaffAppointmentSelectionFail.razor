@@ -1,0 +1,21 @@
+﻿
+@page "/staffappointmentselectionfail"
+
+@inject NavigationManager NavManager
+
+<center>
+    <h4>Failed to select appointment.</h4>
+    <div>Appointment has already been selected. [reason for failure]</div>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/staffappointmentselection");
+    }
+
+}

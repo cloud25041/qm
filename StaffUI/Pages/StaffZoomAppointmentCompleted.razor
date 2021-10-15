@@ -1,0 +1,20 @@
+﻿
+@page "/staffzoomappointmentcompleted"
+
+@inject NavigationManager NavManager
+
+<center>
+    <h4>Appointment has been completed!</h4>
+    <button class="btn btn-primary mt-3" @onclick=@((OkButton))>Ok</button>
+</center>
+
+
+
+@code
+{
+    private void OkButton()
+    {
+        NavManager.NavigateTo("/staffjoinzoomappointment");
+    }
+
+}
