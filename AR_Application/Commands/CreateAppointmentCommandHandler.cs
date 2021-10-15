@@ -26,11 +26,13 @@ namespace AR_Application.Commands
             var account = await _accountRepository.GetAsync(request.username);
             if (account == null)
                 return false;
-
-            var appointment = new Appointment(request.username, request.agencyCode, request.startTime, request.endTime);
-            appointment.SetAccountIdOnceUsernameIsVerified(account.AccountID);
-            _appointmentRepository.Add(appointment);
-            return await _appointmentRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            else
+                return true;
+           // var appointment = new Appointment(request.username, request.agencyCode, request.startTime, request.endTime);
+            //appointment.SetAccountIdOnceUsernameIsVerified(account.AccountID);
+           // _appointmentRepository.Add(appointment);
+           // return await _appointmentRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
+       
     }
 }
