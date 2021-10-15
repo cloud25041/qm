@@ -8,14 +8,12 @@
 <h3>Book or View your Appointments</h3>
 
 <div class="col py-3 px-lg-5 border bg-light">
-    <button class="btn btn-primary" @onclick=@((PhysicalServiceButton))>Book Physical Appointment</button>
+    <button class="btn btn-primary" @onclick=@((BookAppointmentButton))>Book Appointment</button>
 </div>
 <div class="col py-3 px-lg-5 border bg-light">
     <button class="btn btn-primary" @onclick=@((ViewAppointmentButton))>View All Appointment</button>
 </div>
-<div class="col py-3 px-lg-5 border bg-light">
-    <button class="btn btn-primary" @onclick=@((VirtualServiceButton))>Book Virtual Appointment</button>
-</div>
+
 
 
 
@@ -48,13 +46,9 @@
         // accountId = accountId;
         NavManager.NavigateTo($"/appointment/appointmentviewallappointment");
     }
-    private void PhysicalServiceButton()
+    private void BookAppointmentButton()
     {
-        NavManager.NavigateTo($"/appointment/appointmentselectphysicalservice");
-    }
-    private void VirtualServiceButton()
-    {
-        NavManager.NavigateTo("/appointment/appointmentselectvirtualservice");
+        NavManager.NavigateTo($"/appointment/appointmentbooking");
     }
 
     protected override void OnParametersSet()

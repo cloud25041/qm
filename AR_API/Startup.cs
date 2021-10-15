@@ -1,5 +1,4 @@
 using AR_Application;
-using AR_Application.Behaviours;
 using AR_Application.Queries;
 using AR_Domain.AggregateModel.AccountAggregate;
 using AR_Domain.AggregateModel.AppointmentAggregate;
@@ -47,7 +46,7 @@ namespace AR_API
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
