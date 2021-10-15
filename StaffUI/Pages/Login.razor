@@ -62,13 +62,16 @@ else
             if (responseMessage.IsSuccessStatusCode)
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
+                var chasr = "";
                 var results = JsonConvert.DeserializeObject<LoginDetails>(content);
-
-                if (results.IsLoginSuccessful == true && results.IsUserAccount == false)
+                if(results != null)
                 {
-                    NavManager.NavigateTo($"/staffmainselection/{results.AccountId}/{results.Username}");
+                    NavManager.NavigateTo($"/staffmainselection");
                     _error = false;
                 }
+
+
+
                 else
                 {
                     _error = true;
