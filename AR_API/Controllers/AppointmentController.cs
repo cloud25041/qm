@@ -30,7 +30,7 @@ namespace AR_API.Controllers
             return listOfAppointment;
         }
 
-        [Route("api/UserQueue/GetAppointmentDetails")]
+        [Route("api/appointment/GetAppointmentDetails")]
         [HttpPost]
         public IList<AppointmentDetails> GetAppointmentDetails([FromBody] string accountId)
         {

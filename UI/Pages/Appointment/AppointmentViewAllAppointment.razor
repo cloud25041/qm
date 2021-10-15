@@ -7,6 +7,7 @@
 
 @using Newtonsoft.Json;
 @using UI.Models;
+@using Microsoft.AspNetCore.Components.Routing
 
 
 
@@ -33,9 +34,9 @@ else
             </tr>
         </thead>
         if (AppointmentList != null)
-        {   
+        {
             foreach (var appointment in AppointmentList)
-            {           
+            {
                 <div class="table-responsive">
                     <table class="table table-sm table-hover">
 
@@ -49,7 +50,7 @@ else
                                 <td style="display:none;"> 1 </td>
                                 <td style="display:none;">@appointment.AppointmentId</td>
                                 <td>
-                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
+                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.Agency))>Edit</button>
                                     <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
                                 </td>
                             </tr>
@@ -121,6 +122,8 @@ else
     public string userName { get; set; }
 
     public string appointmentName { get; set; }
+    [Parameter]
+    public string appointmentId { get; set; }
 
 
 
@@ -129,7 +132,6 @@ else
     public string service { get; set; }
     public string location { get; set; }
     public string appointmentTime { get; set; }
-    public string appointmentId { get; set; }
 
 
     string[] agencyArray = new string[5];
@@ -143,7 +145,7 @@ else
     {
         accountId = "1234";
         AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetails", accountId);
         if (responseMessage != null)
         {
             // var results = new List<AppointmentDetails>();
@@ -207,14 +209,14 @@ else
         modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
     }
 
-    private void EditButton(int AppointmentId)
+    private void EditButton(string AppointmentId)
     {
         // To add conditions, temporarily routing to appointment physical booking page
-
-        //NavManager.NavigateTo("/appointment/appointmenteditbooking");
+        appointmentId = AppointmentId;
+        NavManager.NavigateTo($"/appointment/appointmenteditappointment/{AppointmentId}");
         //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
 
-        modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
+        //modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
 
     }
 
