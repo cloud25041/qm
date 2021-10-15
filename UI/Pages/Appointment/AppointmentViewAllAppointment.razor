@@ -8,6 +8,7 @@
 @using Newtonsoft.Json;
 @using UI.Models;
 @using Microsoft.AspNetCore.Components.Routing
+@inject LocalStorage.ILocalStorageService localStorage;
 
 
 
@@ -26,10 +27,10 @@ else
         <thead class="table-primary">
             <tr>
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
-                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Service</th>
+                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Appointment Type</th>
                 <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
                 <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
-                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Time</th>
+                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Slot (Time)</th>
                 <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
             </tr>
         </thead>
@@ -44,6 +45,7 @@ else
                             <tr>
                                 <td>@appointment.Agency</td>
                                 <td> @appointment.Service</td>
+                                <td @bind-="@agencyId"></td>
                                 <td>@appointment.Location</td>
                                 <td>25 Aug 2021</td>
                                 <td>3.00pm</td>
@@ -125,9 +127,11 @@ else
     [Parameter]
     public string appointmentId { get; set; }
 
+    public string agencyId { get; set; }
 
+    public List<AppointmentDetails> AppointmentList { get; set; }
 
-    public IList<AppointmentDetails> AppointmentList { get; set; }
+    //public IList<AppointmentDetails> AppointmentList { get; set; }
     public string agency { get; set; }
     public string service { get; set; }
     public string location { get; set; }
@@ -143,9 +147,12 @@ else
 
     protected override async void OnInitialized()
     {
-        accountId = "1234";
+        //accountId = "1234";
+        //AppointmentList = new List<AppointmentDetails>();
+        // call local storage
+        AccountInfo accountInfo = localStorage.GetAccountInfo();
         AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetails", accountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetails", accountInfo.accountId);
         if (responseMessage != null)
         {
             // var results = new List<AppointmentDetails>();
@@ -153,7 +160,8 @@ else
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
-                var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+                //var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+                var results = JsonConvert.DeserializeObject<List<AppointmentDetails>>(content);
                 if (results.Count > 0)
                 {
                     gotAppointmentFlag = true;
