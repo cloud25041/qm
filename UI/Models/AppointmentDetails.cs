@@ -7,15 +7,15 @@ namespace UI.Models
 {
     public class AppointmentDetails
     {
-        public Guid TransactionId { get; set; }
-
-        public string AppointmentName { get; set; }
-
-        public DateTime AppointmentTime { get; set; }
-        public string Agency { get; set; }
-        public string Service { get; set; }
-        public string Location { get; set; }
         public Guid AppointmentId { get; set; }
+        //public Guid AccountId { get; init; }
+        public int AppointmentType { get; set; }
+        public int AppointmentState { get; set; }
+        public DateTime AppointmentDate { get; set; }
+        public int AppointmentSlotId { get; set; }
+        public Guid UserAccountId { get; set; }
+        public Guid StaffAccountID { get; set; }
+        public Guid AgencyId { get; set; }
 
     }
 }
