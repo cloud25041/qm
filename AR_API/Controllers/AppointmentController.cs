@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using AR_Application.Commands;
 using AR_Application.Queries;
+using AR_Application.Model;
 using AR_API.Models;
 
 namespace AR_API.Controllers
@@ -101,11 +102,20 @@ namespace AR_API.Controllers
             return await _mediator.Send(new CreateAppointmentCommand(username, agencyCode, startTime, endTime));
         }
 
+        //[Route("api/appointment/getagencyconcurrentuser")]
+        //[HttpPost]
+        //public async Task<int> GetAgencyConcurrentUser(int? AgencyId)
+        //{
+        //    return await _appointmentQueries.GetAgencyConcurrentUserByAgencyId(AgencyId);
+        //}
+
         [Route("api/userqueue/getagencyappointmentinformation")]
         [HttpPost]
-        public IList<AvailableSlots> GetAvailableSlotsByAgencyId(UserAgencyInput userAgencyInput)
+        public IList<AvailableSlots> GetAvailableSlotsByAgencyIdAndAppointmentType(UserAgencyInput userAgencyInput)
         {
-            if(userAgencyInput.AgencyId == 1 && userAgencyInput.AppointmentTypeId == 1)
+            //List<AppointmentViewModel> listOfAppointment = await _appointmentQueries.GetAllAppointmentsByAgencyIdAndAppointmentType(userAgencyInput.AgencyId, userAgencyInput.AppointmentTypeId);
+            //return listOfAppointment;
+            if (userAgencyInput.AgencyId == 1 && userAgencyInput.AppointmentTypeId == 1)
             {
                 IList<AvailableSlots> availableSlots = new List<AvailableSlots>();
                 // hard code
@@ -147,19 +157,37 @@ namespace AR_API.Controllers
                 
         }
 
-        [Route("api/userqueue/getagencylist")]
-        [HttpGet]
-        public IList<Agency> GetAllAgency()
+        [Route("api/appointment/getavailableappointment")]
+        [HttpPost]
+        public async Task<List<AvailableSlots>> GetAvailableAppointment(UserAgencyInput userAgencyInput)
         {
-            IList<Agency> AgencyList = new List<Agency>();
-            // hard code
-            AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
-            AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
-            AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
-            AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
-            
-            return AgencyList;
+            List<AvailableSlotsViewModel> resultList = await _appointmentQueries.GetAvailableAppointment(userAgencyInput.AgencyId, userAgencyInput.AppointmentTypeId, userAgencyInput.ConcurrentUser, userAgencyInput.SelectedDate);
+            List<AvailableSlots> availableSlotsList = new List<AvailableSlots>();
+            foreach (var result in resultList)
+            {
+                var date = result.Date;
+                var time = result.Time;
+                var slotId = result.SlotId;
+                availableSlotsList.Add(new AvailableSlots() { Date = date, SlotId = slotId, Time = time });
+            }
+            return availableSlotsList;
         }
+
+        //// This one needs to be in Staff API
+        //[Route("api/appointment/getagencyinfolist")]
+        //[HttpGet]
+        //public async Task<List<AgencyViewModel>> GetAgencyInfo()
+        //{
+
+        //    List<AgencyViewModel> AgencyList = await _appointmentQueries.GetAgencyInfo();
+        //    // hard code
+        //    //AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
+            
+        //    return AgencyList;
+        //}
 
 
         [Route("api/account/GetAppointmentByAppointmentId")]
