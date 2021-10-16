@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Staff_Domain.AggregateModel.AppointmentAggregate;
 using Staff_Domain.AggregateModel.AccountAggregate;
+using Staff_Domain.AggregateModel.AgencyAggregate;
 
 namespace Staff_API
 {
@@ -46,9 +47,11 @@ namespace Staff_API
             services.AddMediatR(typeof(ApplicationLayerMediatREntryPoint).Assembly);
             services.AddScoped<AccountQueries>(x => new AccountQueries(Configuration["ConnectionString"]));
             services.AddScoped<AppointmentQueries>(x => new AppointmentQueries(Configuration["ConnectionString"]));
+            services.AddScoped<AgencyQueries>(x => new AgencyQueries(Configuration["ConnectionString"]));
 
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAgencyRepository, AgencyRepository>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 

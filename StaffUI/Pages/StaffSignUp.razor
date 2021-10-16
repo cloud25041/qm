@@ -3,6 +3,7 @@
 @inject HttpClient HttpClient
 @inject NavigationManager NavManager
 @inject IModalService modal
+@using Newtonsoft.Json; 
 @using StaffUI.Models;
 
 <h3>Staff Signup</h3>
@@ -23,7 +24,7 @@ else
         Username: <input type="text" @bind="@Username" />
     </div>
     <div class="col py-3 px-lg-5 border bg-light">
-        Password: <input type="text" @bind="@Password" />
+        Password: <input type="password" @bind="@Password" />
     </div>
     <div class="col py-3 px-lg-5 border bg-light">
         Mobile number: <input type="text" @bind="@MobileNo" />
@@ -34,9 +35,7 @@ else
     <div class="col py-3 px-lg-5 border bg-light">
         Staff Sign Up Code: <input type="text" @bind="@StaffKey" />
     </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Kiosk Account: <input type="checkbox" @onclick="@IsKioskChecked" />
-    </div>
+    
     <button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
     <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
 }
@@ -52,7 +51,7 @@ else
     private string _email;
     private string _staffkey;
     private bool _loading;
-    private bool _isKiosk = false;
+
     #endregion
 
 
@@ -111,19 +110,7 @@ else
         NavManager.NavigateTo("/account");
     }
 
-    private async Task IsKioskChecked()
-    {
-        if (_isKiosk == false)
-        {
-            _isKiosk = true;
-        }
 
-        else
-        {
-            _isKiosk = false;
-        }
-
-    }
     private async Task RegisterAccount()
     {
         SignUpAccountDetails accountDetails = new SignUpAccountDetails();
@@ -132,11 +119,10 @@ else
         accountDetails.LastName = LastName;
         accountDetails.Username = Username;
         accountDetails.Password = Password;
-        accountDetails.MobileNo = MobileNo;
+        accountDetails.MobileNo = Convert.ToInt32(MobileNo);
         accountDetails.Email = Email;
         accountDetails.StaffKey = StaffKey;
-        accountDetails.isKiosk = _isKiosk;
-        accountDetails.isUser = false;
+
 
 
         _loading = true;
@@ -144,30 +130,61 @@ else
 
         // validation part
 
-        if (StaffKey != "")
+        //    if (StaffKey != "")
+        //  {
+        //var checkingResponseMessage = await HttpClient.PostAsJsonAsync("");
+        //}
+
+        //else
+        //{
+
+        //}
+
+        //check staff pin 
+
+        try
         {
-            //var checkingResponseMessage = await HttpClient.PostAsJsonAsync("");
-        }
-
-        else
-        {
-
-        }
-
-
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/staffaccountcreate", accountDetails);
-        if (responseMessage != null)
-        {
-            if (responseMessage.IsSuccessStatusCode)
+            var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails);
+            if (checkStaffPinResponseMessage != null)
             {
+                if (checkStaffPinResponseMessage.IsSuccessStatusCode)
+                {
+                    string staffAgencyPincontent = await checkStaffPinResponseMessage.Content.ReadAsStringAsync();
 
+                }
+
+                else
+                {
+                }
             }
             else
             {
-                string reason = responseMessage.ReasonPhrase;
-
             }
+
+
         }
+
+        catch(Exception ex)
+        {
+
+        }
+
+
+
+
+        //var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/staffaccountcreate", accountDetails);
+        //  if (responseMessage != null)
+        //{
+        //  if (responseMessage.IsSuccessStatusCode)
+        // {
+
+        //}
+        //else
+        //{
+        //  string reason = responseMessage.ReasonPhrase;
+
+        //}
+        //}
         _loading = false;
         this.StateHasChanged();
     }

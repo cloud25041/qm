@@ -62,7 +62,7 @@ else
             if (responseMessage.IsSuccessStatusCode)
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
-                var chasr = "";
+               // var chasr = "";
                 var results = JsonConvert.DeserializeObject<LoginDetails>(content);
                 if(results != null)
                 {

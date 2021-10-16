@@ -16,11 +16,13 @@ namespace Staff_API.Controllers
     {
         private readonly IMediator _mediator;
         private AccountQueries _accountQueries;
+        private AgencyQueries _agencyQueries;
 
-        public AccountController(IMediator mediator, AccountQueries accountQueries)
+        public AccountController(IMediator mediator, AccountQueries accountQueries, AgencyQueries agencyQueries)
         {
             _mediator = mediator;
             _accountQueries = accountQueries;
+            _agencyQueries = agencyQueries;
         }
 
         #region All Account
@@ -62,6 +64,9 @@ namespace Staff_API.Controllers
         #endregion
 
         #region Create Account
+
+       
+
         [Route("api/account/checkUsernameAndEmailAvail")]
         [HttpPost]
         public async Task<ValidationDetails> checkUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)

@@ -12,11 +12,11 @@ namespace StaffUI.Models
         public string LastName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string MobileNo { get; set; }
+        public int MobileNo { get; set; }
         public string Email { get; set; }
-        public string? StaffKey { get; set; }
-        public bool isUser { get; set; }
+        public string StaffKey { get; set; }
+       
 
-        public bool? isKiosk { get; set; }
+      
     }
 }
