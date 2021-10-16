@@ -64,5 +64,38 @@ namespace AR_Application.Queries
             }
             return listOfAppointment;
         }
+
+        // All agency related is to get from Staff API
+        public async Task<List<AgencyViewModel>> GetAgencyInfo()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Agency");
+                return MapQueryResultToListOfAgency(result);
+            }
+        }
+
+        private List<AgencyViewModel> MapQueryResultToListOfAgency(dynamic result)
+        {
+            List<AgencyViewModel> listOfAgency = new();
+            foreach (var item in result)
+            {
+                AgencyViewModel agency = new AgencyViewModel()
+                {
+                    AgencyName = (string)item.AgencyName,
+                    AgencyId= (int)item.AgencyId,
+                    PhysicalConcurrentUser = (int)item.PhysicalConcurrentUser,
+                    VirtualConcurrentUser = (int)item.VirtualConcurrentUser,
+                    AgencyPin = (int)item.AgencyPin,
+                    Location = (string)item.Location,
+                    
+                };
+
+                listOfAgency.Add(agency);
+            }
+            return listOfAgency;
+        }
+        
     }
 }
