@@ -67,10 +67,10 @@ namespace Staff_Application.Queries
                 AccountViewModel account = new AccountViewModel()
                 {
                     username = (string)item.Username,
-                    accountId = (Guid)item.AccountID,
-                    name = (string)item.AccountDetails_Name,
-                    email = (string)item.AccountDetails_Email,
-                    mobileNo = (int)item.AccountDetails_Mobile
+                    accountId = (Guid)item.AccountId,
+                    name = (string)item.Name,
+                    email = (string)item.Email,
+                    mobileNo = (int)item.Mobile
                 };
 
                 listOfAccount.Add(account);

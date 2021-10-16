@@ -1,7 +1,12 @@
 ﻿
-@page "/appointment/appointmenteditappointment/{apptid}"
+@page "/appointment/appointmenteditappointment/{appointmentId}"
 @inject IModalService modal
 @inject NavigationManager NavManager
+@inject HttpClient HttpClient
+@inject NavigationManager UriHelper
+@using Microsoft.AspNetCore.Components.Routing
+@using UI.Models;
+@using Newtonsoft.Json;
 
 @if (_loading)
 {
@@ -27,12 +32,51 @@ else
 @code
 {
 
-
-
     [Parameter]
-    public string apptid { get; set; }
+    public string appointmentId { get; set; }
+
+
+
+    protected override async void OnInitialized()
+    {
+
+        Guid apptid = Guid.Parse(appointmentId);
+
+
+        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
+            var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
+
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<AppointmentDetails>(content);
+
+                if (results != null)
+                {
+                    // logic for displaying of date and time 
+                }
+            }
+        }
+
+
+        //AppointmentTypeList = new List<AppointmentType>();
+        //AppointmentTypeList.Add(new AppointmentType() { Type = "Physical", TypeId = 1 });
+        //AppointmentTypeList.Add(new AppointmentType() { Type = "Virtual", TypeId = 2 });
+
+
+    }
 
     private bool _loading;
+    private bool _detailPickClickFlag = false;
+
+
+
+    public DateTime? SelectedDate { get; set; } = null;
+    public int SelectedSlot { get; set; }
+    public IList<AvailableSlots> availableSlotList { get; set; }
+    public IList<AvailableSlots> selectedDateSlotList { get; set; }
 
     // set minimum & maximum time
     public DateTime MaxTime { get; set; } = new DateTime(2021, 02, 20, 18, 00, 00);
@@ -49,6 +93,23 @@ else
         public string Id { get; set; }
     }
 
+    private void DateSelectedHandler()
+    {
+        selectedDateSlotList = new List<AvailableSlots>();
+        if (SelectedDate.HasValue == true)
+        {
+            foreach (var availableSlot in availableSlotList)
+            {
+                if (availableSlot.Date == SelectedDate)
+                {
+                    selectedDateSlotList.Add(availableSlot);
+                }
+            }
+            this.StateHasChanged();
+        }
+    }
+
+
     private void NavigateEdit()
     {
         NavManager.NavigateTo("/appointment/appointmenteditappointmentsuccess");
@@ -56,8 +117,9 @@ else
 
     private void NavigateCancel()
     {
-        NavManager.NavigateTo("/appointment/appointmentmainselection/{accountid}");
+        NavManager.NavigateTo("/appointment/appointmentmainselection/{accountId}/{username}/{password}");
     }
+
 
 
 }
