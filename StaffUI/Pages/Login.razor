@@ -56,7 +56,7 @@ else
         accountDetails.Username = _username;
         accountDetails.Password = _password;
 
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/logintest", accountDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/GetAccountByUsernameAndVerifyPassword", accountDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)

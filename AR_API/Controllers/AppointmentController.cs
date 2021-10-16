@@ -30,34 +30,57 @@ namespace AR_API.Controllers
             return listOfAppointment;
         }
 
+        //[Route("api/appointment/GetAppointmentDetails")]
+        //[HttpPost]
+        //public IList<AppointmentDetails> GetAppointmentDetails([FromBody] string accountId)
+        //{
+        //    IList<AppointmentDetails> appointmentDetails = new List<AppointmentDetails>();
+
+        //    // dummy data
+        //    string[] agencyArray = new string[3] { "HDB", "CPF", "MSF" };
+        //    string[] serviceArray = new string[3] { "Service1", "Service2", "Service3" };
+        //    string[] locationArray = new string[3] { "Location1", "Lovation2", "Location3" };
+        //    // DateTime[] appointmentTimeArray = new DateTime[3] {"20210928 02:50:30.840252","20210928 02:50:30.840252", "20210928 02:50:30.840252" }
+
+
+
+
+        //    for (int i = 0; i < 3; i++)
+        //    {
+        //        AppointmentDetails apptDetails = new AppointmentDetails();
+        //        apptDetails.AppointmentName = i.ToString();
+        //        apptDetails.AppointmentTime = DateTime.Now;
+        //        apptDetails.Location = locationArray[i];
+        //        apptDetails.Service = serviceArray[i];
+        //        apptDetails.Agency = agencyArray[i];
+
+        //        appointmentDetails.Add(apptDetails);
+        //    }
+        //    // appointmentDetails.AppointmentName = "12345678";
+        //    return appointmentDetails;
+
+        //}
+
         [Route("api/appointment/GetAppointmentDetails")]
         [HttpPost]
-        public IList<AppointmentDetails> GetAppointmentDetails([FromBody] string accountId)
+        public async Task<List<AppointmentViewModel>> GetAppointmentDetails([FromBody] Guid accountId)
         {
-            IList<AppointmentDetails> appointmentDetails = new List<AppointmentDetails>();
+            List<AppointmentViewModel> Appointment = new List<AppointmentViewModel>();
 
-            // dummy data
-            string[] agencyArray = new string[3] { "HDB", "CPF", "MSF" };
-            string[] serviceArray = new string[3] { "Service1", "Service2", "Service3" };
-            string[] locationArray = new string[3] { "Location1", "Lovation2", "Location3" };
-            // DateTime[] appointmentTimeArray = new DateTime[3] {"20210928 02:50:30.840252","20210928 02:50:30.840252", "20210928 02:50:30.840252" }
-
-
-
-
-            for (int i = 0; i < 3; i++)
+            // IList<AppointmentDetails> appointmentDetails = new List<AppointmentDetails>();
+            try
             {
-                AppointmentDetails apptDetails = new AppointmentDetails();
-                apptDetails.AppointmentName = i.ToString();
-                apptDetails.AppointmentTime = DateTime.Now;
-                apptDetails.Location = locationArray[i];
-                apptDetails.Service = serviceArray[i];
-                apptDetails.Agency = agencyArray[i];
-
-                appointmentDetails.Add(apptDetails);
+                
+                Appointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
+                return Appointment;
             }
-            // appointmentDetails.AppointmentName = "12345678";
-            return appointmentDetails;
+
+            catch(Exception ex)
+            {
+                string e = ex.ToString();
+                return Appointment;
+            }
+            
 
         }
 

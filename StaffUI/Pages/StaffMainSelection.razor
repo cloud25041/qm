@@ -1,22 +1,37 @@
-﻿
-@page "/staffmainselection/{accountId}/{username}"
+﻿// StaffMainSelection.razor page
+
+@page "/staffmainselection"
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Routing
 
-<h3>Please Select Counter Type</h3>
+<h3>Please Select Action:</h3>
+
 
 <div class="col py-3 px-lg-5 border bg-light">
-    <button class="btn btn-primary" @onclick=@((PhysicalCounterButton))>Physical Counter</button>
+    <button class="btn btn-primary" @onclick=@((SelectAppointmentButton))>Select Appointments For Today</button>
 </div>
 <div class="col py-3 px-lg-5 border bg-light">
-    <button class="btn btn-primary" @onclick=@((VirtualCounterButton))>Virtual Counter</button>
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    <button class="btn btn-primary" @onclick=@((UploadZoomLinkButton))>Upload Today's Zoom Link</button>
+    <button class="btn btn-primary" @onclick=@((JoinZoomAppointmentButton))>Join Zoom Appointment</button>
 </div>
 <div class="col py-3">
     <button class="btn btn-dark" @onclick=@((SignOutButton))>Sign Out</button>
 </div>
+<div class="col py-3">
+    <button class="btn btn-dark" @onclick=@((ClosePhysicalAppointmentButton))>Close Physical Appointment</button>
+</div>
+
+@*<div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick=@((PhysicalCounterButton))>Physical Counter</button>
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick=@((VirtualCounterButton))>Virtual Counter</button>
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick=@((UploadZoomLinkButton))>Upload Today's Zoom Link</button>
+    </div>
+    <div class="col py-3">
+        <button class="btn btn-dark" @onclick=@((SignOutButton))>Sign Out</button>
+    </div>*@
 
 
 
@@ -32,22 +47,38 @@
     #endregion
     //private bool _loading;
 
+    private void SelectAppointmentButton()
+    {
+        NavManager.NavigateTo("/staff/staffappointmentselection/{accountId}/{username}");
+    }
+
+    private void JoinZoomAppointmentButton()
+    {
+        NavManager.NavigateTo("/staff/staffjoinzoomappointment/{accountId}/{username}");
+    }
+
+
     private void PhysicalCounterButton()
     {
-        NavManager.NavigateTo("/staffphysicalcounterselection");
+        NavManager.NavigateTo("/staff/staffphysicalcounterselection");
     }
     private void VirtualCounterButton()
     {
-        NavManager.NavigateTo("/staffvcselection");
+        NavManager.NavigateTo("/staff/staffvcselection");
     }
     private void UploadZoomLinkButton()
     {
-        NavManager.NavigateTo("/staffvccreation");
+        NavManager.NavigateTo("/staff/staffvccreation");
     }
 
     private void SignOutButton()
     {
         NavManager.NavigateTo("/login");
+    }
+
+    private void ClosePhysicalAppointmentButton()
+    {
+        //NavManager.NavigateTo("/staff/closephysicalappointment");
     }
 
 

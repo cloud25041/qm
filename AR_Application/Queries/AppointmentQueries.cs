@@ -30,7 +30,7 @@ namespace AR_Application.Queries
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AccountId\" = @accountId ", new { accountId });
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"UserAccountId\" = @accountId ", new { accountId });
                 return MapQueryResultToListOfAppointment(result);
             }
         }
@@ -53,11 +53,23 @@ namespace AR_Application.Queries
                 AppointmentViewModel appointment = new AppointmentViewModel()
                 {
                     AppointmentId = (Guid)item.AppointmentId,
-                    AccountId = (Guid)item.AccountId,
+                    //AccountId = (Guid)item.AccountId,
                     AppointmentState = (int)item.AppointmentState,
-                    AgencyCode = (string)item.AgencyCode,
-                    StartTime = (DateTime)item.StartTime,
-                    EndTime = (DateTime)item.EndTime
+                    AppointmentType = (int)item.AppointmentType,
+                    AppointmentDate= (DateTime)item.AppointmentDate,
+                    AppointmentSlotId = (int)item.AppointmentSlotId,
+                    UserAccountId = (Guid)item.UserAccountId,
+                    StaffAccountID = (Guid)item.StaffAccountID,
+                    AgencyId = (Guid)item.AgencyId, 
+                    // should be according to type in database, AgencyId should be int (to change after database is updated) 
+
+
+
+
+
+                    //AgencyCode = (string)item.AgencyCode,
+                    //StartTime = (DateTime)item.StartTime,
+                    //EndTime = (DateTime)item.EndTime
                 };
 
                 listOfAppointment.Add(appointment);

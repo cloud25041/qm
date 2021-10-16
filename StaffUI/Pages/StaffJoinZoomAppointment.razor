@@ -1,0 +1,68 @@
+﻿
+@page "/staffjoinzoomappointment"
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Routing
+
+<h3>Please Join A Zoom Appointment</h3>
+
+
+<thead class="table-primary">
+    <tr>
+        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Name of Customer</th>
+        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Timeslot</th>
+        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Zoom Link</th>
+        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+    </tr>
+</thead>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover">
+
+        <tbody>
+            <tr>
+                @*<td>@nameArray[j]</td>
+                    <td>@dateArray[j]</td>
+                    <td>@timeslotArray[j]</td>*@
+                @*<td style="display:none;"> 1 </td>*@
+                <td>John</td>
+                <td>11am</td>
+                <td>www.zoomlink.com</td>
+                <td>
+                    <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
+                    <button class="btn btn-primary" @onclick=@((NoShowButton))>No Show</button>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@code
+{
+    #region Field
+    [Parameter]
+    public string accountId { get; set; }
+    [Parameter]
+    public string userName { get; set; }
+
+    #endregion
+    //private bool _loading;
+
+    private void AppointmentCompletedButton()
+    {
+        //NavManager.NavigateTo("/staff/staffappointmentselection");
+    }
+
+    private void NoShowButton()
+    {
+        //NavManager.NavigateTo("/staff/staffjoinzoomappointment");
+    }
+
+
+
+
+}

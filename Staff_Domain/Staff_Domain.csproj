@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AggregateModel\AppointmentAggregate\**" />
-    <Content Remove="AggregateModel\AppointmentAggregate\**" />
-    <EmbeddedResource Remove="AggregateModel\AppointmentAggregate\**" />
-    <None Remove="AggregateModel\AppointmentAggregate\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
   </ItemGroup>

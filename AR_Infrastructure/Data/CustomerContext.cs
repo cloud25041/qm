@@ -32,6 +32,7 @@ namespace AR_Infrastructure.Data
             modelBuilder.Entity<Account>().OwnsOne(x => x.AccountDetails);
 
             modelBuilder.Entity<Appointment>().ToTable("Appointment");
+            modelBuilder.Entity<Appointment>().HasKey(a => a.AppointmentId);
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken)

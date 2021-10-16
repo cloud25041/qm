@@ -9,6 +9,7 @@ using Staff_Domain.SeedWork;
 using System.Threading;
 using MediatR;
 using Staff_Infrastructure;
+using Staff_Domain.AggregateModel.AgencyAggregate;
 
 namespace Staff_Infrastructure.Data
 {
@@ -30,11 +31,13 @@ namespace Staff_Infrastructure.Data
         {
             modelBuilder.Entity<Account>().ToTable("Account");
             modelBuilder.Entity<Account>().HasKey(x => x.Username);
-            modelBuilder.Entity<Account>().OwnsOne(x => x.Agency);
+          
             modelBuilder.Entity<Account>().OwnsOne(x => x.Schedule);
 
 
             modelBuilder.Entity<Appointment>().ToTable("Appointment");
+            modelBuilder.Entity<Agency>().ToTable("Agency");
+            
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken)
