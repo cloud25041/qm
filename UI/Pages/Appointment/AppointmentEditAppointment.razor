@@ -40,22 +40,22 @@ else
     protected override async void OnInitialized()
     {
 
+        Guid apptid = Guid.Parse(appointmentId);
 
-        var apptid = appointmentId;
 
         //Change to GUID and look into creating New GUID once and store that ID for reuse in test
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", appointmentId);
+            var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
 
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
-                var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
+                var results = JsonConvert.DeserializeObject<AppointmentDetails>(content);
 
                 if (results != null)
                 {
-                    // logic here
+                    // logic for displaying of date and time 
                 }
             }
         }
@@ -71,7 +71,7 @@ else
     private bool _loading;
     private bool _detailPickClickFlag = false;
 
-    
+
 
     public DateTime? SelectedDate { get; set; } = null;
     public int SelectedSlot { get; set; }
