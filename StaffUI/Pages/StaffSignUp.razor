@@ -152,13 +152,40 @@ else
                     string staffAgencyPincontent = await checkStaffPinResponseMessage.Content.ReadAsStringAsync();
                     var staffPinResults = JsonConvert.DeserializeObject<AgencyPinClass>(staffAgencyPincontent);
 
-                    if(staffPinResults.AgencyIsValidFlag == true || staffPinResults.AgencyId != 0)
+                    if (staffPinResults.AgencyIsValidFlag == true || staffPinResults.AgencyId != 0)
                     {
                         accountDetails.AgencyId = staffPinResults.AgencyId;
-                    }
-                    else
-                    { 
+                        // check for email and username
+                        var checkEmailAndUsernameResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/checkUsernameAndEmailAvail", accountDetails);
+                        if (checkEmailAndUsernameResponseMessage != null)
+                        {
+                            if (checkEmailAndUsernameResponseMessage.IsSuccessStatusCode)
+                            {
+                                string checkEmailAndUsernameContent = await checkEmailAndUsernameResponseMessage.Content.ReadAsStringAsync();
+                                var word = "";
+                                var checkEmailAndUsernameResult = JsonConvert.DeserializeObject<ValidationDetails>(checkEmailAndUsernameContent);
+                                if(checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken != true)
+                                {
+                                    // save if good
+                                }
+                                else if(checkEmailAndUsernameResult.IsUsernameTaken == true && checkEmailAndUsernameResult.IsEmailTaken != true)
+                                {
+                                    // modal.Show<FailedValidation>("Username taken");
+                                }
+                                else if(checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken == true)
+                                {
+                                    // modal.Show<FailedValidation>("Email taken");
+                                }
+                                else
+                                {
+                                    // modal.Show<FailedValidation>("Username and Email taken");
+                                }
+                            }
+                            else
+                            {
 
+                            }
+                        }
                     }
                 }
 

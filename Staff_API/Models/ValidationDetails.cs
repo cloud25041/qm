@@ -8,7 +8,7 @@ namespace Staff_API.Models
     public class ValidationDetails
     {
        public bool IsUsernameTaken { get; set; }
-        public bool? IsStaffKeyCorrect { get; set; }
+       
         public bool IsEmailTaken { get; set; }
 
 

@@ -69,7 +69,7 @@ namespace Staff_API.Controllers
 
         [Route("api/account/checkUsernameAndEmailAvail")]
         [HttpPost]
-        public async Task<ValidationDetails> checkUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
+        public async Task<ValidationDetails> CheckUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
         {
             List<AccountViewModel> listOfAccounts = await _accountQueries.GetAllAccounts();
             ValidationDetails validationDetails = new ValidationDetails();

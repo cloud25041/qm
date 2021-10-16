@@ -7,7 +7,10 @@ namespace StaffUI.Models
 {
     public class ValidationDetails
     {
-       public bool usernameTaken { get; set; }
+        public bool IsUsernameTaken { get; set; }
+
+
+        public bool IsEmailTaken { get; set; }
 
 
     }
