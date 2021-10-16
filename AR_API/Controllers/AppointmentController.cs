@@ -78,11 +78,20 @@ namespace AR_API.Controllers
             return await _mediator.Send(new CreateAppointmentCommand(username, agencyCode, startTime, endTime));
         }
 
+        //[Route("api/appointment/getagencyconcurrentuser")]
+        //[HttpPost]
+        //public async Task<int> GetAgencyConcurrentUser(int? AgencyId)
+        //{
+        //    return await _appointmentQueries.GetAgencyConcurrentUserByAgencyId(AgencyId);
+        //}
+
         [Route("api/userqueue/getagencyappointmentinformation")]
         [HttpPost]
-        public IList<AvailableSlots> GetAvailableSlotsByAgencyId(UserAgencyInput userAgencyInput)
+        public IList<AvailableSlots> GetAvailableSlotsByAgencyIdAndAppointmentType(UserAgencyInput userAgencyInput)
         {
-            if(userAgencyInput.AgencyId == 1 && userAgencyInput.AppointmentTypeId == 1)
+            //List<AppointmentViewModel> listOfAppointment = await _appointmentQueries.GetAllAppointmentsByAgencyIdAndAppointmentType(userAgencyInput.AgencyId, userAgencyInput.AppointmentTypeId);
+            //return listOfAppointment;
+            if (userAgencyInput.AgencyId == 1 && userAgencyInput.AppointmentTypeId == 1)
             {
                 IList<AvailableSlots> availableSlots = new List<AvailableSlots>();
                 // hard code
@@ -124,16 +133,26 @@ namespace AR_API.Controllers
                 
         }
 
-        [Route("api/userqueue/getagencylist")]
-        [HttpGet]
-        public IList<Agency> GetAllAgency()
+        [Route("api/appointment/getavailableappointment")]
+        [HttpPost]
+        public async Task<List<AvailableSlots>> GetAvailableAppointment(UserAgencyInput userAgencyInput)
         {
-            IList<Agency> AgencyList = new List<Agency>();
+            List<AvailableSlots> availableSlots = await _appointmentQueries.GetAvailableAppointment(userAgencyInput);
+            return availableSlots;
+        }
+
+        // This one needs to be in Staff API
+        [Route("api/appointment/getagencyinfolist")]
+        [HttpGet]
+        public async Task<List<AgencyViewModel>> GetAgencyInfo()
+        {
+
+            List<AgencyViewModel> AgencyList = await _appointmentQueries.GetAgencyInfo();
             // hard code
-            AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
-            AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
-            AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
-            AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
+            //AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
+            //AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
+            //AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
+            //AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
             
             return AgencyList;
         }
