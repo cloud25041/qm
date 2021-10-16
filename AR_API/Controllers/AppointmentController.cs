@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using AR_Application.Commands;
 using AR_Application.Queries;
+using AR_Application.Model;
 using AR_API.Models;
 
 namespace AR_API.Controllers
@@ -160,25 +161,33 @@ namespace AR_API.Controllers
         [HttpPost]
         public async Task<List<AvailableSlots>> GetAvailableAppointment(UserAgencyInput userAgencyInput)
         {
-            List<AvailableSlots> availableSlots = await _appointmentQueries.GetAvailableAppointment(userAgencyInput);
-            return availableSlots;
+            List<AvailableSlotsViewModel> resultList = await _appointmentQueries.GetAvailableAppointment(userAgencyInput.AgencyId, userAgencyInput.AppointmentTypeId, userAgencyInput.ConcurrentUser, userAgencyInput.SelectedDate);
+            List<AvailableSlots> availableSlotsList = new List<AvailableSlots>();
+            foreach (var result in resultList)
+            {
+                var date = result.Date;
+                var time = result.Time;
+                var slotId = result.SlotId;
+                availableSlotsList.Add(new AvailableSlots() { Date = date, SlotId = slotId, Time = time });
+            }
+            return availableSlotsList;
         }
 
-        // This one needs to be in Staff API
-        [Route("api/appointment/getagencyinfolist")]
-        [HttpGet]
-        public async Task<List<AgencyViewModel>> GetAgencyInfo()
-        {
+        //// This one needs to be in Staff API
+        //[Route("api/appointment/getagencyinfolist")]
+        //[HttpGet]
+        //public async Task<List<AgencyViewModel>> GetAgencyInfo()
+        //{
 
-            List<AgencyViewModel> AgencyList = await _appointmentQueries.GetAgencyInfo();
-            // hard code
-            //AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
-            //AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
-            //AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
-            //AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
+        //    List<AgencyViewModel> AgencyList = await _appointmentQueries.GetAgencyInfo();
+        //    // hard code
+        //    //AgencyList.Add(new Agency() { AgencyName = "HDB", AgencyId = 1 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "MOM", AgencyId = 2 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "SPF", AgencyId = 3 });
+        //    //AgencyList.Add(new Agency() { AgencyName = "SAF", AgencyId = 4 });
             
-            return AgencyList;
-        }
+        //    return AgencyList;
+        //}
 
 
         [Route("api/account/GetAppointmentByAppointmentId")]
