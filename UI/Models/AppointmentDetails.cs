@@ -15,7 +15,7 @@ namespace UI.Models
         public string Agency { get; set; }
         public string Service { get; set; }
         public string Location { get; set; }
-        public int AppointmentId { get; set; }
+        public Guid AppointmentId { get; set; }
 
     }
 }

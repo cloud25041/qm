@@ -52,7 +52,7 @@ else
                                 <td style="display:none;"> 1 </td>
                                 <td style="display:none;">@appointment.AppointmentId</td>
                                 <td>
-                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.Agency))>Edit</button>
+                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
                                     <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
                                 </td>
                             </tr>
@@ -217,20 +217,14 @@ else
         modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
     }
 
-    private void EditButton(string AppointmentId)
+    private void EditButton(Guid AppointmentId)
     {
         // To add conditions, temporarily routing to appointment physical booking page
-        appointmentId = AppointmentId;
         NavManager.NavigateTo($"/appointment/appointmenteditappointment/{AppointmentId}");
-        //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
 
-        //modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
-
-    }
-
-    private async Task EditAppointment()
-    {
-        int apptid = 7;
+        // Guid apptid = Guid.Parse("3ec2bc2d-88df-4850-a4f2-5f3571d180ad");
+        // NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+        /*
         //Change to GUID and look into creating New GUID once and store that ID for reuse in test
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
 
@@ -246,9 +240,43 @@ else
                     NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
                 }
             }
-
         }
+        */
+        //appointmentId = AppointmentId;
+        //NavManager.NavigateTo($"/appointment/appointmenteditappointment/{appointmentId}");
+        //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
+
+        //modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
+
     }
+
+    private async Task EditAppointment()
+    {
+        //Guid apptid = Guid.Parse("3ec2bc2d-88df-4850-a4f2-5f3571d180ad");
+        var apptid = "3ec2bc2d-88df-4850-a4f2-5f3571d180ad";
+
+        NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
+        /* var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
+
+         if (responseMessage != null)
+         {
+             if (responseMessage.IsSuccessStatusCode)
+             {
+                 string content = await responseMessage.Content.ReadAsStringAsync();
+                 var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
+
+                 if (results != null)
+                 {
+                     NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
+                 }
+             }
+         }
+        */
+    }
+
+
+
 
 
     //private async Task GetAppointment()
