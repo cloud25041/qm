@@ -43,16 +43,14 @@ else
 
                         <tbody>
                             <tr>
-                                <td>@appointment.Agency</td>
-                                <td> @appointment.Service</td>
-                                <td @bind-="@agencyId"></td>
-                                <td>@appointment.Location</td>
-                                <td>25 Aug 2021</td>
-                                <td>3.00pm</td>
+                                <td>@appointment.AgencyId</td>
+                                <td>@appointment.AppointmentSlotId</td>
+                                <td>@appointment.AppointmentState</td>
+                                <td>@appointment.AppointmentDate</td>
                                 <td style="display:none;"> 1 </td>
                                 <td style="display:none;">@appointment.AppointmentId</td>
                                 <td>
-                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.Agency))>Edit</button>
+                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
                                     <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
                                 </td>
                             </tr>
@@ -125,9 +123,12 @@ else
 
     public string appointmentName { get; set; }
     [Parameter]
-    public string appointmentId { get; set; }
+    public Guid appointmentId { get; set; }
 
-    public string agencyId { get; set; }
+    public int agencyId { get; set; }
+
+    public DateTime appointmentDate { get; set; }
+    public int appointmentSlotId { get; set; }
 
     public List<AppointmentDetails> AppointmentList { get; set; }
 
@@ -169,20 +170,20 @@ else
                 foreach (var eachResults in results)
                 {
 
-                    appointmentName = appointmentName + eachResults.AppointmentName;
+                    appointmentName = appointmentName + eachResults.AppointmentId;
                     //AppointmentList.Add(eachResults);
                     i = AppointmentList.Count;
                     // appointmentName = appointmentName + eachResults.AppointmentName;
-                    agency = eachResults.Agency;
-                    agencyArray[i] = agency + i.ToString();
+                    //agency = eachResults.AppointmentId;
+                    //agencyArray[i] = agency + i.ToString();
 
-                    service = eachResults.Service;
-                    serviceArray[i] = service + i.ToString();
+                    //service = eachResults.Service;
+                    //serviceArray[i] = service + i.ToString();
 
-                    location = eachResults.Location;
+                    appointmentDate = eachResults.AppointmentDate;
                     locationArray[i] = location + i.ToString();
 
-                    appointmentTime = appointmentTime + eachResults.AppointmentTime;
+                    appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
                     //appointmentId = appointmentId + eachResults.AppointmentId;
                     AppointmentList.Add(eachResults);
                     this.StateHasChanged();
@@ -197,7 +198,11 @@ else
             }
         }
 
+        var responseMessage2 = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        if (responseMessage != null)
+            {
 
+            }
     }
 
 
@@ -217,7 +222,7 @@ else
         modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
     }
 
-    private void EditButton(string AppointmentId)
+    private void EditButton(Guid AppointmentId)
     {
         // To add conditions, temporarily routing to appointment physical booking page
         appointmentId = AppointmentId;
