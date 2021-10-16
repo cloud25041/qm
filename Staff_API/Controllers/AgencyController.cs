@@ -25,14 +25,26 @@ namespace Staff_API.Controllers
 
         [Route("api/agency/CheckAgencyPinValid")]
         [HttpPost]
-        public async Task<AgencyPinClass> CheckAgencyPinValid(SignUpAccountDetails signUpAccountDetails)
+        public async Task<AgencyPinClass> CheckAgencyPinValid([FromBody]string agencyPin)
         {
-            AgencyPinClass agencyPin = new AgencyPinClass();
-            var isValidFlag = await _agencyQueries.CheckAgencyPinValid(signUpAccountDetails.StaffKey);
-            agencyPin.AgencyIsValidFlag = isValidFlag;
-            agencyPin.AgencyPinNumber = 12345;
+            AgencyPinClass agencyPinClass = new AgencyPinClass();
+            var isValidFlag = await _agencyQueries.CheckAgencyPinValid(agencyPin);
+            agencyPinClass.AgencyIsValidFlag = isValidFlag;
+            if(agencyPinClass.AgencyIsValidFlag == true)
+            {
+                var agencyList = await _agencyQueries.GetAgencybyAgencyPin(agencyPin);
+                foreach(var agency in agencyList)
+                {
+                    agencyPinClass.AgencyId = agency.AgencyId;
+                }
+            }
+            else
+            {
+                agencyPinClass.AgencyId = 0;
+            }
+           // agencyPinClass.AgencyPinNumber = 12345;
 
-            return agencyPin;
+            return agencyPinClass;
         }
 
 

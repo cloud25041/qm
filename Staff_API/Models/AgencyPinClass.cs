@@ -7,7 +7,7 @@ namespace Staff_API.Models
 {
     public class AgencyPinClass
     {
-        public int AgencyPinNumber { get; set; }
+        public int AgencyId { get; set; }
         public bool AgencyIsValidFlag { get; set; }
     }
 }

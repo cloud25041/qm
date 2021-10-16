@@ -7,6 +7,7 @@ namespace StaffUI.Models
 {
     public class AgencyPinClass
     {
-        public int AgencyPinNumber { get; set; }
+        public bool AgencyIsValidFlag { get; set; }
+        public int AgencyId { get; set; }
     }
 }

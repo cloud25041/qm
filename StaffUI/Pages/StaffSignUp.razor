@@ -144,13 +144,22 @@ else
 
         try
         {
-            var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails);
+            var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails.StaffKey);
             if (checkStaffPinResponseMessage != null)
             {
                 if (checkStaffPinResponseMessage.IsSuccessStatusCode)
                 {
                     string staffAgencyPincontent = await checkStaffPinResponseMessage.Content.ReadAsStringAsync();
+                    var staffPinResults = JsonConvert.DeserializeObject<AgencyPinClass>(staffAgencyPincontent);
 
+                    if(staffPinResults.AgencyIsValidFlag == true || staffPinResults.AgencyId != 0)
+                    {
+                        accountDetails.AgencyId = staffPinResults.AgencyId;
+                    }
+                    else
+                    { 
+
+                    }
                 }
 
                 else

@@ -59,7 +59,8 @@ namespace Staff_Application.Queries
             {
                 connection.Open();
                 var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Agency\"WHERE \"AgencyPin\" = @agencyPin ", new { agencyPin });
-                if (result != null)
+                //var count = result.Count();
+                if ((result.Count() != 0) && result != null)
                 {
                     return true;
                 }

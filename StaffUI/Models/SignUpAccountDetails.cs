@@ -15,6 +15,8 @@ namespace StaffUI.Models
         public int MobileNo { get; set; }
         public string Email { get; set; }
         public string StaffKey { get; set; }
+
+        public int AgencyId { get; set; }
        
 
       
