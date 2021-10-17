@@ -1,5 +1,5 @@
 using Staff_Application;
-using Staff_Application.Behaviours;
+//using Staff_Application.Behaviours;
 using Staff_Application.Queries;
 using Staff_Infrastructure.Data;
 using Staff_Infrastructure.Repository;
@@ -53,7 +53,7 @@ namespace Staff_API
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAgencyRepository, AgencyRepository>();
 
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+           // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>

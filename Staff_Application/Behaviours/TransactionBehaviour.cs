@@ -7,6 +7,7 @@ using MediatR;
 
 namespace Staff_Application.Behaviours
 {
+    /*
     public class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -14,4 +15,5 @@ namespace Staff_Application.Behaviours
             throw new NotImplementedException();
         }
     }
+    */
 }

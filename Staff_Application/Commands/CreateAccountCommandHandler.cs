@@ -19,7 +19,8 @@ namespace Staff_Application.Commands
 
         public async Task<bool> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
-           var account = new Account(request.AccountId, request.Name, request.Username, request.Password, request.Email, request.Mobile, request.AgencyId);
+            
+           var account = new Account(request.AccountId,request.Name,request.Username, request.Password,request.Email, request.Mobile, request.AgencyId );
            _accountRepository.Add(account);
             return await _accountRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }

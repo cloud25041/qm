@@ -17,6 +17,8 @@ namespace StaffUI.Models
         public string StaffKey { get; set; }
 
         public int AgencyId { get; set; }
+
+        public Guid AccountId { get; set; }
        
 
       

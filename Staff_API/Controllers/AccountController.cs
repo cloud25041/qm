@@ -93,6 +93,17 @@ namespace Staff_API.Controllers
             return validationDetails;
         }
 
+
+
+        [Route("api/account/createaccount")]
+        [HttpPost]
+        public async Task<bool> CreateAccount(SignUpAccountDetails signUpAccountDetails)
+        {
+            string name = signUpAccountDetails.FirstName + " " + signUpAccountDetails.LastName;
+            //var accountId = Guid.NewGuid();
+            return await _mediator.Send(new CreateAccountCommand(signUpAccountDetails.Username, signUpAccountDetails.AccountId, name, signUpAccountDetails.Password,signUpAccountDetails.Email, signUpAccountDetails.MobileNo, signUpAccountDetails.AgencyId));
+        }
+
         #endregion
 
     }
