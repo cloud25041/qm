@@ -88,7 +88,7 @@ else
                 if (results != null)
                 {
 
-                    localStorage.SetAccountInfo(results);
+                    await localStorage.SetItem<AccountInfo>("account_info", results);
 
 
                     NavManager.NavigateTo($"/appointment/appointmentmainselection");

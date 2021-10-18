@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UI.Models;
+﻿using System.Threading.Tasks;
 
 namespace UI.LocalStorage
 {
-    interface ILocalStorageService
+    public interface ILocalStorageService
     {
-        AccountInfo GetAccountInfo();
-        void SetAccountInfo(AccountInfo accountInfo);
+        Task<T> GetItem<T>(string key);
+        Task RemoveItem(string key);
+        Task SetItem<T>(string key, T value);
     }
 }
