@@ -25,56 +25,15 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
 
         }
 
-        public Appointment(Guid appointmentId, int agencyId, int appointmentType, int appointmentState, Date appointmentDate, int appointmentSlotId, Guid userAccountId, Guid? staffAccountID)
+        public Appointment(int agencyId, int appointmentType, int appointmentState, Date appointmentDate, int appointmentSlotId, Guid userAccountId)
         {
-            AppointmentId = appointmentId;
+            AppointmentId = Guid.NewGuid();
             AgencyId = agencyId;
             AppointmentType = appointmentType;
             AppointmentState = appointmentState;
             AppointmentDate = appointmentDate;
             AppointmentSlotId = appointmentSlotId;
             UserAccountId = userAccountId;
-            StaffAccountID = staffAccountID;
-        }
-
-        /*  public Appointment(string username, string agencyCode, DateTime startTime, DateTime endTime)
-          {
-              AppointmentId = new Guid();
-              AppointmentState = 0;
-              AgencyCode = agencyCode;
-              StartTime = startTime;
-              EndTime = endTime;
-
-          }
-        */
-
-        /* public Appointment(Guid appointmentId, Guid accountId, int appointmentState, string agencyCode, DateTime startTime, DateTime endTime)
-         {
-             AppointmentId = appointmentId;
-             AccountId = accountId;
-             AppointmentState = appointmentState;
-             AgencyCode = agencyCode;
-             StartTime = startTime;
-             EndTime = endTime;
-         }
-        */
-
-        /* public Appointment SetAccountIdOnceUsernameIsVerified(Guid accountId)
-         {
-             AccountId = accountId;
-             return this;
-         }
-        */
-
-        public Appointment CreateAppointment()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Appointment ChangeState(int state)
-        {
-            // update state
-            throw new NotImplementedException();
         }
     }
 }

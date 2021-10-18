@@ -17,7 +17,7 @@ namespace AR_Infrastructure.Data
             else
             {
                 Account account = new Account("testUsername", "testPassword", "testName", "testEmail", 12345678);
-                Appointment appointment = new Appointment(Guid.NewGuid(), 1, 1, 1,DateTime.Now,1,Guid.NewGuid(), Guid.NewGuid());
+                Appointment appointment = new Appointment(0, 0, 0, DateTime.Now, 0, Guid.Empty);
                 customerContext.Add(account);
                 customerContext.Add(appointment);
                 customerContext.SaveChanges();

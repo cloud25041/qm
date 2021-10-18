@@ -8,6 +8,7 @@ using Staff_Application.Queries;
 using Staff_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Staff_Application.IntegrationEvents.Events;
 
 namespace Staff_API.Controllers
 {
@@ -23,66 +24,17 @@ namespace Staff_API.Controllers
             _appointmentQueries = appointmentQueries;
         }
 
-        //#region All Account
-        //[Route("api/account/getallaccount")]
-        //[HttpGet]
-        //public async Task<List<AccountViewModel>> GetAllAccounts()
-        //{
-        //    List<AccountViewModel> listOfAccounts = await _accountQueries.GetAllAccounts();
-        //    return listOfAccounts;
-        //}
-        //#endregion
-
-        //#region Login
-        //[Route("api/account/GetAccountByUsernameAndVerifyPassword")]
-        //[HttpPost]
-        //[ProducesResponseType(typeof(AccountViewModel), (int)HttpStatusCode.OK)]
-        //public async Task<ActionResult<AccountViewModel>> GetAccountByUsernameAndVerifyPassword(LoginDetails loginDetails)
-        //{
-        //    AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(loginDetails.Username, loginDetails.Password);
-        //    if (account != null)
-        //    {
-        //        return Ok(account);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-        //#endregion
-
-        //#region Create Account
-        //[Route("api/account/checkUsernameAndEmailAvail")]
-        //[HttpPost]
-        //public async Task<ValidationDetails> checkUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
-        //{
-        //    List<AccountViewModel> listOfAccounts = await _accountQueries.GetAllAccounts();
-        //    ValidationDetails validationDetails = new ValidationDetails();
-        //    validationDetails.IsEmailTaken = false;
-        //    validationDetails.IsUsernameTaken = false;
-
-        //    foreach (var account in listOfAccounts)
-        //    {
-        //        if (account.email == signUpAccountDetails.Email)
-        //        {
-        //            validationDetails.IsEmailTaken = true;
-
-        //        }
-
-        //        if (account.username == signUpAccountDetails.Username)
-        //        {
-        //            validationDetails.IsUsernameTaken = true;
-        //        }
-        //    }
-
-        //    return validationDetails;
-        //}
-
-        //#endregion
+        [Route("api/appointment/AssignStaffIdToAppointment")]
+        [HttpPost]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<bool>> AssignStaffIdToAppointment([FromBody] Guid staffId)
+        {
+            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId });
+        }
 
         #region Agency
         //This one needs to be in Staff API
-       [Route("api/appointment/getagencyinfolist")]
+        [Route("api/appointment/getagencyinfolist")]
         [HttpGet]
         public async Task<List<AgencyViewModel>> GetAgencyInfo()
         {

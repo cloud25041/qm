@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AR_Domain\AR_Domain.csproj" />
+    <ProjectReference Include="..\EventBus\EventBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>
