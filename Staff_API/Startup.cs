@@ -1,24 +1,21 @@
-using Staff_Application;
-//using Staff_Application.Behaviours;
-using Staff_Application.Queries;
-using Staff_Infrastructure.Data;
-using Staff_Infrastructure.Repository;
+using EventBus.MQTT;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Staff_Domain.AggregateModel.AppointmentAggregate;
+using Staff_Application;
+using Staff_Application.Behaviours;
+using Staff_Application.IntegrationEvents;
+using Staff_Application.Queries;
 using Staff_Domain.AggregateModel.AccountAggregate;
 using Staff_Domain.AggregateModel.AgencyAggregate;
+using Staff_Domain.AggregateModel.AppointmentAggregate;
+using Staff_Infrastructure.Data;
+using Staff_Infrastructure.Repository;
 
 namespace Staff_API
 {
@@ -53,7 +50,11 @@ namespace Staff_API
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAgencyRepository, AgencyRepository>();
 
-           // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+
+            services.AddSingleton<IMQClient>(x => new MQClient() { MqttBroker = "127.0.0.1", MqttPort = 1883, MqttUserId = "eric_staff", MqttPassword = "P@ssw0rd", UsingLocalBroker = true });
+            services.AddSingleton<IStaffIntegrationEventService, StaffIntegrationEventService>();
+            services.AddHostedService<StaffIntegrationEventServiceConsumer>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>

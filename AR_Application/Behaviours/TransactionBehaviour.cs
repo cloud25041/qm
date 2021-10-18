@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AR_Application.IntegrationEvents;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 
 namespace AR_Application.Behaviours
 {
-    /*
+
     public class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly ICustomerIntegrationEventService _customerIntegrationEventService;
+        public TransactionBehaviour(ICustomerIntegrationEventService customerIntegrationEventService)
         {
-            throw new NotImplementedException();
+            _customerIntegrationEventService = customerIntegrationEventService;
+        }
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            var response = await next();
+
+            await _customerIntegrationEventService.PublishEventsThroughEventBusAsync();
+            return response;
         }
     }
-    */
 }

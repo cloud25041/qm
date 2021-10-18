@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using AR_Application.Behaviours;
+using EventBus.MQTT;
+using AR_Application.IntegrationEvents;
 
 namespace AR_API
 {
@@ -46,7 +49,11 @@ namespace AR_API
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+
+            services.AddSingleton<IMQClient>(x => new MQClient() { MqttBroker = "127.0.0.1", MqttPort = 1883, MqttUserId = "eric_user", MqttPassword = "P@ssw0rd", UsingLocalBroker = true });
+            // Eric - ICustomerIntegrationEventService should be transient, using singleton for easier implementation.
+            services.AddSingleton<ICustomerIntegrationEventService, CustomerIntegrationEventService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
