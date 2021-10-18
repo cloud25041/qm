@@ -198,5 +198,18 @@ namespace AR_API.Controllers
             Appointment = await _appointmentQueries.GetAppointmentByAppointmentId(appointmentId);
             return Appointment;
         }
+
+        [Route("api/account/UpdateAppointment")]
+        [HttpPost]
+        public async Task<bool> UpdateAppointment([FromBody] AppointmentViewModel appointment)
+        {
+
+            return false;
+           // return await _mediator.Send(new CreateAppointmentCommand());
+
+            //Appointment = await _appointmentQueries.GetAppointmentByAppointmentId();
+            //return Appointment;
+        }
+
     }
 }
