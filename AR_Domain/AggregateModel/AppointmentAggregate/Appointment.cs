@@ -11,7 +11,7 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
     public class Appointment : Entity, IAggregateRoot
     {
         public Guid AppointmentId { get; private set; }
-        public Guid AgencyId { get; private set; }
+        public int AgencyId { get; private set; }
         public int AppointmentType { get; private set; }
         public int AppointmentState { get; private set; }
         public DateTime AppointmentDate { get; private set; }
@@ -25,7 +25,7 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
 
         }
 
-        public Appointment(Guid appointmentId, Guid agencyId, int appointmentType, int appointmentState, Date appointmentDate, int appointmentSlotId, Guid userAccountId, Guid? staffAccountID)
+        public Appointment(Guid appointmentId, int agencyId, int appointmentType, int appointmentState, Date appointmentDate, int appointmentSlotId, Guid userAccountId, Guid? staffAccountID)
         {
             AppointmentId = appointmentId;
             AgencyId = agencyId;
