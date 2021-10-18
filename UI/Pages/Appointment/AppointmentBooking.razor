@@ -185,7 +185,7 @@ else
         _detailPickClickFlag = true;
         if (_detailPickClickFlag == true)
         {
-            AgencySelectedHandler();
+            //AgencySelectedHandler();
             DateSelectedHandler();
             this.StateHasChanged();
         }
@@ -210,17 +210,23 @@ else
                 }
             }
         }
+        DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
         UserAgencyInput userAgencyInput = new UserAgencyInput();
         userAgencyInput.AgencyId = AgencyVal;
         userAgencyInput.AppointmentTypeId = TypeVal;
         userAgencyInput.SelectedDate = SelectedDate;
         userAgencyInput.ConcurrentUser = ConcurrentUser;
         selectedDateSlotList = new List<AvailableSlots>();
-        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/userqueue/getavailableappointment", userAgencyInput);
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/getavailableappointment", userAgencyInput);
         if (response != null)
         {
             var content = await response.Content.ReadAsStringAsync();
-            availableSlotList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
+            var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
+            foreach(var result in resultList)
+            {
+                result.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
+            }
+            availableSlotList = resultList;
         }
 
     }
