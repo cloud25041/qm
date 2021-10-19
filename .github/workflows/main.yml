@@ -58,4 +58,4 @@ jobs:
           file: ./AR_API/Dockerfile
           context: .
           push: true
-          tags: eost002/AR_API:latest
+          tags: eost002/ar_api:latest
