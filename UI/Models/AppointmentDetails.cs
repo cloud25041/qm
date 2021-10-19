@@ -15,7 +15,7 @@ namespace UI.Models
         public int AppointmentSlotId { get; set; }
         public Guid UserAccountId { get; set; }
         public Guid StaffAccountID { get; set; }
-        public Guid AgencyId { get; set; }
+        public int AgencyId { get; set; }
 
     }
 }

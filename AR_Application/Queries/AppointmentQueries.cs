@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
 using Dapper;
+using AR_Application.Model;
+
 
 namespace AR_Application.Queries
 {
@@ -45,6 +47,30 @@ namespace AR_Application.Queries
             }
         }
 
+        public async Task<List<AvailableSlotsViewModel>> GetAvailableAppointment(int? AgencyId, int? AppointmentTypeId, int? ConcurrentUser, DateTime? SelectedDate)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AgencyId\" = @AgencyId AND \"AppointmentType\" = @AppointmentTypeId AND \"AppointmentDate\" = @SelectedDate ", new { AgencyId ,AppointmentTypeId, ConcurrentUser, SelectedDate });
+                List<AppointmentViewModel> appointmentList = MapQueryResultToListOfAppointment(result);
+                List<AvailableSlotsViewModel> availableSlotList = new List<AvailableSlotsViewModel>();
+                int[] count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                foreach (var appointment in appointmentList)
+                {
+                    count[appointment.AppointmentSlotId]++;
+                }
+                for (int i=0; i <= 15; i++)
+                {
+                    if (count[i] < ConcurrentUser)
+                    {
+                        availableSlotList.Add(new AvailableSlotsViewModel() { Date = SelectedDate, SlotId = i + 1 });
+                    }
+                }
+                return availableSlotList;
+            }
+        }
+
         private List<AppointmentViewModel> MapQueryResultToListOfAppointment (dynamic result)
         {
             List<AppointmentViewModel> listOfAppointment = new();
@@ -60,7 +86,7 @@ namespace AR_Application.Queries
                     AppointmentSlotId = (int)item.AppointmentSlotId,
                     UserAccountId = (Guid)item.UserAccountId,
                     StaffAccountID = (Guid)item.StaffAccountID,
-                    AgencyId = (Guid)item.AgencyId, 
+                    AgencyId = (int)item.AgencyId, 
                     // should be according to type in database, AgencyId should be int (to change after database is updated) 
 
 
@@ -76,5 +102,8 @@ namespace AR_Application.Queries
             }
             return listOfAppointment;
         }
+
+        
+        
     }
 }

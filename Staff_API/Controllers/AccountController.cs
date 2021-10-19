@@ -16,11 +16,13 @@ namespace Staff_API.Controllers
     {
         private readonly IMediator _mediator;
         private AccountQueries _accountQueries;
+        private AgencyQueries _agencyQueries;
 
-        public AccountController(IMediator mediator, AccountQueries accountQueries)
+        public AccountController(IMediator mediator, AccountQueries accountQueries, AgencyQueries agencyQueries)
         {
             _mediator = mediator;
             _accountQueries = accountQueries;
+            _agencyQueries = agencyQueries;
         }
 
         #region All Account
@@ -39,22 +41,35 @@ namespace Staff_API.Controllers
         [ProducesResponseType(typeof(AccountViewModel), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<AccountViewModel>> GetAccountByUsernameAndVerifyPassword(LoginDetails loginDetails)
         {
-            AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(loginDetails.Username, loginDetails.Password);
-            if (account != null)
+            try
             {
-                return Ok(account);
+                AccountViewModel account = await _accountQueries.GetAccountByUsernameAndVerifyPassword(loginDetails.Username, loginDetails.Password);
+                if (account != null)
+                {
+                    return Ok(account);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+
+            catch(Exception ex)
             {
+                string e = ex.ToString();
                 return NotFound();
             }
+            
         }
         #endregion
 
         #region Create Account
+
+       
+
         [Route("api/account/checkUsernameAndEmailAvail")]
         [HttpPost]
-        public async Task<ValidationDetails> checkUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
+        public async Task<ValidationDetails> CheckUsernameAndEmailAvail(SignUpAccountDetails signUpAccountDetails)
         {
             List<AccountViewModel> listOfAccounts = await _accountQueries.GetAllAccounts();
             ValidationDetails validationDetails = new ValidationDetails();
@@ -76,6 +91,17 @@ namespace Staff_API.Controllers
             }
 
             return validationDetails;
+        }
+
+
+
+        [Route("api/account/createaccount")]
+        [HttpPost]
+        public async Task<bool> CreateAccount(SignUpAccountDetails signUpAccountDetails)
+        {
+            string name = signUpAccountDetails.FirstName + " " + signUpAccountDetails.LastName;
+            //var accountId = Guid.NewGuid();
+            return await _mediator.Send(new CreateAccountCommand(signUpAccountDetails.Username, signUpAccountDetails.AccountId, name, signUpAccountDetails.Password,signUpAccountDetails.Email, signUpAccountDetails.MobileNo, signUpAccountDetails.AgencyId));
         }
 
         #endregion

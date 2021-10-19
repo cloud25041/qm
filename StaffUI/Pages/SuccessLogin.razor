@@ -1,0 +1,39 @@
+﻿@page "/successlogin"
+@inject NavigationManager NavManager
+@inject NavigationManager UriHelper
+
+
+   
+
+   
+
+
+    <button class="btn-outline-primary" @onclick="RedirectToAccountPage" data-dismiss="modal">Next</button>
+
+    @code 
+{
+        [Parameter]
+        public string UserName { get; set; }
+
+        public bool ShowDialog
+        {
+            get;
+            set;
+        }
+
+        private async Task RedirectToAccountPage()
+        {
+
+            NavManager.NavigateTo("/account");
+
+
+        }
+
+        public void Close()
+        {
+            ShowDialog = false;
+            NavManager.NavigateTo("/account");
+            StateHasChanged();
+        }
+    }
+ 

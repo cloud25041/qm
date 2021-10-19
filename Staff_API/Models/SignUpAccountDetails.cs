@@ -14,9 +14,13 @@ namespace Staff_API.Models
         public string Password { get; set; }
         public int MobileNo { get; set; }
         public string Email { get; set; }
-        public string? StaffKey { get; set; }
-        public bool isUser { get; set; }
+        public string StaffKey { get; set; }
 
-        public bool? isKiosk { get; set; }
+        public int AgencyId { get; set; }
+
+        public Guid AccountId { get; set; }
+     
+
+      
     }
 }

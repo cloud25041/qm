@@ -8,7 +8,7 @@
 @using Newtonsoft.Json;
 @using Microsoft.AspNetCore.Components.Routing
 @using System.ComponentModel.DataAnnotations;
-
+@using UI.DateTimeSlotHelper;
 
 <h3>Physical Appointment Booking</h3>
 
@@ -25,10 +25,6 @@ else
             <DropDownListEvents TItem="AppointmentType" TValue="int?" ValueChange="TypeSelectedHandler"></DropDownListEvents>
         </SfDropDownList>
     </div>
-    if (AppointmentTypeList != null)
-    {
-
-    }
 
     if (_agencyPickClickFlag)
     {
@@ -101,6 +97,7 @@ else
     public int? SlotVal;
     public int? TypeVal;
     public int? AgencyVal;
+    public int? ConcurrentUser;
 
     public DateTime? test1;
     public string test2;
@@ -146,6 +143,10 @@ else
     {
         public string AgencyName { get; set; }
         public int AgencyId { get; set; }
+        public string AgencyPin { get; set; }
+        public string Location { get; set; }
+        public int PhysicalConcurrentUser { get; set; }
+        public int VirtualConcurrentUser { get; set; }
 
     }
     public IList<AvailableSlots> availableSlotList { get; set; }
@@ -157,30 +158,15 @@ else
     #endregion
 
     #region Private Method
-    //ChangedEventArgs<DateTime?> args
-    private void DateSelectedHandler()
-    {
-        selectedDateSlotList = new List<AvailableSlots>();
-        if (SelectedDate.HasValue == true)
-        {
-            foreach (var availableSlot in availableSlotList)
-            {
-                if (availableSlot.Date == SelectedDate)
-                {
-                    selectedDateSlotList.Add(availableSlot);
-                }
-            }
-            this.StateHasChanged();
-        }
-    }
 
     private async void TypeSelectedHandler()
     {
-        var response = await HttpClient.GetAsync("https://localhost:44351/api/userqueue/getagencylist");
+        // The URL string needs to point to Staff API Controller
+        var response = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
         if (response != null)
         {
             string content = await response.Content.ReadAsStringAsync();
-            var resultList = JsonConvert.DeserializeObject<IList<Agency>>(content);
+            var resultList = JsonConvert.DeserializeObject<List<Agency>>(content);
             AgencyList = resultList;
             _agencyPickClickFlag = true;
             this.StateHasChanged();
@@ -194,28 +180,56 @@ else
         }
     }
 
-    private async void AgencySelectedHandler()
+    private void AgencySelectedHandler()
     {
-        UserAgencyInput userAgencyInput = new UserAgencyInput();
-        userAgencyInput.AgencyId = AgencyVal;
-        userAgencyInput.AppointmentTypeId = TypeVal;
-        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/userqueue/getagencyappointmentinformation", userAgencyInput);
-        if (response != null)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-            var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
-            availableSlotList = resultList;
-            _detailPickClickFlag = true;
-            this.StateHasChanged();
-        }
+        _detailPickClickFlag = true;
         if (_detailPickClickFlag == true)
         {
-            AgencySelectedHandler();
+            //AgencySelectedHandler();
             DateSelectedHandler();
             this.StateHasChanged();
         }
+        this.StateHasChanged();
     }
 
+    private async void DateSelectedHandler()
+    {
+        foreach (var agency in AgencyList)
+        {
+            if (agency.AgencyId == AgencyVal)
+            {
+                if (TypeVal == 1)
+                {
+                    ConcurrentUser = agency.PhysicalConcurrentUser;
+                    break;
+                }
+                if (TypeVal == 2)
+                {
+                    ConcurrentUser = agency.VirtualConcurrentUser;
+                    break;
+                }
+            }
+        }
+        DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+        UserAgencyInput userAgencyInput = new UserAgencyInput();
+        userAgencyInput.AgencyId = AgencyVal;
+        userAgencyInput.AppointmentTypeId = TypeVal;
+        userAgencyInput.SelectedDate = SelectedDate;
+        userAgencyInput.ConcurrentUser = ConcurrentUser;
+        selectedDateSlotList = new List<AvailableSlots>();
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/getavailableappointment", userAgencyInput);
+        if (response != null)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
+            foreach(var result in resultList)
+            {
+                result.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
+            }
+            availableSlotList = resultList;
+        }
+
+    }
     private void NavigateBook()
     {
         if (SelectedDate == null || SlotVal == null || TypeVal == null || AgencyVal == null)

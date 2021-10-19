@@ -1,22 +1,36 @@
 ﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using UI.Models;
 
 namespace UI.LocalStorage
 {
     public class LocalStorageService : ILocalStorageService
     {
-        private string _serializedObject;
+        private IJSRuntime _jsRuntime;
 
-        public AccountInfo GetAccountInfo()
+        public LocalStorageService(IJSRuntime jsRuntime)
         {
-            return JsonConvert.DeserializeObject<AccountInfo>(_serializedObject);
+            _jsRuntime = jsRuntime;
         }
 
-        public void SetAccountInfo(AccountInfo accountInfo)
+        public async Task<T> GetItem<T>(string key)
         {
-            _serializedObject = JsonConvert.SerializeObject(accountInfo);
+            var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
+
+            if (json == null)
+                return default;
+
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        public async Task SetItem<T>(string key, T value)
+        {
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, JsonConvert.SerializeObject(value));
+        }
+
+        public async Task RemoveItem(string key)
+        {
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
     }
 }

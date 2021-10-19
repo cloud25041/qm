@@ -10,21 +10,24 @@ namespace Staff_Application.Commands
 {
     public class CreateAccountCommand : IRequest<bool>
     {
-        public CreateAccountCommand(Guid accountId, string name, string username, string password, string email, int mobile, int agencyId, Schedule schedule)
+       
+
+        
+        public CreateAccountCommand(string username, Guid accountId, string name, string password, string email, int mobile, int agencyId)
         {
             AccountId = accountId;
-            Name = name;
             Username = username;
+            Name = name;
             Password = password;
             Email = email;
             Mobile = mobile;
             AgencyId = agencyId;
-            Schedule = schedule;
+           Schedule = null;
         }
 
         public Guid AccountId { get; private set; }
-        public string Name { get; private set; }
         public string Username { get; private set; }
+        public string Name { get; private set; }
         public string Password { get; private set; }
         public string Email { get; private set; }
         public int Mobile { get; private set; }

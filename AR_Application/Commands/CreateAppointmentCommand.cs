@@ -7,9 +7,11 @@ using MediatR;
 namespace AR_Application.Commands
 {
     public record CreateAppointmentCommand(
-        string username,
-        string agencyCode,
-        DateTime startTime,
-        DateTime endTime) : IRequest<bool>;
+        int agencyId,
+        int appointmentType,
+        int appointmentState,
+        DateTime appointmentDate,
+        int appointmentSlotId,
+        Guid userAccountId) : IRequest<bool>;
 
 }

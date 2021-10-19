@@ -36,7 +36,7 @@ else
 {
     protected override async void OnInitialized()
     {
-        AccountInfo result2 = localStorage.GetAccountInfo();
+        AccountInfo result2 = await localStorage.GetItem<AccountInfo>("account_info");
     }
     #region Fields
 

@@ -10,7 +10,7 @@ namespace UI.Models
 
         public DateTime Date { get; set; }
 
-        public string Time { get; set; }
+        public string? Time { get; set; }
 
         public int SlotId { get; set; }
     }

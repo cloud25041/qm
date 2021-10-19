@@ -9,6 +9,8 @@ namespace AR_API.Models
     {      
         public string AgencyName { get; set; }
         public int AgencyId { get; set; }        
+        public int PhysicalConcurrentUser { get; set; }
+        public int VirtualConcurrentUser { get; set; }
 
     }
 }

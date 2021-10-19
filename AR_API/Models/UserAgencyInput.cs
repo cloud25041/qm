@@ -9,9 +9,10 @@ namespace AR_API.Models
     {
         public int? AgencyId { get; set; }
 
+        public int? ConcurrentUser { get; set; }
+
         public int? AppointmentTypeId { get; set; }
 
-
-
+        public DateTime? SelectedDate { get; set; }
     }
 }
