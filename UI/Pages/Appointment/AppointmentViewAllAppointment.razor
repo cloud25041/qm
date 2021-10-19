@@ -153,7 +153,7 @@ else
         // call local storage
         AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
         AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetails", accountInfo.accountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
         if (responseMessage != null)
         {
             // var results = new List<AppointmentDetails>();
@@ -198,11 +198,11 @@ else
             }
         }
 
-        var responseMessage2 = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-        if (responseMessage != null)
-        {
+        //var responseMessage2 = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        //if (responseMessage != null)
+        //{
 
-        }
+        //}
     }
 
 

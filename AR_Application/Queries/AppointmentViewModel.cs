@@ -15,7 +15,7 @@ namespace AR_Application.Queries
         public int AppointmentSlotId { get; init; }
         public Guid UserAccountId { get; init; }
         public Guid StaffAccountID { get; init; }
-        public Guid AgencyId { get; init; }
+        public int AgencyId { get; init; }
         //public DateTime StartTime { get; init; }
         //public DateTime EndTime { get; init; }
     }
