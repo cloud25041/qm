@@ -27,9 +27,9 @@ namespace Staff_API.Controllers
         [Route("api/appointment/AssignStaffIdToAppointment")]
         [HttpPost]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<bool>> AssignStaffIdToAppointment([FromBody] Guid staffId)
+        public async Task<ActionResult<bool>> AssignStaffIdToAppointment(Guid staffId, Guid appointmentId)
         {
-            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId });
+            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId , AppointmentId = appointmentId});
         }
 
         #region Agency
