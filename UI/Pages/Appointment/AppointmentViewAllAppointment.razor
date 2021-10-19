@@ -38,26 +38,35 @@ else
         {
             foreach (var appointment in AppointmentList)
             {
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
+                foreach (var agency in AgencyList)
+                {
+                    if (appointment.AgencyId == agency.AgencyId)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
 
-                        <tbody>
-                            <tr>
-                                <td>@appointment.AgencyId</td>
-                                <td>@appointment.AppointmentSlotId</td>
-                                <td>@appointment.AppointmentState</td>
-                                <td>@appointment.AppointmentDate</td>
-                                <td style="display:none;"> 1 </td>
-                                <td style="display:none;">@appointment.AppointmentId</td>
-                                <td>
-                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
-                                    <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
-                                </td>
-                            </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>@agency.AgencyName</td>
+                                        <td>@appointment.AppointmentSlotId</td>
+                                        <td>@appointment.AppointmentState</td>
+                                        
+                                        <td>@appointment.AppointmentDate</td>
+                                        <td style="display:none;"> 1 </td>
+                                        <td style="display:none;">@appointment.AppointmentId</td>
+                                        <td>
+                                            <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
+                                            <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
+                                        </td>
+                                    </tr>
 
-                        </tbody>
-                    </table>
-                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+
+
 
             }
         }
@@ -84,7 +93,7 @@ else
     <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
 
 
-<div class="col py-3 px-lg-5 border bg-light">
+@*<div class="col py-3 px-lg-5 border bg-light">
     Text: <input type="text" @bind="@accountId" />
 </div>
 <div class="col py-3 px-lg-5 border bg-light">
@@ -104,7 +113,7 @@ else
 </div>
 <div class="col py-3 px-lg-5 border bg-light">
     Text: <input type="text" @bind="@appointmentId" />
-</div>
+</div>*@
 
 
 
@@ -126,11 +135,13 @@ else
     public Guid appointmentId { get; set; }
 
     public int agencyId { get; set; }
+    public int appointmentType { get; set; }
 
     public DateTime appointmentDate { get; set; }
     public int appointmentSlotId { get; set; }
 
     public List<AppointmentDetails> AppointmentList { get; set; }
+    public List<Agency> AgencyList { get; set; }
 
     //public IList<AppointmentDetails> AppointmentList { get; set; }
     public string agency { get; set; }
@@ -166,13 +177,49 @@ else
                 if (results.Count > 0)
                 {
                     gotAppointmentFlag = true;
+
+                    //string appointmentTypeName;
+                    //if (appointmentType == 1)
+                    //{
+                    //    appointmentTypeName = "Virtual";
+                    //}
+                    //else
+                    //{
+                    //    appointmentTypeName = "Physical";
+                    //}
+
+
+                    var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+                    if (responseForAgency.IsSuccessStatusCode)
+                    {
+                        var contentForAgency = await responseForAgency.Content.ReadAsStringAsync();
+                        AgencyList = JsonConvert.DeserializeObject<List<Agency>>(contentForAgency);
+
+                        if (AgencyList != null)
+                        {
+                            var listOfAgency = await localStorage.GetItem<List<Agency>>("agency_info");
+                            listOfAgency = AgencyList;
+                            string agencyName;
+                            foreach (var agency2 in listOfAgency)
+                            {
+                                if (agency2.AgencyId == agencyId)
+                                {
+                                    agencyName = agency2.AgencyName;
+                                }
+                            }
+                        }
+
+                    }
+
                 }
                 foreach (var eachResults in results)
                 {
-
-                    appointmentName = appointmentName + eachResults.AppointmentId;
-                    //AppointmentList.Add(eachResults);
                     i = AppointmentList.Count;
+                    AppointmentList.Add(eachResults);
+                    this.StateHasChanged();
+
+                    //appointmentName = appointmentName + eachResults.AppointmentId;
+                    //AppointmentList.Add(eachResults);
                     // appointmentName = appointmentName + eachResults.AppointmentName;
                     //agency = eachResults.AppointmentId;
                     //agencyArray[i] = agency + i.ToString();
@@ -180,14 +227,13 @@ else
                     //service = eachResults.Service;
                     //serviceArray[i] = service + i.ToString();
 
-                    appointmentDate = eachResults.AppointmentDate;
-                    locationArray[i] = location + i.ToString();
+                    //appointmentDate = eachResults.AppointmentDate;
+                    //locationArray[i] = location + i.ToString();
 
-                    appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
+                    //appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
                     //appointmentId = appointmentId + eachResults.AppointmentId;
-                    AppointmentList.Add(eachResults);
-                    this.StateHasChanged();
                 }
+
                 this.StateHasChanged();
 
             }
@@ -197,12 +243,6 @@ else
                 accountId = "1234";
             }
         }
-
-        //var responseMessage2 = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-        //if (responseMessage != null)
-        //{
-
-        //}
     }
 
 
