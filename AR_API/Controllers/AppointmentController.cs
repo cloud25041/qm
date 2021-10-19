@@ -62,9 +62,9 @@ namespace AR_API.Controllers
 
         //}
 
-        [Route("api/appointment/GetAppointmentDetails")]
+        [Route("api/appointment/GetAppointmentDetailsByAccountId")]
         [HttpPost]
-        public async Task<List<AppointmentViewModel>> GetAppointmentDetails([FromBody] Guid accountId)
+        public async Task<List<AppointmentViewModel>> GetAppointmentDetailsByAccountId([FromBody] Guid accountId)
         {
             List<AppointmentViewModel> Appointment = new List<AppointmentViewModel>();
 
@@ -97,9 +97,9 @@ namespace AR_API.Controllers
 
         [Route("api/account/createAppointment")]
         [HttpPost]
-        public async Task<bool> CreateAppointment(string username, string agencyCode, DateTime startTime, DateTime endTime)
+        public async Task<bool> CreateAppointment(int agencyId, int appointmentType, int appointmentState, DateTime appointmentDate, int appoinmentSlotId, Guid userAccountId)
         {
-            return await _mediator.Send(new CreateAppointmentCommand(username, agencyCode, startTime, endTime));
+            return await _mediator.Send(new CreateAppointmentCommand(agencyId, appointmentType, appointmentState, appointmentDate, appoinmentSlotId, userAccountId));
         }
 
         //[Route("api/appointment/getagencyconcurrentuser")]

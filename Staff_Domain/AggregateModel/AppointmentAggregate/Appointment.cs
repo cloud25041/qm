@@ -1,50 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Staff_Domain.DomainEvents;
-using Staff_Domain.SeedWork;
+﻿using Staff_Domain.SeedWork;
+using System;
 
 namespace Staff_Domain.AggregateModel.AppointmentAggregate
 {
     public class Appointment : Entity, IAggregateRoot
     {
         public Guid AppointmentId { get; private set; }
-        public Guid AccountId { get; private set; }
+        public int AgencyId { get; private set; }
+        public DateTime AppointmentDate { get; private set; }
+        public int AppointmentSlotId { get; private set; }
+        public Guid UserAccountId { get; private set; }
+        public Guid StaffAccountId { get; private set; }
         public int AppointmentState { get; private set; }
-        public string AgencyCode { get; private set; }
-        public DateTime StartTime { get; private set; }
-        public DateTime EndTime { get; private set; }
+        public string ZoomLink { get; private set; }
 
         Appointment()
         {
 
         }
 
-        public Appointment(string username, string agencyCode, DateTime startTime, DateTime endTime)
-        {
-            AppointmentId = new Guid();
-            AppointmentState = 0;
-            AgencyCode = agencyCode;
-            StartTime = startTime;
-            EndTime = endTime;
-
-        }
-
-        public Appointment(Guid appointmentId, Guid accountId, int appointmentState, string agencyCode, DateTime startTime, DateTime endTime)
+        public Appointment(Guid appointmentId, int agencyId, DateTime appointmentDate, int appointmentSlotId, Guid userAccountId, int appointmentState)
         {
             AppointmentId = appointmentId;
-            AccountId = accountId;
+            AgencyId = agencyId;
+            AppointmentDate = appointmentDate;
+            AppointmentSlotId = appointmentSlotId;
+            UserAccountId = userAccountId;
             AppointmentState = appointmentState;
-            AgencyCode = agencyCode;
-            StartTime = startTime;
-            EndTime = endTime;
         }
 
-        public Appointment SetAccountIdOnceUsernameIsVerified(Guid accountId)
+        public Appointment SetStaffAccountIdOnceStaffConfirmAppointment(Guid staffAccountId)
         {
-            AccountId = accountId;
+            StaffAccountId = staffAccountId;
+            AppointmentState = 2;
+            return this;
+        }
+
+        public Appointment SetZoomLink (string zoomLink)
+        {
+            ZoomLink = zoomLink;
+            AppointmentState = 3;
             return this;
         }
 
@@ -55,7 +50,6 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
 
         public Appointment ChangeState(int state)
         {
-            // update state
             throw new NotImplementedException();
         }
     }

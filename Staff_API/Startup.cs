@@ -1,24 +1,22 @@
-using Staff_Application;
-//using Staff_Application.Behaviours;
-using Staff_Application.Queries;
-using Staff_Infrastructure.Data;
-using Staff_Infrastructure.Repository;
+using EventBus.MQTT;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Staff_Domain.AggregateModel.AppointmentAggregate;
+using Staff_Application;
+using Staff_Application.Behaviours;
+using Staff_Application.IntegrationEvents;
+using Staff_Application.Queries;
 using Staff_Domain.AggregateModel.AccountAggregate;
 using Staff_Domain.AggregateModel.AgencyAggregate;
+using Staff_Domain.AggregateModel.AppointmentAggregate;
+using Staff_Infrastructure.Data;
+using Staff_Infrastructure.Repository;
+using System;
 
 namespace Staff_API
 {
@@ -40,7 +38,7 @@ namespace Staff_API
             });
           
            services.AddDbContext<StaffContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("StaffContext")));
+                options.UseNpgsql(Configuration["ConnectionString"]));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -53,7 +51,18 @@ namespace Staff_API
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAgencyRepository, AgencyRepository>();
 
-           // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+
+            services.AddSingleton<IMQClient>(x => new MQClient()
+            {
+                MqttBroker = Configuration["MqttIp"],
+                MqttPort = Convert.ToInt32(Configuration["MqttPort"]),
+                MqttUserId = Configuration["MqttUsername"],
+                MqttPassword = Configuration["MqttPassword"],
+                UsingLocalBroker = true
+            });
+            services.AddSingleton<IStaffIntegrationEventService, StaffIntegrationEventService>();
+            services.AddHostedService<StaffIntegrationEventConsumerService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
