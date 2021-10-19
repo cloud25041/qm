@@ -86,7 +86,7 @@ namespace AR_Application.Queries
                     AppointmentSlotId = (int)item.AppointmentSlotId,
                     UserAccountId = (Guid)item.UserAccountId,
                     StaffAccountID = (Guid)item.StaffAccountID,
-                    AgencyId = (Guid)item.AgencyId, 
+                    AgencyId = (int)item.AgencyId, 
                     // should be according to type in database, AgencyId should be int (to change after database is updated) 
 
 
