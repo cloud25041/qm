@@ -9,6 +9,7 @@
 @using UI.Models;
 @using Microsoft.AspNetCore.Components.Routing
 @inject LocalStorage.ILocalStorageService localStorage;
+@using UI.DateTimeSlotHelper;
 
 
 
@@ -26,12 +27,11 @@ else
     {
         <thead class="table-primary">
             <tr>
-                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
-                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Appointment Type</th>
-                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
-                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
-                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Slot (Time)</th>
-                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Agency</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Appointment Type</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Date</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Slot (Time)</th>
+                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
             </tr>
         </thead>
         if (AppointmentList != null)
@@ -42,19 +42,28 @@ else
                 {
                     if (appointment.AgencyId == agency.AgencyId)
                     {
+                        
+                        if (appointment.AppointmentType == 1)
+                        {
+                            appointmentTypeName = "Physical";
+                        }
+                        else
+                        {
+                            appointmentTypeName = "Virtual";
+                        }
                         <div class="table-responsive">
                             <table class="table table-sm table-hover">
 
-                                <tbody>
+                                <tbody class="table-responsive">
                                     <tr>
-                                        <td>@agency.AgencyName</td>
-                                        <td>@appointment.AppointmentSlotId</td>
-                                        <td>@appointment.AppointmentState</td>
-                                        
-                                        <td>@appointment.AppointmentDate</td>
-                                        <td style="display:none;"> 1 </td>
-                                        <td style="display:none;">@appointment.AppointmentId</td>
-                                        <td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentSlotId</td>
+
+                                        @*<td style="display:none;"> 1 </td>
+                                            <td style="display:none;">@appointment.AppointmentId</td>*@
+                                        <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
                                             <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
                                             <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
                                         </td>
@@ -94,26 +103,26 @@ else
 
 
 @*<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@accountId" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentName" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@agencyArray[1]" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@service" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@location" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentTime" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentId" />
-</div>*@
+        Text: <input type="text" @bind="@accountId" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentName" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@agencyArray[1]" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@service" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@location" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentTime" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentId" />
+    </div>*@
 
 
 
@@ -136,6 +145,7 @@ else
 
     public int agencyId { get; set; }
     public int appointmentType { get; set; }
+    public string appointmentTypeName { get; set; }
 
     public DateTime appointmentDate { get; set; }
     public int appointmentSlotId { get; set; }
@@ -177,17 +187,6 @@ else
                 if (results.Count > 0)
                 {
                     gotAppointmentFlag = true;
-
-                    //string appointmentTypeName;
-                    //if (appointmentType == 1)
-                    //{
-                    //    appointmentTypeName = "Virtual";
-                    //}
-                    //else
-                    //{
-                    //    appointmentTypeName = "Physical";
-                    //}
-
 
                     var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
                     if (responseForAgency.IsSuccessStatusCode)
