@@ -16,6 +16,7 @@ using Staff_Domain.AggregateModel.AgencyAggregate;
 using Staff_Domain.AggregateModel.AppointmentAggregate;
 using Staff_Infrastructure.Data;
 using Staff_Infrastructure.Repository;
+using System;
 
 namespace Staff_API
 {
@@ -37,7 +38,7 @@ namespace Staff_API
             });
           
            services.AddDbContext<StaffContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("StaffContext")));
+                options.UseNpgsql(Configuration["ConnectionString"]));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -52,9 +53,16 @@ namespace Staff_API
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
-            services.AddSingleton<IMQClient>(x => new MQClient() { MqttBroker = "127.0.0.1", MqttPort = 1883, MqttUserId = "eric_staff", MqttPassword = "P@ssw0rd", UsingLocalBroker = true });
+            services.AddSingleton<IMQClient>(x => new MQClient()
+            {
+                MqttBroker = Configuration["MqttIp"],
+                MqttPort = Convert.ToInt32(Configuration["MqttPort"]),
+                MqttUserId = Configuration["MqttUsername"],
+                MqttPassword = Configuration["MqttPassword"],
+                UsingLocalBroker = true
+            });
             services.AddSingleton<IStaffIntegrationEventService, StaffIntegrationEventService>();
-            services.AddHostedService<StaffIntegrationEventServiceConsumer>();
+            services.AddHostedService<StaffIntegrationEventConsumerService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
