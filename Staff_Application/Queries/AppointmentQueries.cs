@@ -25,6 +25,17 @@ namespace Staff_Application.Queries
             }
         }
 
+       /* public async Task<List<ViewAllAppointmentViewModel>> GetAllAppointmentByAgencyId(int agencyId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AgencyId\" = @agencyId ", new { agencyId });
+              //  return MapQueryResultToListOfViewAppointment(result);
+            }
+        }
+       */
+
         public async Task<List<AppointmentViewModel>> GetAllAppointmentsByAccountId(Guid accountId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -54,7 +65,26 @@ namespace Staff_Application.Queries
             }
             return listOfAppointment;
         }
-   
+
+
+      /*  private List<ViewAllAppointmentViewModel> MapQueryResultToListOfViewAppointment(dynamic result)
+        {
+            List<ViewAllAppointmentViewModel> listOfAppointment = new();
+            foreach (var item in result)
+            {
+                ViewAllAppointmentViewModel appointment = new ViewAllAppointmentViewModel()
+                {
+                    AppointmentId = (Guid)item.AppointmentId,
+                    UserAccountId = (Guid)item.UserAccountId,
+                    CustomerName = item.CustomerName;
+                };
+
+                listOfAppointment.Add(appointment);
+            }
+            return listOfAppointment;
+        }
+      */
+
         public async Task<List<AgencyViewModel>> GetAgencyInfo()
         {
             using (var connection = new NpgsqlConnection(_connectionString))

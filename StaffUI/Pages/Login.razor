@@ -4,6 +4,7 @@
 @inject NavigationManager NavManager
 @inject NavigationManager UriHelper
 @inject IModalService modal
+@inject LocalStorage.ILocalStorageService localStorage;
 @using StaffUI.Models;
 @using Newtonsoft.Json;
 
@@ -13,30 +14,28 @@
 
 @if (_loading)
 {
-    <h3>Login...</h3> }
+<h3>Login...</h3> }
 else
 {
-    if (_error == true)
-    {
-        <h5> Error login, Please try again</h5>
-    }
-    else
-    {
+if (_error == true)
+{
+<h5> Error login, Please try again</h5> }
+                else
+                {
 
-    }
+                }
 
-    <div class="col py-3 px-lg-5 border bg-light">
-        Username: <input type="text" placeholder="Username" @bind="@_username" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Password: <input type="password" placeholder="Password" @bind="@_password" />
-    </div>
+<div class="col py-3 px-lg-5 border bg-light">
+    Username: <input type="text" placeholder="Username" @bind="@_username" />
+</div>
+                <div class="col py-3 px-lg-5 border bg-light">
+                    Password: <input type="password" placeholder="Password" @bind="@_password" />
+                </div>
 
-    <div class="col py-3 px-lg-5 border bg-light">
-        <button class="btn btn-primary" @onclick="LoginAccount">LogIn</button>
-        <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
-    </div>
-}
+                                <div class="col py-3 px-lg-5 border bg-light">
+                                    <button class="btn btn-primary" @onclick="LoginAccount">LogIn</button>
+                                    <button class="btn btn-secondary" @onclick="BackFunction">Cancel</button>
+                                </div>}
 
 @code
     { private string _username;
@@ -62,10 +61,12 @@ else
             if (responseMessage.IsSuccessStatusCode)
             {
                 string content = await responseMessage.Content.ReadAsStringAsync();
-               // var chasr = "";
+                // var chasr = "";
                 var results = JsonConvert.DeserializeObject<LoginDetails>(content);
-                if(results != null)
+                if (results != null)
                 {
+
+                    await localStorage.SetItem<LoginDetails>("account_info", results);
                     NavManager.NavigateTo($"/staffmainselection");
                     _error = false;
                 }
@@ -84,5 +85,4 @@ else
 
             }
         }
-    }
-}
+    } }

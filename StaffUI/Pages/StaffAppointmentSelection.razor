@@ -2,7 +2,10 @@
 @page "/staffappointmentselection"
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Routing
-
+@using StaffUI.Models;
+@inject HttpClient HttpClient
+@inject LocalStorage.ILocalStorageService localStorage;
+@using Newtonsoft.Json;
 <h3>List of Unassigned Appointments</h3>
 
 
@@ -12,47 +15,45 @@
 }
 else
 {
-    //if (i > 0)
-    //{
-        <thead class="table-primary">
-            <tr>
-                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Name of Customer</th>
-                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Date</th>
-                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Timeslot</th>
-                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
-            </tr>
-        </thead>
+    if (_noAppointmentflag == false)
+    {
+    <thead class="table-primary">
+        <tr>
+            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">User AccountId</th>
+            <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Name</th>
+            <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Date</th>
+            <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Time</th>
+            <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+        </tr>
+    </thead>
         //for (int j = 0; j <= i; j++)
         //{
-            <div class="table-responsive">
-                <table class="table table-sm table-hover">
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
 
-                    <tbody>
-                        <tr>
-                            @*<td>@nameArray[j]</td>
-                            <td>@dateArray[j]</td>
-                            <td>@timeslotArray[j]</td>*@
-                            @*<td style="display:none;"> 1 </td>*@
-                            <td>Mary</td>
-                            <td>9 Oct 2021</td>
-                            <td>10.30am</td>
-                            <td>
-                                <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
-                            </td>
-                        </tr>
+            <tbody>
+                <tr>
+                    @*<td>@nameArray[j]</td>
+                        <td>@dateArray[j]</td>
+                        <td>@timeslotArray[j]</td>*@
+                    @*<td style="display:none;"> 1 </td>*@
+                    <td>Mary</td>
+                    <td>9 Oct 2021</td>
+                    <td>10.30am</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
+                    </td>
+                </tr>
 
-                    </tbody>
-                </table>
-            </div>
-
-            //}
-
-        }
+            </tbody>
+        </table>
+    </div>
+    }
     else
-        {
+    {
 
-        <tr>
-            <td colspan="5">No Record Found.</td>
+      <tr>
+       <td colspan="5">No Record Found.</td>
         </tr>
 
     }
@@ -67,25 +68,66 @@ else
 
 
 
+
+
+
+
+
 @code
 {
     #region Field
-    [Parameter]
-    public string accountId { get; set; }
-    [Parameter]
-    public string userName { get; set; }
+
 
     #endregion
     //private bool _loading;
 
     private bool _loading;
+    private bool _noAppointmentflag;
 
     private void SelectButton()
     {
         //NavManager.NavigateTo("/staff/staffselectappointment");
-        // update the database to assign staff ID to this particular appointment 
+        // update the database to assign staff ID to this particular appointment
     }
 
+    protected override async void OnInitialized()
+    {
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        List<ViewAppointmentDetails> viewAppointmentDetailList = new List<ViewAppointmentDetails>();
 
+        // call api to get list of appointment avaliable for that agency
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAgencyId", accountInfo.AgencyId);
 
+        if (responseMessage != null)
+        {
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<List<ViewAppointmentDetails>>(content);
+                if (results.Count > 0)
+                {
+                    _noAppointmentflag = true;
+                }
+                else
+                {
+                    _noAppointmentflag = false;
+
+                    foreach(var appointment in results)
+                    {
+                        ViewAppointmentDetails eachAppointmentDetails = new ViewAppointmentDetails();
+                        eachAppointmentDetails.AppointmentId = appointment.AppointmentId;
+                        eachAppointmentDetails.CustomerName = appointment.CustomerName;
+                        eachAppointmentDetails.AppointmentDate = appointment.AppointmentDate;
+                        eachAppointmentDetails.AppointmentSlotID = appointment.AppointmentSlotID;
+                        eachAppointmentDetails.UserAccountId = eachAppointmentDetails.UserAccountId;
+
+                        viewAppointmentDetailList.Add(eachAppointmentDetails);
+
+                    }
+                }
+
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@ namespace Staff_Application.Queries
     {
         public string username { get; init; }
         public Guid accountId { get; init; }
+        public int agencyId { get; init; }
         public string name { get; init; }
         public string email { get; init; }
         public int mobileNo { get; init; }

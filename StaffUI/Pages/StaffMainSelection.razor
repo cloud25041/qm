@@ -1,4 +1,4 @@
-﻿// StaffMainSelection.razor page
+﻿  // StaffMainSelection.razor page
 
 @page "/staffmainselection"
 @inject NavigationManager NavManager
@@ -49,18 +49,18 @@
 
     private void SelectAppointmentButton()
     {
-        NavManager.NavigateTo("/staff/staffappointmentselection/{accountId}/{username}");
+        NavManager.NavigateTo($"/staffappointmentselection");
     }
 
     private void JoinZoomAppointmentButton()
     {
-        NavManager.NavigateTo("/staff/staffjoinzoomappointment/{accountId}/{username}");
+        NavManager.NavigateTo("/staffjoinzoomappointment");
     }
 
 
     private void PhysicalCounterButton()
     {
-        NavManager.NavigateTo("/staff/staffphysicalcounterselection");
+        NavManager.NavigateTo("/staffphysicalcounterselection");
     }
     private void VirtualCounterButton()
     {
