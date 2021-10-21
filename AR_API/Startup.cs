@@ -60,6 +60,7 @@ namespace AR_API
                 UsingLocalBroker = true });
             // Eric - ICustomerIntegrationEventService should be transient, using singleton for easier implementation.
             services.AddSingleton<ICustomerIntegrationEventService, CustomerIntegrationEventService>();
+            services.AddHostedService<CustomerIntegrationEventConsumerService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
