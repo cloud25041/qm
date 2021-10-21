@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using AR_Application.Behaviours;
 using EventBus.MQTT;
 using AR_Application.IntegrationEvents;
+using System;
 
 namespace AR_API
 {
@@ -38,7 +39,7 @@ namespace AR_API
             });
 
             services.AddDbContext<CustomerContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("CustomerContext")));
+                options.UseNpgsql(Configuration["ConnectionString"]));
             
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -51,7 +52,12 @@ namespace AR_API
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
-            services.AddSingleton<IMQClient>(x => new MQClient() { MqttBroker = "127.0.0.1", MqttPort = 1883, MqttUserId = "eric_user", MqttPassword = "P@ssw0rd", UsingLocalBroker = true });
+            services.AddSingleton<IMQClient>(x => new MQClient() { 
+                MqttBroker = Configuration["MqttIp"], 
+                MqttPort =  Convert.ToInt32(Configuration["MqttPort"]), 
+                MqttUserId = Configuration["MqttUsername"], 
+                MqttPassword = Configuration["MqttPassword"], 
+                UsingLocalBroker = true });
             // Eric - ICustomerIntegrationEventService should be transient, using singleton for easier implementation.
             services.AddSingleton<ICustomerIntegrationEventService, CustomerIntegrationEventService>();
 

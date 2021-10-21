@@ -42,15 +42,5 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
             AppointmentState = 3;
             return this;
         }
-
-        public Appointment CreateAppointment()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Appointment ChangeState(int state)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

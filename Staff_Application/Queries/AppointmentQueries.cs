@@ -98,7 +98,7 @@ namespace Staff_Application.Queries
 
         private List<AgencyViewModel> MapQueryResultToListOfAgency(dynamic result)
         {
-            List<AgencyViewModel> listOfAgency = new();
+            List<AgencyViewModel> listOfAgency = new List<AgencyViewModel>();
             foreach (var item in result)
             {
                 AgencyViewModel agency = new AgencyViewModel()

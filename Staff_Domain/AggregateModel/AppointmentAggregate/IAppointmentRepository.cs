@@ -9,5 +9,7 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
     public interface IAppointmentRepository : IRepository<Appointment>
     {
         public Appointment Add(Appointment appointment);
+        public Appointment Update(Appointment appointment);
+        public Task<Appointment> GetAppointmentByIdAsync(Guid id);
     }
 }

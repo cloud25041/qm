@@ -10,5 +10,6 @@ namespace Staff_Domain.AggregateModel.AccountAggregate
     {
         public Account Add(Account account);
         public Task<Account> GetAsync(string username);
+        public Task<Account> GetAccountByIdAsync(Guid id);
     }
 }

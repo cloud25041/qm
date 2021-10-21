@@ -9,6 +9,7 @@
 @using UI.Models;
 @using Microsoft.AspNetCore.Components.Routing
 @inject LocalStorage.ILocalStorageService localStorage;
+@using UI.DateTimeSlotHelper;
 
 
 
@@ -26,38 +27,55 @@ else
     {
         <thead class="table-primary">
             <tr>
-                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Agency</th>
-                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Appointment Type</th>
-                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Location</th>
-                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Date</th>
-                <th class="col-xs-2 col-sm-1 col-md-1 col-lg-1">Slot (Time)</th>
-                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Agency</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Appointment Type</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Date</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Slot (Time)</th>
+                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
             </tr>
         </thead>
         if (AppointmentList != null)
         {
             foreach (var appointment in AppointmentList)
             {
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
+                foreach (var agency in AgencyList)
+                {
+                    if (appointment.AgencyId == agency.AgencyId)
+                    {
+                        
+                        if (appointment.AppointmentType == 1)
+                        {
+                            appointmentTypeName = "Physical";
+                        }
+                        else
+                        {
+                            appointmentTypeName = "Virtual";
+                        }
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
 
-                        <tbody>
-                            <tr>
-                                <td>@appointment.AgencyId</td>
-                                <td>@appointment.AppointmentSlotId</td>
-                                <td>@appointment.AppointmentState</td>
-                                <td>@appointment.AppointmentDate</td>
-                                <td style="display:none;"> 1 </td>
-                                <td style="display:none;">@appointment.AppointmentId</td>
-                                <td>
-                                    <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
-                                    <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
-                                </td>
-                            </tr>
+                                <tbody class="table-responsive">
+                                    <tr>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentSlotId</td>
 
-                        </tbody>
-                    </table>
-                </div>
+                                        @*<td style="display:none;"> 1 </td>
+                                            <td style="display:none;">@appointment.AppointmentId</td>*@
+                                        <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
+                                            <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
+                                            <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+
+
 
             }
         }
@@ -84,27 +102,27 @@ else
     <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
 
 
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@accountId" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentName" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@agencyArray[1]" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@service" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@location" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentTime" />
-</div>
-<div class="col py-3 px-lg-5 border bg-light">
-    Text: <input type="text" @bind="@appointmentId" />
-</div>
+@*<div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@accountId" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentName" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@agencyArray[1]" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@service" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@location" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentTime" />
+    </div>
+    <div class="col py-3 px-lg-5 border bg-light">
+        Text: <input type="text" @bind="@appointmentId" />
+    </div>*@
 
 
 
@@ -126,11 +144,14 @@ else
     public Guid appointmentId { get; set; }
 
     public int agencyId { get; set; }
+    public int appointmentType { get; set; }
+    public string appointmentTypeName { get; set; }
 
     public DateTime appointmentDate { get; set; }
     public int appointmentSlotId { get; set; }
 
     public List<AppointmentDetails> AppointmentList { get; set; }
+    public List<Agency> AgencyList { get; set; }
 
     //public IList<AppointmentDetails> AppointmentList { get; set; }
     public string agency { get; set; }
@@ -166,13 +187,38 @@ else
                 if (results.Count > 0)
                 {
                     gotAppointmentFlag = true;
+
+                    var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+                    if (responseForAgency.IsSuccessStatusCode)
+                    {
+                        var contentForAgency = await responseForAgency.Content.ReadAsStringAsync();
+                        AgencyList = JsonConvert.DeserializeObject<List<Agency>>(contentForAgency);
+
+                        if (AgencyList != null)
+                        {
+                            var listOfAgency = await localStorage.GetItem<List<Agency>>("agency_info");
+                            listOfAgency = AgencyList;
+                            string agencyName;
+                            foreach (var agency2 in listOfAgency)
+                            {
+                                if (agency2.AgencyId == agencyId)
+                                {
+                                    agencyName = agency2.AgencyName;
+                                }
+                            }
+                        }
+
+                    }
+
                 }
                 foreach (var eachResults in results)
                 {
-
-                    appointmentName = appointmentName + eachResults.AppointmentId;
-                    //AppointmentList.Add(eachResults);
                     i = AppointmentList.Count;
+                    AppointmentList.Add(eachResults);
+                    this.StateHasChanged();
+
+                    //appointmentName = appointmentName + eachResults.AppointmentId;
+                    //AppointmentList.Add(eachResults);
                     // appointmentName = appointmentName + eachResults.AppointmentName;
                     //agency = eachResults.AppointmentId;
                     //agencyArray[i] = agency + i.ToString();
@@ -180,14 +226,13 @@ else
                     //service = eachResults.Service;
                     //serviceArray[i] = service + i.ToString();
 
-                    appointmentDate = eachResults.AppointmentDate;
-                    locationArray[i] = location + i.ToString();
+                    //appointmentDate = eachResults.AppointmentDate;
+                    //locationArray[i] = location + i.ToString();
 
-                    appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
+                    //appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
                     //appointmentId = appointmentId + eachResults.AppointmentId;
-                    AppointmentList.Add(eachResults);
-                    this.StateHasChanged();
                 }
+
                 this.StateHasChanged();
 
             }
@@ -197,12 +242,6 @@ else
                 accountId = "1234";
             }
         }
-
-        //var responseMessage2 = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-        //if (responseMessage != null)
-        //{
-
-        //}
     }
 
 

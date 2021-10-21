@@ -90,7 +90,7 @@ else
     }
 
     #region Fields
-
+    private bool _completedFormFlag = false;
     private bool _agencyPickClickFlag = false;
     private bool _loading;
     private bool _detailPickClickFlag = false;
@@ -172,10 +172,10 @@ else
             this.StateHasChanged();
 
         }
-        if (_detailPickClickFlag == true)
+
+        if (_completedFormFlag == true)
         {
             AgencySelectedHandler();
-            DateSelectedHandler();
             this.StateHasChanged();
         }
     }
@@ -183,9 +183,8 @@ else
     private void AgencySelectedHandler()
     {
         _detailPickClickFlag = true;
-        if (_detailPickClickFlag == true)
+        if (_completedFormFlag == true)
         {
-            //AgencySelectedHandler();
             DateSelectedHandler();
             this.StateHasChanged();
         }
@@ -194,6 +193,7 @@ else
 
     private async void DateSelectedHandler()
     {
+        _completedFormFlag = true;
         foreach (var agency in AgencyList)
         {
             if (agency.AgencyId == AgencyVal)
@@ -222,11 +222,19 @@ else
         {
             var content = await response.Content.ReadAsStringAsync();
             var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
+            List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
             foreach(var result in resultList)
             {
-                result.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
+                //var tempValue = result;
+                //tempValue.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
+                //listOfTimeInString.Add(dateTimeSlotHelper.GetTimebySlot(result.SlotId));
+                //availableSlotList.Add(tempValue);
+
+                AvailableSlots availableSlots = new AvailableSlots() { Date = result.Date, Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId), SlotId = result.SlotId };
+                selectedDateSlotList.Add(availableSlots);
+                //listOfNewAvailableSlots.Add(availableSlots);
+
             }
-            availableSlotList = resultList;
         }
 
     }
