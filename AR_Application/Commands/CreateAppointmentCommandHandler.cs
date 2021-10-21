@@ -23,9 +23,20 @@ namespace AR_Application.Commands
 
         public async Task<bool> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointment = new Appointment(request.agencyId, request.appointmentType, request.appointmentState, request.appointmentDate, request.appointmentSlotId, request.userAccountId);
+            Appointment appointment = new Appointment(request.agencyId, request.appointmentType, request.appointmentState, request.appointmentDate, request.appointmentSlotId, request.userAccountId);
 
-            AppointmentBookedIntegrationEvent appointmentBookedIntegrationEvent = new AppointmentBookedIntegrationEvent(appointment.AppointmentId, appointment.AgencyId, appointment.AppointmentDate, appointment.AppointmentSlotId, appointment.UserAccountId, appointment.AppointmentState);
+            Account account = await _accountRepository.GetAccountByIdAsync(appointment.UserAccountId);
+            if (account == null)
+                throw new System.Exception("Account not found using this account Id :" + appointment.UserAccountId.ToString());
+
+            AppointmentBookedIntegrationEvent appointmentBookedIntegrationEvent = new AppointmentBookedIntegrationEvent(
+                appointment.AppointmentId, 
+                appointment.AgencyId, 
+                appointment.AppointmentDate, 
+                appointment.AppointmentSlotId, 
+                appointment.UserAccountId, 
+                appointment.AppointmentState,
+                account.AccountDetails.Name);
             await _customerIntegrationEventService.AddAndSaveEventAsync(appointmentBookedIntegrationEvent);
 
             _appointmentRepository.Add(appointment);

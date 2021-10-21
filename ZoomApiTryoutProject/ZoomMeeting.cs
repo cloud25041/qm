@@ -21,5 +21,12 @@ namespace ZoomApiTryoutProject
             ZoomClient zoomClient = new ZoomClient(_JwtConnectionInfo);
             return await zoomClient.Meetings.CreateInstantMeetingAsync("eost002@gmail.com", "testTopic", "testAgenda");
         }
+
+        public async Task Abc()
+        {
+            throw new NotImplementedException();
+            //ZoomClient zoomClient = new ZoomClient(_JwtConnectionInfo);
+            //zoomClient.Meetings.
+        } 
     }
 }

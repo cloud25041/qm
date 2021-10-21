@@ -9,6 +9,6 @@ namespace AR_Domain.AggregateModel.AccountAggregate
     public interface IAccountRepository : IRepository<Account>
     {
         public Account Add(Account account);
-        public Task<Account> GetAsync(string username);
+        public Task<Account> GetAccountByIdAsync(Guid id);
     }
 }
