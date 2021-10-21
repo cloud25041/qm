@@ -102,6 +102,14 @@ namespace AR_API.Controllers
             return await _mediator.Send(new CreateAppointmentCommand(agencyId, appointmentType, appointmentState, appointmentDate, appoinmentSlotId, userAccountId));
         }
 
+        // Eric - yo Justin. you need to add this route
+        [Route("")]
+        [HttpPost]
+        public async Task<bool> EditAppointmentDateAndSlot(Guid appointmentId, DateTime date, int slot)
+        {
+            return await _mediator.Send(new EditAppointmentDateAndSlotCommand(appointmentId, date, slot));
+        }
+
         //[Route("api/appointment/getagencyconcurrentuser")]
         //[HttpPost]
         //public async Task<int> GetAgencyConcurrentUser(int? AgencyId)

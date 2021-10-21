@@ -29,7 +29,7 @@ namespace Staff_Application.Commands
             // Eric - Check account valid
             Account account = await _accountRepository.GetAccountByIdAsync(request.StaffId);
             if (account == null)
-                return false;
+                throw new Exception("Account does not exist using this staff id:" + request.StaffId);
 
             // Eric - Get appointment and make modification
             Appointment appointment = await _appointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
@@ -37,10 +37,10 @@ namespace Staff_Application.Commands
             _appointmentRepository.Update(appointment);
 
             // Eric - Populate new integration event
-            AppointmentConfirmedByStaffIntegrationEvent integrationEvent = new AppointmentConfirmedByStaffIntegrationEvent(appointment.AppointmentId, appointment.StaffAccountId, appointment.AppointmentState);
+            AppointmentConfirmedByStaffIntegrationEvent integrationEvent = new AppointmentConfirmedByStaffIntegrationEvent(request.AppointmentId, request.StaffId);
             await _staffIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
 
-            await _appointmentRepository.UnitOfWork.SaveEntitiesAsync();
+            await _appointmentRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
             return true;
         }
     }

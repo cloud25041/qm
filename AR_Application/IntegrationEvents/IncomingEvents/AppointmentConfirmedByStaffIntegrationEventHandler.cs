@@ -21,12 +21,12 @@ namespace AR_Application.IntegrationEvents.IncomingEvents
         public async Task<Unit> Handle(AppointmentConfirmedByStaffIntegrationEvent request, CancellationToken cancellationToken)
         {
             // Eric - Retreive appointment and make modification to entity.
-            Appointment appointment = await _appointmentRepository.GetAppointmentByIdAsync(request.appointmentId);
-            appointment.SetStaffIdOnceStaffConfirmedThisAppointment(request.staffId);
+            Appointment appointment = await _appointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
+            appointment.SetStaffIdOnceStaffConfirmedThisAppointment(request.StaffId);
 
             // Eric - Update entity in repository.
             _appointmentRepository.Update(appointment);
-            await _appointmentRepository.UnitOfWork.SaveEntitiesAsync();
+            await _appointmentRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
             return Unit.Value;
         }
     }

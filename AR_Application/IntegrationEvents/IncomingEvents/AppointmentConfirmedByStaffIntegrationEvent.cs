@@ -8,7 +8,6 @@ using MediatR;
 namespace AR_Application.IntegrationEvents.IncomingEvents
 {
     public record AppointmentConfirmedByStaffIntegrationEvent(
-        Guid appointmentId,
-        Guid staffId,
-        int appointmentState) : IntegrationEvent, IRequest;
+        Guid AppointmentId,
+        Guid StaffId) : IntegrationEvent, IRequest;
 }
