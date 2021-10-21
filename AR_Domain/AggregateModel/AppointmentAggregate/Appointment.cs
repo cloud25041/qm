@@ -35,5 +35,12 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
             AppointmentSlotId = appointmentSlotId;
             UserAccountId = userAccountId;
         }
+
+        public Appointment SetStaffIdOnceStaffConfirmedThisAppointment(Guid staffId)
+        {
+            StaffAccountID = staffId;
+            AppointmentState = 2;
+            return this;
+        }
     }
 }

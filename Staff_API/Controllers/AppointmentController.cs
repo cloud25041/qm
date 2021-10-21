@@ -8,7 +8,6 @@ using Staff_Application.Queries;
 using Staff_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Staff_Application.IntegrationEvents.Events;
 
 namespace Staff_API.Controllers
 {
@@ -27,9 +26,9 @@ namespace Staff_API.Controllers
         [Route("api/appointment/AssignStaffIdToAppointment")]
         [HttpPost]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<bool>> AssignStaffIdToAppointment([FromBody] Guid staffId)
+        public async Task<ActionResult<bool>> AssignStaffIdToAppointment(Guid staffId, Guid appointmentId)
         {
-            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId });
+            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId , AppointmentId = appointmentId});
         }
 
         #region Agency

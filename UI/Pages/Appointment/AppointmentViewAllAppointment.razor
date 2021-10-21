@@ -30,7 +30,8 @@ else
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Agency</th>
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Appointment Type</th>
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Date</th>
-                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Slot (Time)</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Timeslot</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Zoom Link</th>
                 <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
             </tr>
         </thead>
@@ -51,6 +52,13 @@ else
                         {
                             appointmentTypeName = "Virtual";
                         }
+
+                        //for (appointment.AppointmentSlotId == DateTimeSlotHelper.)
+                        DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+                        var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
+
+
+
                         <div class="table-responsive">
                             <table class="table table-sm table-hover">
 
@@ -59,10 +67,8 @@ else
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentSlotId</td>
-
-                                        @*<td style="display:none;"> 1 </td>
-                                            <td style="display:none;">@appointment.AppointmentId</td>*@
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@zoomLink</td>
                                         <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
                                             <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
                                             <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
@@ -142,6 +148,8 @@ else
     public string appointmentName { get; set; }
     [Parameter]
     public Guid appointmentId { get; set; }
+
+    public string zoomLink { get; set; }
 
     public int agencyId { get; set; }
     public int appointmentType { get; set; }

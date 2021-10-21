@@ -2,6 +2,9 @@
 using AR_Domain.SeedWork;
 using AR_Infrastructure.Data;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AR_Infrastructure.Repository
 {
@@ -18,6 +21,28 @@ namespace AR_Infrastructure.Repository
         public Appointment Add(Appointment appointment)
         {
             return _customerContext.Appointments.Add(appointment).Entity;
+        }
+
+        public Appointment Update(Appointment appointment)
+        {
+            return _customerContext.Appointments.Update(appointment).Entity;
+        }
+
+        public async Task<Appointment> GetAppointmentByIdAsync(Guid id)
+        {
+            var appointment = await _customerContext
+                                .Appointments
+                                .FirstOrDefaultAsync(o => o.AppointmentId == id);
+
+            if (appointment == null)
+            {
+                appointment = _customerContext
+                            .Appointments
+                            .Local
+                            .FirstOrDefault(o => o.AppointmentId == id);
+            }
+
+            return appointment;
         }
     }
 }

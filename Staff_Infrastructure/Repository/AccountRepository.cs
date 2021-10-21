@@ -4,6 +4,7 @@ using Staff_Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Staff_Infrastructure.Repository
 {
@@ -36,6 +37,23 @@ namespace Staff_Infrastructure.Repository
                             .Accounts
                             .Local
                             .FirstOrDefault(o => o.Username == username);
+            }
+
+            return account;
+        }
+
+        public async Task<Account> GetAccountByIdAsync(Guid id)
+        {
+            var account = await _staffContext
+                                .Accounts
+
+                                .FirstOrDefaultAsync(o => o.AccountId == id);
+            if (account == null)
+            {
+                account = _staffContext
+                            .Accounts
+                            .Local
+                            .FirstOrDefault(o => o.AccountId == id);
             }
 
             return account;
