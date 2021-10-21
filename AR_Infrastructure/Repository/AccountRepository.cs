@@ -4,6 +4,7 @@ using AR_Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace AR_Infrastructure.Repository
 {
@@ -23,18 +24,17 @@ namespace AR_Infrastructure.Repository
             return _customerContext.Accounts.Add(account).Entity;
         }
 
-        public async Task<Account> GetAsync(string username)
+        public async Task<Account> GetAccountByIdAsync(Guid id)
         {
             var account = await _customerContext
                                 .Accounts
-                                .Include(x => x.AccountDetails)
-                                .FirstOrDefaultAsync(o => o.Username == username);
+                                .FirstOrDefaultAsync(o => o.AccountID == id);
             if (account == null)
             {
                 account = _customerContext
                             .Accounts
                             .Local
-                            .FirstOrDefault(o => o.Username == username);
+                            .FirstOrDefault(o => o.AccountID == id);
             }
 
             return account;

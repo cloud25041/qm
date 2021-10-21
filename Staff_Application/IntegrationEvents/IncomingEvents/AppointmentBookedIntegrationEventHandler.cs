@@ -18,7 +18,7 @@ namespace Staff_Application.IntegrationEvents.IncomingEvents
         public async Task<Unit> Handle(AppointmentBookedIntegrationEvent request, CancellationToken cancellationToken)
         {
             
-            Appointment appointment = new Appointment(request.AppointmentId, request.AgencyId, request.AppointmentDate, request.AppointmentSlotId, request.UserAccountId, request.AppointmentState);
+            Appointment appointment = new Appointment(request.AppointmentId, request.AgencyId, request.AppointmentDate, request.AppointmentSlotId, request.CustomerAccountId, request.AppointmentState, request.CustomerName);
             _appointmentRepository.Add(appointment);
             await _appointmentRepository.UnitOfWork.SaveEntitiesAsync();
             
