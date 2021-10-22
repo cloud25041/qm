@@ -33,6 +33,19 @@ namespace Staff_API.Controllers
         }
 
 
+        [Route("api/appointment/GetAppointmentDetailsByAgencyId")]
+        [HttpPost]
+        
+        public async Task <List<ViewAllAppointmentViewModel>> GetAppointmentDetailsByAgencyId([FromBody] int agencyId)
+        {
+            List<ViewAllAppointmentViewModel> agencyList = new List<ViewAllAppointmentViewModel>();
+
+            agencyList = await _appointmentQueries.GetAllAppointmentByAgencyId(agencyId);
+
+            return agencyList;
+        }
+
+
         /*public async Task<List<ViewAppointmentDetails>> GetAppointmentDetailsByAgencyId(int agencyId)
         {
             //  List<ViewAppointmentDetails> viewAppointmentDetailsList = await _appointmentQueries.GetAllAppointmentsByAgencyId(agencyId);
