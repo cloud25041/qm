@@ -10,7 +10,7 @@ namespace ZoomApiTryoutProject.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : Controller
     {
         private static readonly string[] Summaries = new[]
         {
@@ -29,9 +29,6 @@ namespace ZoomApiTryoutProject.Controllers
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            InstantMeeting meeting = await ZoomMeeting.CreateZoomMeeting();
-
-
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -40,6 +37,24 @@ namespace ZoomApiTryoutProject.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [Route("api/CreateInstantZoomMeeting")]
+        [HttpGet]
+        public async Task<InstantMeeting> CreateInstantZoomMeeting()
+        {
+            InstantMeeting meeting = await ZoomMeeting.CreateInstantZoomMeeting();
+
+            return meeting;
+        }
+
+        [Route("api/Create5MinScheduledMeeting")]
+        [HttpGet]
+        public async Task<ScheduledMeeting> Create5MinScheduledMeeting()
+        {
+            ScheduledMeeting meeting = await ZoomMeeting.Create5MinScheduledMeeting();
+
+            return meeting;
         }
     }
 }

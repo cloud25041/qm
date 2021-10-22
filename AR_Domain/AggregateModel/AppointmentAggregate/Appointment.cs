@@ -18,6 +18,7 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
         public int AppointmentSlotId { get; private set; }
         public Guid UserAccountId { get; private set; }
         public Guid? StaffAccountID { get; private set; }
+        public string? ZoomLink { get; private set; }
 
 
         Appointment()
@@ -39,7 +40,18 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
         public Appointment SetStaffIdOnceStaffConfirmedThisAppointment(Guid staffId)
         {
             StaffAccountID = staffId;
+
             AppointmentState = 2;
+            return this;
+        }
+
+        public Appointment EditAppointmentDateAndSlot(DateTime date, int slot)
+        {
+            AppointmentDate = date;
+            AppointmentSlotId = slot;
+
+            AppointmentState = 1;
+            ZoomLink = null;
             return this;
         }
     }

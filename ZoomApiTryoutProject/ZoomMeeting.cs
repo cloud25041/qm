@@ -16,17 +16,16 @@ namespace ZoomApiTryoutProject
             _JwtConnectionInfo = new JwtConnectionInfo(apiKey, apiSecret);
         }
 
-        public async Task<InstantMeeting> CreateZoomMeeting()
+        public async Task<InstantMeeting> CreateInstantZoomMeeting()
         {
             ZoomClient zoomClient = new ZoomClient(_JwtConnectionInfo);
             return await zoomClient.Meetings.CreateInstantMeetingAsync("eost002@gmail.com", "testTopic", "testAgenda");
         }
 
-        public async Task Abc()
+        public async Task<ScheduledMeeting> Create5MinScheduledMeeting()
         {
-            throw new NotImplementedException();
-            //ZoomClient zoomClient = new ZoomClient(_JwtConnectionInfo);
-            //zoomClient.Meetings.
+            ZoomClient zoomClient = new ZoomClient(_JwtConnectionInfo);
+            return await zoomClient.Meetings.CreateScheduledMeetingAsync("eost002@gmail.com", "testTopic", "testAgenda", DateTime.UtcNow, 5, TimeZones.Asia_Singapore, "pw");
         } 
     }
 }
