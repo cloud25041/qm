@@ -3,6 +3,16 @@
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Routing
 
+@inject IModalService modal
+@inject HttpClient HttpClient
+@inject NavigationManager UriHelper
+
+@using Newtonsoft.Json;
+@using StaffUI.Models;
+@using Microsoft.AspNetCore.Components.Routing
+@*@inject LocalStorage.ILocalStorageService localStorage;*@
+@using StaffUI.DateTimeSlotHelper;
+
 <h3>Please Join A Zoom Appointment</h3>
 
 
@@ -22,8 +32,8 @@
         <tbody>
             <tr>
                 @*<td>@nameArray[j]</td>
-        <td>@dateArray[j]</td>
-        <td>@timeslotArray[j]</td>*@
+                    <td>@dateArray[j]</td>
+                    <td>@timeslotArray[j]</td>*@
                 @*<td style="display:none;"> 1 </td>*@
                 <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">John</td>
                 <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">24/10/2021</td>
@@ -64,6 +74,13 @@
         //NavManager.NavigateTo("/staff/staffjoinzoomappointment");
     }
 
+    //protected override async void OnInitialized()
+    //{
+    //    //;
+    //    AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
+    //    AppointmentList = new List<AppointmentDetails>();
+    //    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
+    //}
 
 
 

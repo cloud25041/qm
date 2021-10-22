@@ -25,6 +25,7 @@ else
 
     if (gotAppointmentFlag)
     {
+
         <thead class="table-primary">
             <tr>
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Agency</th>
@@ -35,6 +36,7 @@ else
                 <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
             </tr>
         </thead>
+
         if (AppointmentList != null)
         {
             foreach (var appointment in AppointmentList)
@@ -59,14 +61,14 @@ else
 
 
 
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover">
+                        <div>
+                            <table class="table table-hover">
 
-                                <tbody class="table-responsive">
+                                <tbody>
                                     <tr>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate.ToString("dd-MM-yyyy")</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@zoomLink</td>
                                         <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
