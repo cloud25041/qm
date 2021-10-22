@@ -8,6 +8,7 @@
 @inject HttpClient HttpClient
 @inject LocalStorage.ILocalStorageService localStorage;
 @using Newtonsoft.Json;
+@using StaffUI.DateTimeSlotHelper;
 
 
 
@@ -31,7 +32,7 @@ else
                 <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Action</th>
             </tr>
         </thead>
-        
+
         foreach (var appointment in ViewAppointmentDetailsList)
         {
             <div class="table-responsive">
@@ -39,13 +40,13 @@ else
 
                     <tbody>
                         <tr>
-                            
+
                             <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.UserAccountId</td>
                             <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.CustomerName</td>
                             <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="text-align:center">@appointment.AppointmentDate.ToLongDateString() </td>
-                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:left"> 10.30am</td>
+                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:left"> @appointment.AppointmentTime</td>
                             <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:left">
-                                <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
+                                <button class="btn btn-primary" @onclick=@((SelectButton))>Accept</button>
                             </td>
                         </tr>
 
@@ -117,13 +118,16 @@ else
                 {
                     //_noAppointmentflag = false;
 
+                    DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+                    //var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
+
                     foreach (var appointment in results)
                     {
                         ViewAppointmentDetails eachAppointmentDetails = new ViewAppointmentDetails();
                         eachAppointmentDetails.AppointmentId = appointment.AppointmentId;
                         eachAppointmentDetails.CustomerName = appointment.CustomerName;
                         eachAppointmentDetails.AppointmentDate = appointment.AppointmentDate.Date;
-                        eachAppointmentDetails.AppointmentSlotID = appointment.AppointmentSlotID;
+                        eachAppointmentDetails.AppointmentTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotID);
                         eachAppointmentDetails.UserAccountId = appointment.UserAccountId;
 
 

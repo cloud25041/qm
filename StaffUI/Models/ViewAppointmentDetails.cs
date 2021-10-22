@@ -11,6 +11,7 @@ namespace StaffUI.Models
         public string CustomerName { get; set; }
         public DateTime AppointmentDate { get; set; }
 
+        public string AppointmentTime { get; set; }
         public int AppointmentSlotID { get; set; }
         public Guid AppointmentId { get; set; }
 
