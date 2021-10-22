@@ -20,7 +20,7 @@
 }
 else
 {
-    if (_noAppointmentflag == false)
+    if (ViewAppointmentDetailsList != null)
     {
         <thead class="table-primary">
             <tr>
@@ -31,28 +31,29 @@ else
                 <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
             </tr>
         </thead>
-        //for (int j = 0; j <= i; j++)
-        //{
-        <div class="table-responsive">
-            <table class="table table-sm table-hover">
+        
+        foreach (var appointment in ViewAppointmentDetailsList)
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
 
-                <tbody>
-                    <tr>
-                        @*<td>@nameArray[j]</td>
-                            <td>@dateArray[j]</td>
-                            <td>@timeslotArray[j]</td>*@
-                        @*<td style="display:none;"> 1 </td>*@
-                        <td>Mary</td>
-                        <td>9 Oct 2021</td>
-                        <td>10.30am</td>
-                        <td>
-                            <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            
+                            <td>@appointment.UserAccountId</td>
+                            <td>@appointment.CustomerName</td>
+                            <td>@appointment.AppointmentDate.Date</td>
+                            <td>10.30am</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
+                            </td>
+                        </tr>
 
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        }
+
     }
     else
     {
@@ -89,12 +90,14 @@ else
     private bool _loading;
     private bool _noAppointmentflag;
 
+    private List<ViewAppointmentDetails> ViewAppointmentDetailsList { get; set; }
+
 
 
     protected override async void OnInitialized()
     {
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
-        List<ViewAppointmentDetails> viewAppointmentDetailList = new List<ViewAppointmentDetails>();
+        ViewAppointmentDetailsList = new List<ViewAppointmentDetails>();
 
         // call api to get list of appointment avaliable for that agency
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByAgencyId", accountInfo.AgencyId);
@@ -108,11 +111,11 @@ else
                 var results = JsonConvert.DeserializeObject<List<ViewAppointmentDetails>>(content);
                 if (results.Count <= 0)
                 {
-                    _noAppointmentflag = true;
+                    //_noAppointmentflag = true;
                 }
                 else
                 {
-                    _noAppointmentflag = false;
+                    //_noAppointmentflag = false;
 
                     foreach (var appointment in results)
                     {
@@ -124,12 +127,12 @@ else
                         eachAppointmentDetails.UserAccountId = appointment.UserAccountId;
 
 
-                        viewAppointmentDetailList.Add(eachAppointmentDetails);
+                        ViewAppointmentDetailsList.Add(eachAppointmentDetails);
+                        this.StateHasChanged();
                     }
+                    this.StateHasChanged();
                 }
-
             }
-
         }
     }
 

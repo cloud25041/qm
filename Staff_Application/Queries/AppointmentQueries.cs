@@ -54,11 +54,14 @@ namespace Staff_Application.Queries
                 AppointmentViewModel appointment = new AppointmentViewModel()
                 {
                     AppointmentId = (Guid)item.AppointmentId,
-                    AccountId = (Guid)item.AccountId,
+                    AgencyId = (int)item.AgencyId,
+                    StaffAccountId = (Guid)item.StaffAccountId,
+                    AppointmentDate = (DateTime)item.AppointmentDate,
+                    CustomerId = (Guid)item.CustomerId,
+                    CustomerName = (string)item.CustomerName,
                     AppointmentState = (int)item.AppointmentState,
-                    AgencyCode = (string)item.AgencyCode,
-                    StartTime = (DateTime)item.StartTime,
-                    EndTime = (DateTime)item.EndTime
+                    ZoomId = (string)item.ZoomId,
+                    
                 };
 
                 listOfAppointment.Add(appointment);
@@ -75,7 +78,7 @@ namespace Staff_Application.Queries
                 ViewAllAppointmentViewModel appointment = new ViewAllAppointmentViewModel()
                 {
                     AppointmentId = (Guid)item.AppointmentId,
-                    UserAccountId = (Guid)item.UserAccountId,
+                    UserAccountId = (Guid)item.CustomerAccountId,
                     CustomerName = (string)item.CustomerName,
                     AppointmentSlotID = (int)item.AppointmentSlotId,
                     AppointmentDate = (DateTime)item.AppointmentDate,
