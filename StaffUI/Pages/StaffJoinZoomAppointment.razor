@@ -8,10 +8,11 @@
 
 <thead class="table-primary">
     <tr>
-        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Name of Customer</th>
-        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Timeslot</th>
-        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Zoom Link</th>
-        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Name of Customer</th>
+        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Date</th>
+        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Timeslot</th>
+        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Zoom Link</th>
+        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
     </tr>
 </thead>
 
@@ -21,13 +22,14 @@
         <tbody>
             <tr>
                 @*<td>@nameArray[j]</td>
-                    <td>@dateArray[j]</td>
-                    <td>@timeslotArray[j]</td>*@
+        <td>@dateArray[j]</td>
+        <td>@timeslotArray[j]</td>*@
                 @*<td style="display:none;"> 1 </td>*@
-                <td>John</td>
-                <td>11am</td>
-                <td>www.zoomlink.com</td>
-                <td>
+                <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">John</td>
+                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">24/10/2021</td>
+                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">11am</td>
+                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">www.zoomlink.com</td>
+                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
                     <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
                     <button class="btn btn-primary" @onclick=@((NoShowButton))>No Show</button>
                 </td>

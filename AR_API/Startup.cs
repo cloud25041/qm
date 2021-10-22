@@ -16,6 +16,7 @@ using AR_Application.Behaviours;
 using EventBus.MQTT;
 using AR_Application.IntegrationEvents;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace AR_API
 {
@@ -60,6 +61,7 @@ namespace AR_API
                 UsingLocalBroker = true });
             // Eric - ICustomerIntegrationEventService should be transient, using singleton for easier implementation.
             services.AddSingleton<ICustomerIntegrationEventService, CustomerIntegrationEventService>();
+            services.AddHostedService<CustomerIntegrationEventConsumerService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
@@ -67,7 +69,7 @@ namespace AR_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +78,8 @@ namespace AR_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AR_API v1"));
                 app.UseCors();
             }
+
+            loggerFactory.AddFile(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/qm/logs/ar_api-{Date}.log");
 
             app.UseHttpsRedirection();
 

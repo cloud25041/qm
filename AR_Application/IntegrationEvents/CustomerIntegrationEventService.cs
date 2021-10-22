@@ -17,15 +17,13 @@ namespace AR_Application.IntegrationEvents
         public CustomerIntegrationEventService(IMQClient mQClient)
         {
             _mQClient = mQClient;
+            _integrationEvents = new();
         }
 
         public async Task AddAndSaveEventAsync(IntegrationEvent evt)
         {
             await Task.Run(() =>
             {
-                if (_integrationEvents == null)
-                    _integrationEvents = new();
-
                 _integrationEvents.Add(evt);
             });
         }

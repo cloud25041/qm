@@ -14,14 +14,13 @@ namespace Staff_Application.IntegrationEvents
     public class StaffIntegrationEventConsumerService : IHostedService
     {
         private readonly IMQClient _mQClient;
-        private IMediator _mediator;
         public IServiceProvider Service { get; private set; }
 
         public StaffIntegrationEventConsumerService(IMQClient mQClient, IServiceProvider service)
         {
             _mQClient = mQClient;
-            _mQClient.MqttTopicUpdateEvent += EventMessageHandler;
             Service = service;
+            _mQClient.MqttTopicUpdateEvent += EventMessageHandler;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -42,7 +41,7 @@ namespace Staff_Application.IntegrationEvents
 
             using (var scope = Service.CreateScope())
             {
-                _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                IMediator _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 await _mediator.Send(integrationEvent);
             }
         }

@@ -16,6 +16,7 @@ namespace UI.Models
         public Guid UserAccountId { get; set; }
         public Guid StaffAccountID { get; set; }
         public int AgencyId { get; set; }
+        public string ZoomLink { get; set; }
 
     }
 }

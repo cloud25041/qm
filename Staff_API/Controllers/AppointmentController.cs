@@ -8,7 +8,6 @@ using Staff_Application.Queries;
 using Staff_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Staff_Application.IntegrationEvents.Events;
 
 namespace Staff_API.Controllers
 {

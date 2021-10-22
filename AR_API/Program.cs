@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using AR_Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using EventBus.MQTT;
-using AR_Application.IntegrationEvents.Events;
+using AR_Application.IntegrationEvents.IncomingEvents;
 
 namespace AR_API
 {
@@ -56,7 +56,7 @@ namespace AR_API
                     Task.Delay(1000).Wait();
                     if(mQClient.IsConnected == true)
                     {
-                        // subscribe to integration events topics here
+                        mQClient.Subscribe<AppointmentConfirmedByStaffIntegrationEvent, AppointmentConfirmedByStaffIntegrationEventHandler>();
                     }
                     else
                     {
