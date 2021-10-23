@@ -25,6 +25,18 @@ namespace Staff_Application.Queries
             }
         }
 
+        public async Task<List<ViewAllAppointmentViewModel>> GetAllAppointmentByAgencyId(int agencyId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                int appointmentState = 1;
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AgencyId\" = @agencyId  AND \"AppointmentState\" = @appointmentState", new { agencyId, appointmentState });
+                return MapQueryResultToListOfViewAppointment(result);
+            }
+        }
+       
+
         public async Task<List<AppointmentViewModel>> GetAllAppointmentsByAccountId(Guid accountId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -43,18 +55,45 @@ namespace Staff_Application.Queries
                 AppointmentViewModel appointment = new AppointmentViewModel()
                 {
                     AppointmentId = (Guid)item.AppointmentId,
-                    AccountId = (Guid)item.AccountId,
+                    AgencyId = (int)item.AgencyId,
+                    StaffAccountId = (Guid)item.StaffAccountId,
+                    AppointmentDate = (DateTime)item.AppointmentDate,
+                    CustomerId = (Guid)item.CustomerId,
+                    CustomerName = (string)item.CustomerName,
                     AppointmentState = (int)item.AppointmentState,
-                    AgencyCode = (string)item.AgencyCode,
-                    StartTime = (DateTime)item.StartTime,
-                    EndTime = (DateTime)item.EndTime
+                    ZoomId = (string)item.ZoomId,
+                    
                 };
 
                 listOfAppointment.Add(appointment);
             }
             return listOfAppointment;
         }
-   
+
+
+        private List<ViewAllAppointmentViewModel> MapQueryResultToListOfViewAppointment(dynamic result)
+        {
+            List<ViewAllAppointmentViewModel> listOfAppointment = new();
+            foreach (var item in result)
+            {
+                ViewAllAppointmentViewModel appointment = new ViewAllAppointmentViewModel()
+                {
+                    AppointmentId = (Guid)item.AppointmentId,
+                    UserAccountId = (Guid)item.CustomerAccountId,
+                    CustomerName = (string)item.CustomerName,
+                    AppointmentSlotID = (int)item.AppointmentSlotId,
+                    AppointmentDate = (DateTime)item.AppointmentDate,
+
+
+                    
+                };
+
+                listOfAppointment.Add(appointment);
+            }
+            return listOfAppointment;
+        }
+      
+
         public async Task<List<AgencyViewModel>> GetAgencyInfo()
         {
             using (var connection = new NpgsqlConnection(_connectionString))

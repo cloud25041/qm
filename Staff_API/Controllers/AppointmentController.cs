@@ -31,6 +31,28 @@ namespace Staff_API.Controllers
             return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId , AppointmentId = appointmentId});
         }
 
+
+        [Route("api/appointment/GetAppointmentDetailsByAgencyId")]
+        [HttpPost]
+        
+        public async Task <List<ViewAllAppointmentViewModel>> GetAppointmentDetailsByAgencyId([FromBody] int agencyId)
+        {
+            List<ViewAllAppointmentViewModel> agencyList = new List<ViewAllAppointmentViewModel>();
+
+            agencyList = await _appointmentQueries.GetAllAppointmentByAgencyId(agencyId);
+
+            return agencyList;
+        }
+
+
+        /*public async Task<List<ViewAppointmentDetails>> GetAppointmentDetailsByAgencyId(int agencyId)
+        {
+            //  List<ViewAppointmentDetails> viewAppointmentDetailsList = await _appointmentQueries.GetAllAppointmentsByAgencyId(agencyId);
+            List<ViewAppointmentDetails> viewAppointmentDetailsList =  new List<ViewAppointmentDetails>();
+            return viewAppointmentDetailsList;
+        }
+        */
+
         #region Agency
         //This one needs to be in Staff API
         [Route("api/appointment/getagencyinfolist")]

@@ -124,146 +124,194 @@ else
 
     private async Task RegisterAccount()
     {
-        SignUpAccountDetails accountDetails = new SignUpAccountDetails();
-        accountDetails.TransactionId = Guid.NewGuid();
-        accountDetails.FirstName = FirstName;
-        accountDetails.LastName = LastName;
-        accountDetails.Username = Username;
-        accountDetails.Password = Password;
-        accountDetails.MobileNo = Convert.ToInt32(MobileNo);
-        accountDetails.Email = Email;
-        accountDetails.StaffKey = StaffKey;
-
-
         _errorMessageFlag = false;
         _errorMessage = "";
-      
+        string validationError = "";
 
         // validation part
 
-        //    if (StaffKey != "")
-        //  {
-        //var checkingResponseMessage = await HttpClient.PostAsJsonAsync("");
-        //}
+        validationError = ValidationCheck(_username, _password, _mobileNo, _email, _firstName, _lastName, _staffkey);
 
-        //else
-        //{
-
-        //}
-
-        //check staff pin 
-
-        try
+        if(validationError == null)
         {
-            var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails.StaffKey);
-            if (checkStaffPinResponseMessage != null)
+            SignUpAccountDetails accountDetails = new SignUpAccountDetails();
+            accountDetails.TransactionId = Guid.NewGuid();
+            accountDetails.FirstName = FirstName;
+            accountDetails.LastName = LastName;
+            accountDetails.Username = Username;
+            accountDetails.Password = Password;
+            accountDetails.MobileNo = Convert.ToInt32(MobileNo);
+            accountDetails.Email = Email;
+            accountDetails.StaffKey = StaffKey;
+
+            try
             {
-                if (checkStaffPinResponseMessage.IsSuccessStatusCode)
+                var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails.StaffKey);
+                if (checkStaffPinResponseMessage != null)
                 {
-                    string staffAgencyPincontent = await checkStaffPinResponseMessage.Content.ReadAsStringAsync();
-                    var staffPinResults = JsonConvert.DeserializeObject<AgencyPinClass>(staffAgencyPincontent);
-
-                    if (staffPinResults.AgencyIsValidFlag == true || staffPinResults.AgencyId != 0)
+                    if (checkStaffPinResponseMessage.IsSuccessStatusCode)
                     {
-                        accountDetails.AgencyId = staffPinResults.AgencyId;
-                        // check for email and username
-                        var checkEmailAndUsernameResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/checkUsernameAndEmailAvail", accountDetails);
-                        if (checkEmailAndUsernameResponseMessage != null)
-                        {
-                            if (checkEmailAndUsernameResponseMessage.IsSuccessStatusCode)
-                            {
-                                string checkEmailAndUsernameContent = await checkEmailAndUsernameResponseMessage.Content.ReadAsStringAsync();
-                                // var word = "";
-                                var checkEmailAndUsernameResult = JsonConvert.DeserializeObject<ValidationDetails>(checkEmailAndUsernameContent);
-                                if(checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken != true)
-                                {
-                                    accountDetails.AccountId = Guid.NewGuid();
-                                    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/createaccount", accountDetails);
-                                    if(responseMessage != null)
-                                    {
-                                        if(responseMessage.IsSuccessStatusCode)
-                                        {
-                                              _loading = true;
-                                              this.StateHasChanged();
-                                              
-                                              modal.Show<SuccessLogin>("Account created");
-                                        }
-                                    }
+                        string staffAgencyPincontent = await checkStaffPinResponseMessage.Content.ReadAsStringAsync();
+                        var staffPinResults = JsonConvert.DeserializeObject<AgencyPinClass>(staffAgencyPincontent);
 
+                        if (staffPinResults.AgencyIsValidFlag == true || staffPinResults.AgencyId != 0)
+                        {
+                            accountDetails.AgencyId = staffPinResults.AgencyId;
+                            // check for email and username
+                            var checkEmailAndUsernameResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/checkUsernameAndEmailAvail", accountDetails);
+                            if (checkEmailAndUsernameResponseMessage != null)
+                            {
+                                if (checkEmailAndUsernameResponseMessage.IsSuccessStatusCode)
+                                {
+                                    string checkEmailAndUsernameContent = await checkEmailAndUsernameResponseMessage.Content.ReadAsStringAsync();
+                                    // var word = "";
+                                    var checkEmailAndUsernameResult = JsonConvert.DeserializeObject<ValidationDetails>(checkEmailAndUsernameContent);
+                                    if (checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken != true)
+                                    {
+                                        accountDetails.AccountId = Guid.NewGuid();
+                                        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/createaccount", accountDetails);
+                                        if (responseMessage != null)
+                                        {
+                                            if (responseMessage.IsSuccessStatusCode)
+                                            {
+                                                _loading = true;
+                                                this.StateHasChanged();
+
+                                                modal.Show<SuccessLogin>("Account created");
+                                                NavManager.NavigateTo("/login");
+
+                                            }
+                                        }
+
+                                        else
+                                        {
+                                        }
+
+
+                                        // save if good
+                                    }
+                                    else if (checkEmailAndUsernameResult.IsUsernameTaken == true && checkEmailAndUsernameResult.IsEmailTaken != true)
+                                    {
+                                        modal.Show<FailedValidation>("Username taken");
+                                        _errorMessageFlag = true;
+                                        _errorMessage = "Username Taken";
+                                    }
+                                    else if (checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken == true)
+                                    {
+                                        modal.Show<FailedValidation>("Email taken");
+                                        _errorMessageFlag = true;
+                                        _errorMessage = "Email Taken";
+                                    }
                                     else
                                     {
+                                        modal.Show<FailedValidation>("Username and Email taken");
+                                        _errorMessageFlag = true;
+                                        _errorMessage = "Username And Email Taken";
                                     }
-
-
-                                    // save if good
-                                }
-                                else if(checkEmailAndUsernameResult.IsUsernameTaken == true && checkEmailAndUsernameResult.IsEmailTaken != true)
-                                {
-                                    modal.Show<FailedValidation>("Username taken");
-                                    _errorMessageFlag = true;
-                                    _errorMessage = "Username Taken";
-                                }
-                                else if(checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken == true)
-                                {
-                                    modal.Show<FailedValidation>("Email taken");
-                                    _errorMessageFlag = true;
-                                    _errorMessage = "Email Taken";
                                 }
                                 else
                                 {
-                                    modal.Show<FailedValidation>("Username and Email taken");
-                                    _errorMessageFlag = true;
-                                    _errorMessage = "Username And Email Taken";
+
                                 }
                             }
-                            else
-                            {
-
-                            }
+                        }
+                        else
+                        {
+                            _errorMessageFlag = true;
+                            _errorMessage = "Wrong Staff pin";
+                            // invalid key
                         }
                     }
+
                     else
                     {
-                        _errorMessageFlag = true;
-                        _errorMessage = "Wrong Staff pin";
-                        // invalid key
                     }
                 }
-
                 else
                 {
                 }
+
+
             }
-            else
+
+            catch (Exception ex)
             {
+
             }
 
-
         }
 
-        catch(Exception ex)
+        else
         {
-
+            _errorMessageFlag = true;
+            _errorMessage = validationError;
         }
 
-
-
-
-        //var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44355/api/account/staffaccountcreate", accountDetails);
-        //  if (responseMessage != null)
-        //{
-        //  if (responseMessage.IsSuccessStatusCode)
-        // {
-
-        //}
-        //else
-        //{
-        //  string reason = responseMessage.ReasonPhrase;
-
-        //}
-        //}
         _loading = false;
         this.StateHasChanged();
+    }
+
+
+
+    private string ValidationCheck(string username, string password, string mobileno, string email, string firstname, string lastname, string staffpin)
+    {
+        bool errorflag = false;
+        string errorMessage = "Please enter your ";
+
+        if (firstname == "" || firstname == null)
+        {
+            errorMessage = errorMessage + "First Name, ";
+            errorflag = true;
+        }
+
+        if (lastname == "" || lastname == null)
+        {
+            errorMessage = errorMessage + "Last Name, ";
+            errorflag = true;
+        }
+
+
+        if (username == "" || username == null)
+        {
+            errorMessage = errorMessage + "Username, ";
+            errorflag = true;
+
+        }
+
+        if (password == "" || password == null)
+        {
+            errorMessage = errorMessage + "Password, ";
+            errorflag = true;
+        }
+
+        if (mobileno == "" || mobileno == null)
+        {
+            errorMessage = errorMessage + "Mobile Number, ";
+            errorflag = true;
+
+        }
+
+        if (email == "" || email == null)
+        {
+            errorMessage = errorMessage + "Email, ";
+            errorflag = true;
+        }
+
+        if(staffpin == "" || staffpin == null)
+        {
+            errorMessage = errorMessage + "Staff Pin ";
+            errorflag = true;
+        }
+
+        if (errorflag == false)
+        {
+            errorMessage = null;
+        }
+
+        return errorMessage;
+
+
+
     }
     #endregion
 

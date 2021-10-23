@@ -11,9 +11,7 @@ namespace StaffUI.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string AccountId { get; set; }
-
-        public bool IsUserAccount { get; set; }
-
+        public int AgencyId { get; set; }
         public bool IsLoginSuccessful { get; set; }
 
     }

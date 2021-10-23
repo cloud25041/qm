@@ -1,7 +1,16 @@
 ﻿
 @page "/staffappointmentselection"
 @inject NavigationManager NavManager
+@inject NavigationManager UriHelper
+@inject IModalService modal
 @using Microsoft.AspNetCore.Components.Routing
+@using StaffUI.Models;
+@inject HttpClient HttpClient
+@inject LocalStorage.ILocalStorageService localStorage;
+@using Newtonsoft.Json;
+@using StaffUI.DateTimeSlotHelper;
+
+
 
 <h3>List of Unassigned Appointments</h3>
 
@@ -12,44 +21,43 @@
 }
 else
 {
-    //if (i > 0)
-    //{
+    if (ViewAppointmentDetailsList != null)
+    {
         <thead class="table-primary">
             <tr>
-                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Name of Customer</th>
-                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2">Date</th>
-                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2">Timeslot</th>
-                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Action</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">User AccountId</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Name</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 ">Date</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 ">Time</th>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Action</th>
             </tr>
         </thead>
-        //for (int j = 0; j <= i; j++)
-        //{
+
+        foreach (var appointment in ViewAppointmentDetailsList)
+        {
             <div class="table-responsive">
                 <table class="table table-sm table-hover">
 
                     <tbody>
                         <tr>
-                            @*<td>@nameArray[j]</td>
-                            <td>@dateArray[j]</td>
-                            <td>@timeslotArray[j]</td>*@
-                            @*<td style="display:none;"> 1 </td>*@
-                            <td>Mary</td>
-                            <td>9 Oct 2021</td>
-                            <td>10.30am</td>
-                            <td>
-                                <button class="btn btn-primary" @onclick=@((SelectButton))>Select</button>
+
+                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.UserAccountId</td>
+                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.CustomerName</td>
+                            <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="text-align:center">@appointment.AppointmentDate.ToLongDateString() </td>
+                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:left"> @appointment.AppointmentTime</td>
+                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:left">
+                                <button class="btn btn-primary" @onclick=@((AcceptButton))>Accept</button>
                             </td>
                         </tr>
 
                     </tbody>
                 </table>
             </div>
-
-            //}
-
         }
+
+    }
     else
-        {
+    {
 
         <tr>
             <td colspan="5">No Record Found.</td>
@@ -67,25 +75,77 @@ else
 
 
 
+
+
+
+
+
 @code
 {
     #region Field
-    [Parameter]
-    public string accountId { get; set; }
-    [Parameter]
-    public string userName { get; set; }
+
 
     #endregion
     //private bool _loading;
 
     private bool _loading;
+    private bool _noAppointmentflag;
 
-    private void SelectButton()
+    private List<ViewAppointmentDetails> ViewAppointmentDetailsList { get; set; }
+
+
+
+    protected override async void OnInitialized()
     {
-        //NavManager.NavigateTo("/staff/staffselectappointment");
-        // update the database to assign staff ID to this particular appointment 
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        ViewAppointmentDetailsList = new List<ViewAppointmentDetails>();
+
+        // call api to get list of appointment avaliable for that agency
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByAgencyId", accountInfo.AgencyId);
+
+        if (responseMessage != null)
+        {
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<List<ViewAppointmentDetails>>(content);
+                if (results.Count <= 0)
+                {
+                    //_noAppointmentflag = true;
+                }
+                else
+                {
+                    //_noAppointmentflag = false;
+
+                    DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+                    //var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
+
+                    foreach (var appointment in results)
+                    {
+                        ViewAppointmentDetails eachAppointmentDetails = new ViewAppointmentDetails();
+                        eachAppointmentDetails.AppointmentId = appointment.AppointmentId;
+                        eachAppointmentDetails.CustomerName = appointment.CustomerName;
+                        eachAppointmentDetails.AppointmentDate = appointment.AppointmentDate.Date;
+                        eachAppointmentDetails.AppointmentTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotID);
+                        eachAppointmentDetails.UserAccountId = appointment.UserAccountId;
+
+
+                        ViewAppointmentDetailsList.Add(eachAppointmentDetails);
+                        this.StateHasChanged();
+                    }
+                    this.StateHasChanged();
+                }
+            }
+        }
     }
 
+    private async Task AcceptButton()
+    {
 
+        //NavManager.NavigateTo("/staff/staffselectappointment");
+        // update the database to assign staff ID to this particular appointment
+    }
 
 }
+

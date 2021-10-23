@@ -48,31 +48,43 @@ namespace Staff_API.Controllers
         }
 
 
-       /* [Route("api/agency/CheckAgencyPin")]
-        [HttpPost]
-        public async Task<AgencyPinClass> CheckAgencyPin(SignUpAccountDetails signUpAccountDetails)
+
+      /*  [Route("api/agency/GetAllAgencyList")]
+        [HttpGet]
+        public async Task<AgencyPinClass> GetAllAgencyList()
         {
-            bool isAgencyPinValid = 
+          
 
-            AgencyViewModel agency = await _agencyQueries.GetAgencybyId(signUpAccountDetails.StaffKey);
-            try
-            {
-
-                // do a query using agencypin on agency table 
-
-                // return agencyId
-                int agencyId = 1;
-                agencyPinClass.AgencyPinNumber = agencyId;
-                return agencyPinClass;
-            }
-            catch (Exception ex)
-            {
-                return agencyPinClass;
-            }
-
-
+           //return agencyPinClass;
         }
-       */
+      */
+
+
+        /* [Route("api/agency/CheckAgencyPin")]
+         [HttpPost]
+         public async Task<AgencyPinClass> CheckAgencyPin(SignUpAccountDetails signUpAccountDetails)
+         {
+             bool isAgencyPinValid = 
+
+             AgencyViewModel agency = await _agencyQueries.GetAgencybyId(signUpAccountDetails.StaffKey);
+             try
+             {
+
+                 // do a query using agencypin on agency table 
+
+                 // return agencyId
+                 int agencyId = 1;
+                 agencyPinClass.AgencyPinNumber = agencyId;
+                 return agencyPinClass;
+             }
+             catch (Exception ex)
+             {
+                 return agencyPinClass;
+             }
+
+
+         }
+        */
 
     }
 }

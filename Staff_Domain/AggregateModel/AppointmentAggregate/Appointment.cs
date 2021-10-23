@@ -11,9 +11,9 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
         public int AppointmentSlotId { get; private set; }
         public Guid CustomerAccountId { get; private set; }
         public string CustomerName { get; private set; }
-        public Guid StaffAccountId { get; private set; }
         public int AppointmentState { get; private set; }
-        public string ZoomLink { get; private set; }
+        public Guid? StaffAccountId { get; private set; }
+        public string? ZoomLink { get; private set; }
 
         Appointment()
         {
@@ -34,13 +34,25 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
         public Appointment SetStaffAccountIdOnceStaffConfirmAppointment(Guid staffAccountId)
         {
             StaffAccountId = staffAccountId;
+
             AppointmentState = 2;
+            return this;
+        }
+
+        public Appointment EditAppointmentDateAndSlot(DateTime date, int slot)
+        {
+            AppointmentDate = date;
+            AppointmentSlotId = slot;
+
+            AppointmentState = 1;
+            ZoomLink = null;
             return this;
         }
 
         public Appointment SetZoomLink (string zoomLink)
         {
             ZoomLink = zoomLink;
+
             AppointmentState = 3;
             return this;
         }

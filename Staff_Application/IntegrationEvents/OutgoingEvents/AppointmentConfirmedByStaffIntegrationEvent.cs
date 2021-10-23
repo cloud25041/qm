@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Staff_Application.IntegrationEvents.OutgoingEvents
 {
     public record AppointmentConfirmedByStaffIntegrationEvent(
-        Guid appointmentId,
-        Guid staffId,
-        int appointmentState) : IntegrationEvent;
+        Guid AppointmentId,
+        Guid StaffId) : IntegrationEvent;
 }

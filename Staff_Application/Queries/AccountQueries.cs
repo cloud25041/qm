@@ -70,7 +70,8 @@ namespace Staff_Application.Queries
                     accountId = (Guid)item.AccountId,
                     name = (string)item.Name,
                     email = (string)item.Email,
-                    mobileNo = (int)item.Mobile
+                    mobileNo = (int)item.Mobile,
+                    agencyId = (int)item.AgencyId
                 };
 
                 listOfAccount.Add(account);

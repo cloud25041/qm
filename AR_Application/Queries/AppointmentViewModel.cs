@@ -8,7 +8,6 @@ namespace AR_Application.Queries
     public record AppointmentViewModel
     {
         public Guid AppointmentId { get; init; }
-        //public Guid AccountId { get; init; }
         public int AppointmentType { get; init; }
         public int AppointmentState { get; init; }
         public DateTime AppointmentDate { get; init; }
@@ -16,7 +15,5 @@ namespace AR_Application.Queries
         public Guid UserAccountId { get; init; }
         public Guid StaffAccountID { get; init; }
         public int AgencyId { get; init; }
-        //public DateTime StartTime { get; init; }
-        //public DateTime EndTime { get; init; }
     }
 }
