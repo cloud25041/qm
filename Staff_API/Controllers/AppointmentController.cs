@@ -44,6 +44,30 @@ namespace Staff_API.Controllers
             return agencyList;
         }
 
+        [Route("api/appointment/GetAppointmentDetailsByStaffAccountId")]
+        [HttpPost]
+        public async Task<List<AppointmentViewModel>> GetAppointmentDetailsByStaffAccountId([FromBody] Guid accountId)
+        {
+            List<AppointmentViewModel> Appointment = new List<AppointmentViewModel>();
+
+            // IList<AppointmentDetails> appointmentDetails = new List<AppointmentDetails>();
+            try
+            {
+
+                Appointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
+                return Appointment;
+            }
+
+            catch (Exception ex)
+            {
+                string e = ex.ToString();
+                return Appointment;
+            }
+
+
+        }
+
+
 
         /*public async Task<List<ViewAppointmentDetails>> GetAppointmentDetailsByAgencyId(int agencyId)
         {
@@ -52,6 +76,9 @@ namespace Staff_API.Controllers
             return viewAppointmentDetailsList;
         }
         */
+
+
+
 
         #region Agency
         //This one needs to be in Staff API
