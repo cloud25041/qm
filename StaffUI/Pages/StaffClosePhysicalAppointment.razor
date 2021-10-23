@@ -1,19 +1,18 @@
 ﻿
 @page "/staffclosephysicalappointment"
 @inject NavigationManager NavManager
-@inject HttpClient Http
+@inject HttpClient HttpClient
+@inject NavigationManager UriHelper
+@using Microsoft.AspNetCore.Components.Routing
+@using StaffUI.Models;
+@inject LocalStorage.ILocalStorageService localStorage;
+@using Newtonsoft.Json;
 
 
 <h3>Physical Counters</h3>
 
 <p>List of Active Physical Counters.</p>
 
-@if (list == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
     <table class="table">
         <thead>
             <tr>
@@ -22,21 +21,21 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var x in list)
-            {
+            <div class="col py-3 px-lg-5 border bg-light">
+                AppointmentId: <input type="text" placeholder="Username" @bind="@_appointmentId" />
+            </div>
                 <tr>
-                    <td>@x.PhysicalCounterId</td>
                     <td>
-                        <button class="btn btn-primary" @onclick=@((CompletedPhysicalCounter))>Completed</button>
-                        <button class="btn btn-primary" @onclick=@((NoShowPhysicalCounter))>Missed</button>
+                        <button class="btn btn-primary" @onclick=@(CompletedPhysicalCounter)>Completed</button>
+                        <button class="btn btn-primary" @onclick=@(NoShowPhysicalCounter)>No Show</button>
                     </td>
                 </tr>
-            }
+            
         </tbody>
     </table>
 
     <button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
-}
+
 
 
 
@@ -44,29 +43,43 @@ else
 {
 
     private PhysicalCounterIdList[] list;
+    public string _appointmentId;
 
     public class PhysicalCounterIdList
     {
         public int PhysicalCounterId { get; set; }
     }
 
-    protected override async Task OnInitializedAsync()
+    public class PhysicalCounterDetails
     {
-        // Get AppointmentByUserID from WebAPI
-        // 
-        //list = await Http.GetFromJsonAsync<PhysicalCounterIdList[]>("sample-data/PClist.json");
+        public Guid appointmentId { get; set; }
+        public Guid StaffId { get; set; }
+        public int state { get; set; }
     }
 
     private async Task CompletedPhysicalCounter()
     {
-
-        //Call API to PUT the data 
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        PhysicalCounterDetails physicalCounterDetails = new PhysicalCounterDetails();
+        Guid appointmentGuid = Guid.Parse(_appointmentId);
+        physicalCounterDetails.appointmentId = appointmentGuid;
+        physicalCounterDetails.state = 4;
+        physicalCounterDetails.StaffId = accountInfo.AccountId;
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
+        if (responseMessage != null)
+        {
+            // success
+        }
+        else
+        {
+            // fail
+        }
     }
 
     private async Task NoShowPhysicalCounter()
     {
 
-        //Call API to PUT the data 
+        //Call API to PUT the data
     }
 
     private async Task BackButton()
