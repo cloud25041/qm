@@ -97,9 +97,9 @@ namespace AR_API.Controllers
 
         [Route("api/account/createAppointment")]
         [HttpPost]
-        public async Task<bool> CreateAppointment(int agencyId, int appointmentType, int appointmentState, DateTime appointmentDate, int appoinmentSlotId, Guid userAccountId)
+        public async Task<bool> CreateAppointment(CreateAppointmentDetails createAppointmentDetails)
         {
-            return await _mediator.Send(new CreateAppointmentCommand(agencyId, appointmentType, appointmentState, appointmentDate, appoinmentSlotId, userAccountId));
+            return await _mediator.Send(new CreateAppointmentCommand(createAppointmentDetails.AgencyId, createAppointmentDetails.AppointmentType, createAppointmentDetails.AppointmentState, createAppointmentDetails.AppointmentDate, createAppointmentDetails.AppointmentSlotId, createAppointmentDetails.UserAccountId));
         }
 
         // Eric - yo Justin. you need to add this route
