@@ -59,6 +59,7 @@ namespace AR_API
                         mQClient.Subscribe<AppointmentConfirmedByStaffIntegrationEvent, AppointmentConfirmedByStaffIntegrationEventHandler>();
                         mQClient.Subscribe<AppointmentCompletedIntegrationEvent, AppointmentCompletedIntegrationEventHandler>();
                         mQClient.Subscribe<NoShowAppointmentIntegrationEvent, NoShowAppointmentIntegrationEventHandler>();
+                        mQClient.Subscribe<ZoomLinkCreatedIntegrationEvent, ZoomLinkCreatedIntegrationEventHandler>();
                     }
                     else
                     {

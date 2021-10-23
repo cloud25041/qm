@@ -57,6 +57,7 @@ namespace Staff_API
                     if (mQClient.IsConnected == true)
                     {
                         mQClient.Subscribe<AppointmentBookedIntegrationEvent, AppointmentBookedIntegrationEventHandler>();
+                        mQClient.Subscribe<ZoomLinkCreatedIntegrationEvent, ZoomLinkCreatedIntegrationEventHandler>();
                     }
                     else
                     {
