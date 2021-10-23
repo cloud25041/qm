@@ -47,15 +47,19 @@ namespace Staff_API.Controllers
         [Route("api/appointment/UpdateAppointmentState")]
         [HttpPost]
 
-        public async Task<ActionResult<bool>> UpdateAppointmentState(Guid appointmentId, int state)
+        public async Task<ActionResult<bool>> UpdateAppointmentState([FromBody] Guid appointmentId, int state) // change to a class para later
         {
             if(state == 4)
             {
-                return await _mediator.Send(new AppointmentCompleteCommand() { AppointmentId = appointmentId });
+                return await _mediator.Send(new AppointmentCompleteCommand(appointmentId));
             }
             if(state == 5)
             {
-                return await _mediator.Send(new AppointmentNoShowCommand() { AppointmentId = appointmentId });
+                return await _mediator.Send(new NoShowAppointmentCommand(appointmentId));
+            }
+            else
+            {
+                return false;
             }
         }
 
