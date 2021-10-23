@@ -38,7 +38,6 @@
 
     private PhysicalCounterIdList[] list;
     public string _appointmentId;
-    //private bool _error;
 
     public class PhysicalCounterIdList
     {
@@ -63,12 +62,10 @@
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
-            //_error = false;
             NavManager.NavigateTo("/staffmainselection");
         }
         else
         {
-            //_error = true;
             NavManager.NavigateTo("/staffmainselection");
         }
     }
@@ -85,12 +82,10 @@
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
-            //_error = false;
             NavManager.NavigateTo("/staffmainselection");
         }
         else
         {
-            //_error = true;
             NavManager.NavigateTo("/staffmainselection");
         }
     }
