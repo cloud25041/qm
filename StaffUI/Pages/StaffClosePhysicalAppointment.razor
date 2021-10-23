@@ -13,28 +13,22 @@
 
 <p>List of Active Physical Counters.</p>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Physical Counter Number</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <div class="col py-3 px-lg-5 border bg-light">
-                AppointmentId: <input type="text" placeholder="Username" @bind="@_appointmentId" />
-            </div>
-                <tr>
-                    <td>
-                        <button class="btn btn-primary" @onclick=@(CompletedPhysicalCounter)>Completed</button>
-                        <button class="btn btn-primary" @onclick=@(NoShowPhysicalCounter)>No Show</button>
-                    </td>
-                </tr>
-            
-        </tbody>
-    </table>
+<table class="table">
+    <tbody>
+        <div class="col py-3 px-lg-5 border bg-light">
+            AppointmentId: <input type="text" placeholder="Username" @bind="@_appointmentId" />
+        </div>
+        <tr>
+            <td>
+                <button class="btn btn-primary" @onclick=@(CompletedPhysicalCounter)>Completed</button>
+                <button class="btn btn-primary" @onclick=@(NoShowPhysicalCounter)>No Show</button>
+            </td>
+        </tr>
 
-    <button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
+    </tbody>
+</table>
+
+<button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
 
 
 
@@ -44,6 +38,7 @@
 
     private PhysicalCounterIdList[] list;
     public string _appointmentId;
+    //private bool _error;
 
     public class PhysicalCounterIdList
     {
@@ -68,18 +63,36 @@
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
-            // success
+            //_error = false;
+            NavManager.NavigateTo("/staffmainselection");
         }
         else
         {
-            // fail
+            //_error = true;
+            NavManager.NavigateTo("/staffmainselection");
         }
     }
 
     private async Task NoShowPhysicalCounter()
     {
 
-        //Call API to PUT the data
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        PhysicalCounterDetails physicalCounterDetails = new PhysicalCounterDetails();
+        Guid appointmentGuid = Guid.Parse(_appointmentId);
+        physicalCounterDetails.appointmentId = appointmentGuid;
+        physicalCounterDetails.state = 5;
+        physicalCounterDetails.StaffId = accountInfo.AccountId;
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
+        if (responseMessage != null)
+        {
+            //_error = false;
+            NavManager.NavigateTo("/staffmainselection");
+        }
+        else
+        {
+            //_error = true;
+            NavManager.NavigateTo("/staffmainselection");
+        }
     }
 
     private async Task BackButton()
