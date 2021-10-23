@@ -11,5 +11,6 @@ namespace Staff_Application.IntegrationEvents
     {
         Task PublishEventsThroughEventBusAsync();
         Task AddAndSaveEventAsync(IntegrationEvent evt);
+        void AddAndSaveEventAsync();
     }
 }

@@ -44,6 +44,20 @@ namespace Staff_API.Controllers
             return agencyList;
         }
 
+        [Route("api/appointment/UpdateAppointmentState")]
+        [HttpPost]
+
+        public async Task<ActionResult<bool>> UpdateAppointmentState(Guid appointmentId, int state)
+        {
+            if(state == 4)
+            {
+                return await _mediator.Send(new AppointmentCompleteCommand() { AppointmentId = appointmentId });
+            }
+            if(state == 5)
+            {
+                return await _mediator.Send(new AppointmentNoShowCommand() { AppointmentId = appointmentId });
+            }
+        }
 
         /*public async Task<List<ViewAppointmentDetails>> GetAppointmentDetailsByAgencyId(int agencyId)
         {
