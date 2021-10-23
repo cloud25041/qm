@@ -30,7 +30,8 @@ namespace Staff_Application.Queries
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AgencyId\" = @agencyId ", new { agencyId });
+                int appointmentState = 1;
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"AgencyId\" = @agencyId  AND \"AppointmentState\" = @appointmentState", new { agencyId, appointmentState });
                 return MapQueryResultToListOfViewAppointment(result);
             }
         }

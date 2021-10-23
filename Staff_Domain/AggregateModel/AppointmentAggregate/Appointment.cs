@@ -56,5 +56,16 @@ namespace Staff_Domain.AggregateModel.AppointmentAggregate
             AppointmentState = 3;
             return this;
         }
+
+        public Appointment CompleteAppointment()
+        {
+            AppointmentState = 4;
+            return this;
+        }
+        public Appointment NoShowAppointment()
+        {
+            AppointmentState = 5;
+            return this;
+        }
     }
 }

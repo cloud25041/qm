@@ -26,9 +26,9 @@ namespace Staff_API.Controllers
         [Route("api/appointment/AssignStaffIdToAppointment")]
         [HttpPost]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<bool>> AssignStaffIdToAppointment(Guid staffId, Guid appointmentId)
+        public async Task<ActionResult<bool>> AssignStaffIdToAppointment(AcceptAppointmentDetails acceptAppointmentDetails)
         {
-            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = staffId , AppointmentId = appointmentId});
+            return await _mediator.Send(new AssignStaffToAppointmentCommand() { StaffId = acceptAppointmentDetails.AccountId, AppointmentId = acceptAppointmentDetails.AppointmentId});
         }
 
 
@@ -67,7 +67,24 @@ namespace Staff_API.Controllers
 
         }
 
+        [Route("api/appointment/UpdateAppointmentState")]
+        [HttpPost]
 
+        public async Task<ActionResult<bool>> UpdateAppointmentState(PhysicalCounterDetails physicalCounterDetails)
+        {
+            if (physicalCounterDetails.state == 4)
+            {
+                return await _mediator.Send(new AppointmentCompleteCommand(physicalCounterDetails.appointmentId));
+            }
+            if (physicalCounterDetails.state == 5)
+            {
+                return await _mediator.Send(new NoShowAppointmentCommand(physicalCounterDetails.appointmentId));
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /*public async Task<List<ViewAppointmentDetails>> GetAppointmentDetailsByAgencyId(int agencyId)
         {

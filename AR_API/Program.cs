@@ -57,6 +57,8 @@ namespace AR_API
                     if(mQClient.IsConnected == true)
                     {
                         mQClient.Subscribe<AppointmentConfirmedByStaffIntegrationEvent, AppointmentConfirmedByStaffIntegrationEventHandler>();
+                        mQClient.Subscribe<AppointmentCompletedIntegrationEvent, AppointmentCompletedIntegrationEventHandler>();
+                        mQClient.Subscribe<NoShowAppointmentIntegrationEvent, NoShowAppointmentIntegrationEventHandler>();
                     }
                     else
                     {

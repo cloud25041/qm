@@ -1,0 +1,65 @@
+﻿
+@page "/appointment/appointmentbookingsuccess/{agencyName}/{appointmentDate}/{appointmentTime}"
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Routing
+@using UI.Models;
+@inject LocalStorage.ILocalStorageService localStorage;
+
+<h3>Booked a physical appointment successfully!</h3>
+
+@if (_loading)
+{
+    <h3>Loading Up Booking Results...</h3>
+}
+else
+{
+    <div class="col py-3 px-lg-5 border bg-light">
+        Queue No : @agencyName
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Appointment Date: @appointmentDate
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        Appointment Date: @appointmentTime
+    </div>
+
+
+
+    <div class="col py-3">
+        <button class="btn btn-primary" @onclick="Navigate">OK</button>
+    </div>
+}
+
+@code
+{
+    protected override async void OnInitialized()
+    {
+        AccountInfo result2 = await localStorage.GetItem<AccountInfo>("account_info");
+    }
+    #region Fields
+
+    #endregion
+
+    #region Properties
+
+    [Parameter]
+    public string appointmentDate { get; set; }
+    [Parameter]
+    public string appointmentTime { get; set; }
+    [Parameter]
+    public string agencyName { get; set; }
+
+
+    #endregion
+    private bool _loading;
+
+    private void Navigate()
+    {
+        NavManager.NavigateTo("/appointment/appointmentviewallappointment");
+    }
+
+
+}
