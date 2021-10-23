@@ -10,7 +10,7 @@ namespace StaffUI.Models
         public Guid TransactionId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string AccountId { get; set; }
+        public Guid AccountId { get; set; }
         public int AgencyId { get; set; }
         public bool IsLoginSuccessful { get; set; }
 
