@@ -11,6 +11,12 @@
 
 <h3>Physical Counters</h3>
 
+@if (_error == true)
+{
+    <h5> @_message</h5>
+}
+
+
 <p>List of Active Physical Counters.</p>
 
 <table class="table">
@@ -38,6 +44,8 @@
 
     private PhysicalCounterIdList[] list;
     public string _appointmentId;
+    private bool _error = false;
+    private string _message = "";
 
     public class PhysicalCounterIdList
     {
@@ -62,11 +70,21 @@
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
-            NavManager.NavigateTo("/staffmainselection");
-        }
-        else
-        {
-            NavManager.NavigateTo("/staffmainselection");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<bool>(content);
+                if (results == true)
+                {
+                    _error = false;
+                    NavManager.NavigateTo("/staffmainselection");
+                }
+                else
+                {
+                    _error = true;
+                    _message = "Appointment failed to update. Please try again";
+                }
+            }
         }
     }
 
@@ -82,12 +100,24 @@
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
-            NavManager.NavigateTo("/staffmainselection");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<bool>(content);
+                if (results == true)
+                {
+                    _error = false;
+                    NavManager.NavigateTo("/staffmainselection");
+                }
+                else
+                {
+                    _error = true;
+                    _message = "Appointment failed to update. Please try again";
+                }
+            }
+
         }
-        else
-        {
-            NavManager.NavigateTo("/staffmainselection");
-        }
+
     }
 
     private async Task BackButton()
