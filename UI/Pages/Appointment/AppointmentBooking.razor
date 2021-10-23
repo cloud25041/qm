@@ -6,9 +6,10 @@
 @inject NavigationManager UriHelper
 @using UI.Models;
 @using Newtonsoft.Json;
-@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Routing;
 @using System.ComponentModel.DataAnnotations;
 @using UI.DateTimeSlotHelper;
+@inject LocalStorage.ILocalStorageService localStorage;
 
 <h3>Physical Appointment Booking</h3>
 
@@ -69,7 +70,7 @@ else
 
 @code
 {
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
         AppointmentTypeList = new List<AppointmentType>();
         AppointmentTypeList.Add(new AppointmentType() { Type = "Physical", TypeId = 1 });
@@ -223,7 +224,7 @@ else
             var content = await response.Content.ReadAsStringAsync();
             var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
             List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
-            foreach(var result in resultList)
+            foreach (var result in resultList)
             {
                 //var tempValue = result;
                 //tempValue.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
@@ -238,7 +239,8 @@ else
         }
 
     }
-    private void NavigateBook()
+
+    private async void NavigateBook()
     {
         if (SelectedDate == null || SlotVal == null || TypeVal == null || AgencyVal == null)
         {
@@ -247,24 +249,44 @@ else
         }
         else
         {
-            //Testing
-            _display = true;
-            test1 = SelectedDate;
-            foreach (var availableSlot in availableSlotList)
+            DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+            AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
+
+            CreateAppointmentDetails createAppointmentDetails = new CreateAppointmentDetails();
+            createAppointmentDetails.AgencyId = AgencyVal ?? default(int);
+            createAppointmentDetails.AppointmentDate = SelectedDate ?? default(DateTime);
+            createAppointmentDetails.AppointmentSlotId = SlotVal ?? default(int);
+            createAppointmentDetails.AppointmentState = 1;
+            createAppointmentDetails.AppointmentType = TypeVal ?? default(int);
+            createAppointmentDetails.UserAccountId = accountInfo.accountId;
+
+            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/createAppointment", createAppointmentDetails);
+            if (checkResponseMessage.IsSuccessStatusCode)
             {
-                if (availableSlot.SlotId == SlotVal && availableSlot.Date == SelectedDate)
+                if (checkResponseMessage != null)
                 {
-                    test2 = availableSlot.Time;
-                    this.StateHasChanged();
-                    break;
+                    appointmentDate = SelectedDate.Value.Date.ToString("dd MMM yyyy");
+
+                    appointmentTime = dateTimeSlotHelper.GetTimebySlot(SlotVal ?? default(int));
+
+                    string agencyName = "";
+
+                    foreach (var agency in AgencyList)
+                    {
+                        if (agency.AgencyId == AgencyVal)
+                        {
+                            agencyName = agency.AgencyName;
+                            break;
+                        }
+                    }
+                    NavManager.NavigateTo($"/appointment/appointmentbookingsuccess/{agencyName}/{appointmentDate}/{appointmentTime}");
                 }
             }
-            appointmentDate = SelectedDate.Value.Date.ToString("dd MMM yyyy");
-            appointmentTime = test2;
-            queueNo = "Q100";
-            NavManager.NavigateTo("/appointment/appointmentphysicalbookingsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}");
+            else
+            {
+                modal.Show<AppointmentBookingFail>("Booking has Failed");
+            }
         }
-
     }
 
     private void NavigateCancel()
@@ -274,5 +296,6 @@ else
 
 
     #endregion
-
 }
+
+

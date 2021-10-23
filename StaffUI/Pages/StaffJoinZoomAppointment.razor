@@ -10,57 +10,95 @@
 @using Newtonsoft.Json;
 @using StaffUI.Models;
 @using Microsoft.AspNetCore.Components.Routing
-@*@inject LocalStorage.ILocalStorageService localStorage;*@
+@inject LocalStorage.ILocalStorageService localStorage;
 @using StaffUI.DateTimeSlotHelper;
 
 <h3>Please Join A Zoom Appointment</h3>
 
-
-<thead class="table-primary">
-    <tr>
-        <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Name of Customer</th>
-        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Date</th>
-        <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Timeslot</th>
-        <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Zoom Link</th>
-        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
-    </tr>
-</thead>
-
-<div class="table-responsive">
-    <table class="table table-sm table-hover">
-
-        <tbody>
+@if (_loading)
+{
+    <h3>Registering...</h3>
+}
+else
+{
+    if (gotAppointmentFlag)
+    {
+        <thead class="table-primary">
             <tr>
-                @*<td>@nameArray[j]</td>
-                    <td>@dateArray[j]</td>
-                    <td>@timeslotArray[j]</td>*@
-                @*<td style="display:none;"> 1 </td>*@
-                <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">John</td>
-                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">24/10/2021</td>
-                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">11am</td>
-                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">www.zoomlink.com</td>
-                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
-                    <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
-                    <button class="btn btn-primary" @onclick=@((NoShowButton))>No Show</button>
-                </td>
+                <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">Name of Customer</th>
+                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Date</th>
+                <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Timeslot</th>
+                <th class="col-xs-4 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Zoom Link</th>
+                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">Action</th>
             </tr>
+        </thead>
 
-        </tbody>
-    </table>
-</div>
+        if (AppointmentList != null)
+        {
+            foreach (var appointment in AppointmentList)
+            {
+                //if (appointment.AppointmentType == 1)
+                //{
+                //    appointmentTypeName = "Physical";
+                //}
+                //else
+                //{
+                //    appointmentTypeName = "Virtual";
+                //}
+
+                //for (appointment.AppointmentSlotId == DateTimeSlotHelper.)
+                DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+                //var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
+
+                <div>
+                    <table class="table table-hover">
+
+                        <tbody>
+                            <tr>
+                                <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">John</td>
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">24/10/2021</td>
+                                @*<td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@tempTime</td>*@
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">www.zoomlink.com</td>
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
+                                    <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
+                                    <button class="btn btn-primary" @onclick=@((NoShowButton))>No Show</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+    }
+    else
+    {
+
+        <tr>
+            <td colspan="5">No Record Found.</td>
+        </tr>
+
+    }
 
 
-
-
+}
 
 @code
 {
+    int i = 0;
     #region Field
     [Parameter]
     public string accountId { get; set; }
     [Parameter]
     public string userName { get; set; }
 
+    private bool _loading;
+    public string userFullName { get; set; }
+
+    public List<AppointmentDetails> AppointmentList { get; set; }
+    //public List<Agency> AgencyList { get; set; }
+
+    private bool gotAppointmentFlag = false;
     #endregion
     //private bool _loading;
 
@@ -74,13 +112,82 @@
         //NavManager.NavigateTo("/staff/staffjoinzoomappointment");
     }
 
-    //protected override async void OnInitialized()
-    //{
-    //    //;
-    //    AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
-    //    AppointmentList = new List<AppointmentDetails>();
-    //    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
-    //}
+    protected override async void OnInitialized()
+    {
+        //accountId = "1234";
+        //AppointmentList = new List<AppointmentDetails>();
+        // call local storage
+        ViewAppointmentDetails accountInfo = await localStorage.GetItem<ViewAppointmentDetails>("appointment_info");
+        AppointmentList = new List<AppointmentDetails>();
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByStaffAccountId", accountInfo.UserAccountId);
+        if (responseMessage != null)
+        {
+            // var results = new List<AppointmentDetails>();
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
+                //var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
+                var results = JsonConvert.DeserializeObject<List<AppointmentDetails>>(content);
+                if (results.Count > 0)
+                {
+                    gotAppointmentFlag = true;
+
+                    //var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+                    //if (responseForAgency.IsSuccessStatusCode)
+                    //{
+                    //    var contentForAgency = await responseForAgency.Content.ReadAsStringAsync();
+                    //    AgencyList = JsonConvert.DeserializeObject<List<Agency>>(contentForAgency);
+
+                    //    if (AgencyList != null)
+                    //    {
+                    //        var listOfAgency = await localStorage.GetItem<List<Agency>>("agency_info");
+                    //        listOfAgency = AgencyList;
+                    //        string agencyName;
+                    //        foreach (var agency2 in listOfAgency)
+                    //        {
+                    //            if (agency2.AgencyId == agencyId)
+                    //            {
+                    //                agencyName = agency2.AgencyName;
+                    //            }
+                    //        }
+                    //    }
+
+                    //}
+
+                }
+                foreach (var eachResults in results)
+                {
+                    i = AppointmentList.Count;
+                    AppointmentList.Add(eachResults);
+                    this.StateHasChanged();
+
+                    //appointmentName = appointmentName + eachResults.AppointmentId;
+                    //AppointmentList.Add(eachResults);
+                    // appointmentName = appointmentName + eachResults.AppointmentName;
+                    //agency = eachResults.AppointmentId;
+                    //agencyArray[i] = agency + i.ToString();
+
+                    //service = eachResults.Service;
+                    //serviceArray[i] = service + i.ToString();
+
+                    //appointmentDate = eachResults.AppointmentDate;
+                    //locationArray[i] = location + i.ToString();
+
+                    //appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
+                    //appointmentId = appointmentId + eachResults.AppointmentId;
+                }
+
+                this.StateHasChanged();
+
+            }
+            else
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                accountId = "1234";
+            }
+        }
+    }
 
 
 

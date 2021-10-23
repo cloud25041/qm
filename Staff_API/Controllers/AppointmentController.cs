@@ -44,16 +44,39 @@ namespace Staff_API.Controllers
             return agencyList;
         }
 
+        [Route("api/appointment/GetAppointmentDetailsByStaffAccountId")]
+        [HttpPost]
+        public async Task<List<AppointmentViewModel>> GetAppointmentDetailsByStaffAccountId([FromBody] Guid accountId)
+        {
+            List<AppointmentViewModel> Appointment = new List<AppointmentViewModel>();
+
+            // IList<AppointmentDetails> appointmentDetails = new List<AppointmentDetails>();
+            try
+            {
+
+                Appointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
+                return Appointment;
+            }
+
+            catch (Exception ex)
+            {
+                string e = ex.ToString();
+                return Appointment;
+            }
+
+
+        }
+
         [Route("api/appointment/UpdateAppointmentState")]
         [HttpPost]
 
         public async Task<ActionResult<bool>> UpdateAppointmentState(PhysicalCounterDetails physicalCounterDetails)
         {
-            if(physicalCounterDetails.state == 4)
+            if (physicalCounterDetails.state == 4)
             {
                 return await _mediator.Send(new AppointmentCompleteCommand(physicalCounterDetails.appointmentId));
             }
-            if(physicalCounterDetails.state == 5)
+            if (physicalCounterDetails.state == 5)
             {
                 return await _mediator.Send(new NoShowAppointmentCommand(physicalCounterDetails.appointmentId));
             }
@@ -70,6 +93,9 @@ namespace Staff_API.Controllers
             return viewAppointmentDetailsList;
         }
         */
+
+
+
 
         #region Agency
         //This one needs to be in Staff API
