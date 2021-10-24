@@ -14,6 +14,13 @@
 
 <h3>List of Unassigned Appointments</h3>
 
+@if(_errorFlag == true)
+{
+    <h5> Error Accepting the appointment</h5>
+}
+else
+{
+}
 
 @if (_loading)
 {
@@ -90,6 +97,7 @@ else
 
     private bool _loading;
     private bool _noAppointmentflag;
+    private bool _errorFlag;
 
     private List<ViewAppointmentDetails> ViewAppointmentDetailsList { get; set; }
 
@@ -97,6 +105,7 @@ else
 
     protected override async void OnInitialized()
     {
+        _errorFlag = false;
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
         ViewAppointmentDetailsList = new List<ViewAppointmentDetails>();
 
@@ -142,13 +151,27 @@ else
 
     private async Task AcceptButton(Guid AppointmentId)
     {
+        _errorFlag = false;
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
         AcceptAppointmentDetails acceptAppointmentDetails = new AcceptAppointmentDetails();
         acceptAppointmentDetails.AccountId = accountInfo.AccountId;
         acceptAppointmentDetails.AppointmentId = AppointmentId;
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/AssignStaffIdToAppointment", acceptAppointmentDetails);
+        if (responseMessage != null)
+        {
 
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                this.StateHasChanged();
+                NavManager.NavigateTo("/staffmainselection");
+            }
+            else
+            {
+                _errorFlag = true;
+            }
+
+        }
     }
-
 }
+
 
