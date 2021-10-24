@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UI.Models
+namespace StaffUI.Models
 {
     public class AccountInfo
     {

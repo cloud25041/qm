@@ -4,8 +4,11 @@
 @inject NavigationManager NavManager
 @inject HttpClient HttpClient
 @inject NavigationManager UriHelper
-@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Routing;
+@using System.ComponentModel.DataAnnotations;
 @using UI.Models;
+@using UI.DateTimeSlotHelper;
+@inject LocalStorage.ILocalStorageService localStorage;
 @using Newtonsoft.Json;
 
 @if (_loading)
@@ -14,28 +17,35 @@
 }
 else
 {
-<div class="col py-3 px-lg-5 border bg-light">
-    Current Appointment Date: @currentAppointmentdetails.AppointmentDate
-    Current Appointment Time:
-</div>
-    
     <div class="col py-3 px-lg-5 border bg-light">
-            New Appointment Date: <SfDatePicker TValue="DateTime?" @bind-Value="@SelectedDate" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate">
+        Current Agency: @currentAppointmentdetails.AgencyId
+        Current Appointment Type: @currentAppointmentdetails.AppointmentType
+        Current Appointment Date: @currentAppointmentdetails.AppointmentDate
+        Current Slot: @currentAppointmentdetails.AppointmentSlotId
+    </div>
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        New Appointment Date: <SfDatePicker TValue="DateTime?" @bind-Value="@SelectedDate" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate">
             <DatePickerEvents TValue="DateTime?" ValueChange="DateSelectedHandler"></DatePickerEvents>
-            </SfDatePicker>
-        </div>
+        </SfDatePicker>
+    </div>
 
-       <div class="col py-3 px-lg-5 border bg-light">
-            New Appointment Time: <SfTimePicker TValue="DateTime?" Placeholder="Select a Time" Min="@MinTime" Max="@MaxTime" Format="HH:mm" Step="30"></SfTimePicker>
+    if (SelectedDate != null)
+    {
+        <p>DropDownList value is:<strong>@SelectedDate.Value.Date</strong></p>
+        <div class="col py-3 px-lg-5 border bg-light">
+            Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@SlotValue" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
+                <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
+            </SfDropDownList>
         </div>
+        <p>DropDownList value is:<strong>@SlotValue</strong></p>
 
-    
+    }
 
     <div class="col py-3">
         <button class="btn btn-primary" @onclick="NavigateBook">Book</button>
         <button class="btn btn-secondary" @onclick="NavigateCancel">Cancel</button>
     </div>
-    <button class="btn btn-secondary" @onclick="@(() => modal.Show<AppointmentEditFail>("Error!"))">Display Fail Modal</button>
 }
 
 @code
@@ -48,56 +58,58 @@ else
     public string appointmentDate { get; set; }
 
     [Parameter]
-    public string appointmentTime { get; set; }
+    public int AppointmentSlotId { get; set; }
 
     [Parameter]
     public string queueNo { get; set; }
 
-    public List<AppointmentDetails> currentAppointmentdetails { get; set; }
+    public AppointmentDetails currentAppointmentdetails { get; set; }
     public IList<AvailableSlots> availableSlotList { get; set; }
     public IList<AvailableSlots> selectedDateSlotList { get; set; }
+    public IList<Agency> AgencyList { get; set; }
 
     protected override async void OnInitialized()
     {
 
         Guid apptid = Guid.Parse(appointmentId);
 
-        currentAppointmentdetails = new List<AppointmentDetails>();
+        currentAppointmentdetails = new AppointmentDetails();
 
-        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
-
-        if (responseMessage != null)
+        var response = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        if (response != null)
         {
-            if (responseMessage.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                string content = await responseMessage.Content.ReadAsStringAsync();
-                var results = JsonConvert.DeserializeObject<AppointmentDetails>(content);
+                string content = await response.Content.ReadAsStringAsync();
+                var resultList = JsonConvert.DeserializeObject<List<Agency>>(content);
+                AgencyList = resultList;
+                this.StateHasChanged();
 
-                if (results != null)
-                {
-                    // logic for displaying of date and time
-                    appointmentDate = currentAppointmentdetails.Date.ToString("dd MMM yyyy");
-                    //currentAppointmentdetails.AppointmentDate = results.AppointmentDate;
 
-                }
             }
-        }
+            else
+            {
 
+
+            }
+
+
+        }
 
     }
 
     private bool _loading;
     private string errorMessage;
 
+
     public DateTime? SelectedDate { get; set; } = null;
     public int SelectedSlot { get; set; }
-    public int? SlotVal;
+    public int? SlotValue;
+    public int? TypeValue;
+    public int? AgencyValue;
+    public int? ConcurrentUser;
 
 
-    // set minimum & maximum time
-    public DateTime MaxTime { get; set; } = new DateTime(2021, 02, 20, 18, 00, 00);
-    public DateTime MinTime { get; set; } = new DateTime(2021, 02, 20, 08, 00, 00);
     // set min & max dates
     public DateTime MinDate { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
     public DateTime MaxDate { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, DateTime.Now.Day);
@@ -110,26 +122,64 @@ else
         public string Id { get; set; }
     }
 
-    private void DateSelectedHandler()
+    public class Agency
     {
-        selectedDateSlotList = new List<AvailableSlots>();
-        if (SelectedDate.HasValue == true)
+        public string AgencyName { get; set; }
+        public int AgencyId { get; set; }
+        public string AgencyPin { get; set; }
+        public string Location { get; set; }
+        public int PhysicalConcurrentUser { get; set; }
+        public int VirtualConcurrentUser { get; set; }
+
+    }
+
+    private async void DateSelectedHandler()
+    {
+        foreach (var agency in AgencyList)
         {
-            foreach (var availableSlot in availableSlotList)
+            if (agency.AgencyId == AgencyValue)
             {
-                if (availableSlot.Date == SelectedDate)
+                if (TypeValue == 1)
                 {
-                    selectedDateSlotList.Add(availableSlot);
+                    ConcurrentUser = agency.PhysicalConcurrentUser;
+                    break;
+                }
+                if (TypeValue == 2)
+                {
+                    ConcurrentUser = agency.VirtualConcurrentUser;
+                    break;
                 }
             }
-            this.StateHasChanged();
         }
+        DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+        UserAgencyInput userAgencyInput = new UserAgencyInput();
+        userAgencyInput.AgencyId = AgencyValue;
+        userAgencyInput.AppointmentTypeId = TypeValue;
+        userAgencyInput.SelectedDate = SelectedDate;
+        userAgencyInput.ConcurrentUser = ConcurrentUser;
+        selectedDateSlotList = new List<AvailableSlots>();
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/getavailableappointment", userAgencyInput);
+        if (response != null)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
+            List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
+            foreach (var result in resultList)
+            {
+
+                AvailableSlots availableSlots = new AvailableSlots() { Date = result.Date, Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId), SlotId = result.SlotId };
+                selectedDateSlotList.Add(availableSlots);
+
+
+            }
+        }
+
     }
 
 
     private void NavigateBook()
     {
-        if (SelectedDate == null || SlotVal == null)
+        if (SelectedDate == null || SlotValue == null)
         {
             errorMessage = "Please Select a Valid Option from the dropdown selection.";
             this.StateHasChanged();

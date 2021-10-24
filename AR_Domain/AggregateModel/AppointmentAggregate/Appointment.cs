@@ -64,5 +64,12 @@ namespace AR_Domain.AggregateModel.AppointmentAggregate
             AppointmentState = 5;
             return this;
         }
+
+        public Appointment SetZoomLink(string zoomLink)
+        {
+            ZoomLink = zoomLink;
+            AppointmentState = 3;
+            return this;
+        }
     }
 }
