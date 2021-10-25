@@ -47,6 +47,16 @@ namespace Staff_Application.Queries
             }
         }
 
+        public async Task<List<AppointmentViewModel>> GetAllAppointmentsByStaffAccountId(Guid accountId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<dynamic>("SELECT * FROM \"Appointment\" WHERE \"StaffAccountId\" = @accountId ", new { accountId });
+                return MapQueryResultToListOfAppointment(result);
+            }
+        }
+
         private List<AppointmentViewModel> MapQueryResultToListOfAppointment (dynamic result)
         {
             List<AppointmentViewModel> listOfAppointment = new();
@@ -56,12 +66,13 @@ namespace Staff_Application.Queries
                 {
                     AppointmentId = (Guid)item.AppointmentId,
                     AgencyId = (int)item.AgencyId,
+                    AppointmentSlotId = (int)item.AppointmentSlotId,
                     StaffAccountId = (Guid)item.StaffAccountId,
                     AppointmentDate = (DateTime)item.AppointmentDate,
-                    CustomerId = (Guid)item.CustomerId,
+                    CustomerId = (Guid)item.CustomerAccountId,
                     CustomerName = (string)item.CustomerName,
                     AppointmentState = (int)item.AppointmentState,
-                    ZoomId = (string)item.ZoomId,
+                    ZoomId = (string)item.ZoomLink,
                     
                 };
 

@@ -54,7 +54,7 @@ namespace Staff_API.Controllers
             try
             {
 
-                Appointment = await _appointmentQueries.GetAllAppointmentsByAccountId(accountId);
+                Appointment = await _appointmentQueries.GetAllAppointmentsByStaffAccountId(accountId);
                 return Appointment;
             }
 

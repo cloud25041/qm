@@ -9,7 +9,7 @@ namespace Staff_Application.Queries
     {
         public Guid AppointmentId { get; init; }
         public int AgencyId { get; init; }
-        public Guid StaffAccountId { get; init; }
+        public Guid? StaffAccountId { get; init; }
         public DateTime AppointmentDate { get; init; }
         public int AppointmentSlotId { get; init; }
         public Guid CustomerId { get; init; }

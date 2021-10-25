@@ -37,28 +37,19 @@ else
         {
             foreach (var appointment in AppointmentList)
             {
-                //if (appointment.AppointmentType == 1)
-                //{
-                //    appointmentTypeName = "Physical";
-                //}
-                //else
-                //{
-                //    appointmentTypeName = "Virtual";
-                //}
 
-                //for (appointment.AppointmentSlotId == DateTimeSlotHelper.)
                 DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
-                //var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
+                var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
 
                 <div>
                     <table class="table table-hover">
 
                         <tbody>
                             <tr>
-                                <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">John</td>
-                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">24/10/2021</td>
-                                @*<td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@tempTime</td>*@
-                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">www.zoomlink.com</td>
+                                <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.CustomerName</td>
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.AppointmentDate.ToLongDateString()</td>
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@tempTime</td>
+                                <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.ZoomId</td>
                                 <td class="col-xs-1 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
                                     <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
                                     <button class="btn btn-primary" @onclick=@((NoShowButton))>No Show</button>
@@ -68,6 +59,7 @@ else
                         </tbody>
                     </table>
                 </div>
+
             }
         }
     }
@@ -88,28 +80,94 @@ else
     int i = 0;
     #region Field
     [Parameter]
-    public string accountId { get; set; }
+    public Guid accountId { get; set; }
     [Parameter]
     public string userName { get; set; }
 
+    public Guid userAccountId { get; set; }
     private bool _loading;
     public string userFullName { get; set; }
 
-    public List<AppointmentDetails> AppointmentList { get; set; }
+    public List<StaffAppointmentDetails> AppointmentList { get; set; }
     //public List<Agency> AgencyList { get; set; }
+
+    public List<UserAccountInfo> UserAccountInfoList { get; set; }
+
+    public class VirtualCounterDetails
+    {
+        public Guid appointmentId { get; set; }
+        public Guid StaffId { get; set; }
+        public int state { get; set; }
+    }
+    public string _appointmentId;
+    private bool _error = false;
+    private string _message = "";
 
     private bool gotAppointmentFlag = false;
     #endregion
     //private bool _loading;
 
-    private void AppointmentCompletedButton()
+    private async Task AppointmentCompletedButton()
     {
         //NavManager.NavigateTo("/staff/staffappointmentselection");
+        //put justin's method inside
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        VirtualCounterDetails virtualCounterDetails = new VirtualCounterDetails();
+        Guid appointmentGuid = Guid.Parse(_appointmentId);
+        virtualCounterDetails.appointmentId = appointmentGuid;
+        virtualCounterDetails.state = 4;
+        virtualCounterDetails.StaffId = accountInfo.AccountId;
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<bool>(content);
+                if (results == true)
+                {
+                    _error = false;
+                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                }
+                else
+                {
+                    _error = true;
+                    _message = "Appointment failed to update. Please try again";
+                }
+            }
+        }
     }
 
-    private void NoShowButton()
+    private async Task NoShowButton()
     {
         //NavManager.NavigateTo("/staff/staffjoinzoomappointment");
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        VirtualCounterDetails virtualCounterDetails = new VirtualCounterDetails();
+        Guid appointmentGuid = Guid.Parse(_appointmentId);
+        virtualCounterDetails.appointmentId = appointmentGuid;
+        virtualCounterDetails.state = 5;
+        virtualCounterDetails.StaffId = accountInfo.AccountId;
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
+        if (responseMessage != null)
+        {
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string content = await responseMessage.Content.ReadAsStringAsync();
+                var results = JsonConvert.DeserializeObject<bool>(content);
+                if (results == true)
+                {
+                    _error = false;
+                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                }
+                else
+                {
+                    _error = true;
+                    _message = "Appointment failed to update. Please try again";
+                }
+            }
+
+        }
+
     }
 
     protected override async void OnInitialized()
@@ -117,9 +175,23 @@ else
         //accountId = "1234";
         //AppointmentList = new List<AppointmentDetails>();
         // call local storage
-        ViewAppointmentDetails accountInfo = await localStorage.GetItem<ViewAppointmentDetails>("appointment_info");
-        AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByStaffAccountId", accountInfo.UserAccountId);
+        //StaffAppointmentDetails accountInfo = await localStorage.GetItem<StaffAppointmentDetails>("appointment_info");
+        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+        AppointmentList = new List<StaffAppointmentDetails>();
+
+        //try
+        //{
+        //    return;
+        //}
+
+        //catch
+        //{
+        //    return;
+        //}
+
+        var staffAccountId = accountInfo.AccountId;
+
+        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByStaffAccountId", staffAccountId);
         if (responseMessage != null)
         {
             // var results = new List<AppointmentDetails>();
@@ -128,32 +200,32 @@ else
                 var content = await responseMessage.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
                 //var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
-                var results = JsonConvert.DeserializeObject<List<AppointmentDetails>>(content);
+                var results = JsonConvert.DeserializeObject<List<StaffAppointmentDetails>>(content);
                 if (results.Count > 0)
                 {
                     gotAppointmentFlag = true;
 
-                    //var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-                    //if (responseForAgency.IsSuccessStatusCode)
-                    //{
-                    //    var contentForAgency = await responseForAgency.Content.ReadAsStringAsync();
-                    //    AgencyList = JsonConvert.DeserializeObject<List<Agency>>(contentForAgency);
+                    var responseForUserAccount = await HttpClient.GetAsync("https://localhost:44351/api/account/getallaccount");
+                    if (responseForUserAccount.IsSuccessStatusCode)
+                    {
+                        var contentForUserAccount = await responseForUserAccount.Content.ReadAsStringAsync();
+                        UserAccountInfoList = JsonConvert.DeserializeObject<List<UserAccountInfo>>(contentForUserAccount);
 
-                    //    if (AgencyList != null)
-                    //    {
-                    //        var listOfAgency = await localStorage.GetItem<List<Agency>>("agency_info");
-                    //        listOfAgency = AgencyList;
-                    //        string agencyName;
-                    //        foreach (var agency2 in listOfAgency)
-                    //        {
-                    //            if (agency2.AgencyId == agencyId)
-                    //            {
-                    //                agencyName = agency2.AgencyName;
-                    //            }
-                    //        }
-                    //    }
+                        if (UserAccountInfoList != null)
+                        {
+                            var listOfUserAccount = await localStorage.GetItem<List<UserAccountInfo>>("useraccount_info");
+                            listOfUserAccount = UserAccountInfoList;
+                            string userAccountName;
+                            foreach (var userAccount2 in listOfUserAccount)
+                            {
+                                if (userAccount2.accountId == userAccountId)
+                                {
+                                    userAccountName = userAccount2.name;
+                                }
+                            }
+                        }
 
-                    //}
+                    }
 
                 }
                 foreach (var eachResults in results)
@@ -184,7 +256,7 @@ else
             else
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
-                accountId = "1234";
+                //accountId = "1234";
             }
         }
     }

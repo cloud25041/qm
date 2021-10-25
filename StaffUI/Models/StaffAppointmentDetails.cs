@@ -13,9 +13,10 @@ namespace StaffUI.Models
         public DateTime AppointmentDate { get; set; }
         public int AppointmentSlotId { get; set; }
         public Guid UserAccountId { get; set; }
-        public Guid StaffAccountID { get; set; }
+        public string CustomerName { get; set; }
+        public Guid? StaffAccountId { get; set; }
         public int AgencyId { get; set; }
-        public string ZoomLink { get; set; }
+        public string ZoomId { get; set; }
 
     }
 }
