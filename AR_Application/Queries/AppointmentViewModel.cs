@@ -15,5 +15,6 @@ namespace AR_Application.Queries
         public Guid UserAccountId { get; init; }
         public Guid StaffAccountID { get; init; }
         public int AgencyId { get; init; }
+        public string ZoomLink { get; init; }
     }
 }

@@ -70,7 +70,7 @@ else
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.AppointmentDate.ToString("dd-MM-yyyy")</td>
                                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@zoomLink</td>
+                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointment.ZoomLink</td>
                                         <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">
                                             <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
                                             <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
@@ -268,7 +268,7 @@ else
 
     private void DeleteButton()
     {
-        modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
+        //modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
     }
 
     private void EditButton(Guid AppointmentId)
