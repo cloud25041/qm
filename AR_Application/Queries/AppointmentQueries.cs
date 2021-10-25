@@ -87,6 +87,7 @@ namespace AR_Application.Queries
                     UserAccountId = (Guid)item.UserAccountId,
                     StaffAccountID = (Guid)item.StaffAccountID,
                     AgencyId = (int)item.AgencyId, 
+                    ZoomLink = (string)item.ZoomLink,
                     // should be according to type in database, AgencyId should be int (to change after database is updated) 
 
 
