@@ -53,8 +53,8 @@ else
                                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
                                     <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="text-align:center">@appointment.ZoomId</td>
                                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">
-                                        <button class="btn btn-primary" @onclick=@((AppointmentCompletedButton))>Completed</button>
-                                        <button class="btn btn-dark" @onclick=@((NoShowButton))>No Show</button>
+                                        <button class="btn btn-primary" @onclick=@(() => AppointmentCompletedButton(appointment.AppointmentId))>Completed</button>
+                                        <button class="btn btn-dark" @onclick=@(() => NoShowButton(appointment.AppointmentId))>No Show</button>
                                     </td>
                                 </tr>
 
@@ -111,16 +111,13 @@ else
     #endregion
     //private bool _loading;
 
-    private async Task AppointmentCompletedButton()
+    private async Task AppointmentCompletedButton(Guid AppointmentId)
     {
-        //NavManager.NavigateTo("/staff/staffappointmentselection");
-        //put justin's method inside
-        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+
         VirtualCounterDetails virtualCounterDetails = new VirtualCounterDetails();
-        Guid appointmentGuid = Guid.Parse(_appointmentId);
-        virtualCounterDetails.appointmentId = appointmentGuid;
+
+        virtualCounterDetails.appointmentId = AppointmentId;
         virtualCounterDetails.state = 4;
-        virtualCounterDetails.StaffId = accountInfo.AccountId;
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
         if (responseMessage != null)
         {
@@ -142,15 +139,13 @@ else
         }
     }
 
-    private async Task NoShowButton()
+    private async Task NoShowButton(Guid AppointmentId)
     {
-        //NavManager.NavigateTo("/staff/staffjoinzoomappointment");
-        LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
+
         VirtualCounterDetails virtualCounterDetails = new VirtualCounterDetails();
-        Guid appointmentGuid = Guid.Parse(_appointmentId);
-        virtualCounterDetails.appointmentId = appointmentGuid;
+
+        virtualCounterDetails.appointmentId = AppointmentId;
         virtualCounterDetails.state = 5;
-        virtualCounterDetails.StaffId = accountInfo.AccountId;
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
         if (responseMessage != null)
         {
@@ -169,7 +164,6 @@ else
                     _message = "Appointment failed to update. Please try again";
                 }
             }
-
         }
 
     }
@@ -182,16 +176,6 @@ else
         //StaffAppointmentDetails accountInfo = await localStorage.GetItem<StaffAppointmentDetails>("appointment_info");
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
         AppointmentList = new List<StaffAppointmentDetails>();
-
-        //try
-        //{
-        //    return;
-        //}
-
-        //catch
-        //{
-        //    return;
-        //}
 
         var staffAccountId = accountInfo.AccountId;
 
