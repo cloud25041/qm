@@ -85,9 +85,9 @@ namespace AR_Application.Queries
                     AppointmentDate= (DateTime)item.AppointmentDate,
                     AppointmentSlotId = (int)item.AppointmentSlotId,
                     UserAccountId = (Guid)item.UserAccountId,
-                    StaffAccountID = (Guid)item.StaffAccountID,
+                    StaffAccountID = (item.StaffAccountID == null) ? Guid.Empty : (Guid)item.StaffAccountID,
                     AgencyId = (int)item.AgencyId, 
-                    ZoomLink = (string)item.ZoomLink,
+                    ZoomLink = (item.ZoomLink == null) ? "" : (string)item.ZoomLink,
                     // should be according to type in database, AgencyId should be int (to change after database is updated) 
 
 

@@ -67,12 +67,12 @@ namespace Staff_Application.Queries
                     AppointmentId = (Guid)item.AppointmentId,
                     AgencyId = (int)item.AgencyId,
                     AppointmentSlotId = (int)item.AppointmentSlotId,
-                    StaffAccountId = (Guid)item.StaffAccountId,
+                    StaffAccountId = (item.StaffAccountId == null) ? Guid.Empty : (Guid)item.StaffAccountId,
                     AppointmentDate = (DateTime)item.AppointmentDate,
                     CustomerId = (Guid)item.CustomerAccountId,
                     CustomerName = (string)item.CustomerName,
                     AppointmentState = (int)item.AppointmentState,
-                    ZoomId = (string)item.ZoomLink,
+                    ZoomId = (item.ZoomLink == null) ? "" : (string)item.ZoomLink,
                     
                 };
 
