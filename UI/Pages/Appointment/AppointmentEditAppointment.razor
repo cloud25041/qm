@@ -18,10 +18,10 @@
 else
 {
     <div class="col py-3 px-lg-5 border bg-light">
-        Current Agency: @currentAppointmentdetails.AgencyId
-        Current Appointment Type: @currentAppointmentdetails.AppointmentType
-        Current Appointment Date: @currentAppointmentdetails.AppointmentDate
-        Current Slot: @currentAppointmentdetails.AppointmentSlotId
+        Current Agency: @agencyId
+        Current Appointment Type: @appointmentType
+        Current Appointment Date: @appointmentDate
+        Current Slot: @AppointmentSlotId
     </div>
 
     <div class="col py-3 px-lg-5 border bg-light">
@@ -50,17 +50,20 @@ else
 
 @code
 {
-
     [Parameter]
     public string appointmentId { get; set; }
 
-    [Parameter]
+
     public string appointmentDate { get; set; }
 
-    [Parameter]
+
     public int AppointmentSlotId { get; set; }
 
-    [Parameter]
+    public string appointmentType { get; set; }
+
+    public string agencyId { get; set; }
+
+
     public string queueNo { get; set; }
 
     public AppointmentDetails currentAppointmentdetails { get; set; }
@@ -71,30 +74,28 @@ else
     protected override async void OnInitialized()
     {
 
-        Guid apptid = Guid.Parse(appointmentId);
+        var apptid = Guid.Parse(appointmentId);
 
-        currentAppointmentdetails = new AppointmentDetails();
+        AppointmentDetails currentAppointmentdetails = new AppointmentDetails();
 
-        var response = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-        if (response != null)
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentByAppointmentId", apptid);
         {
-            if (response.IsSuccessStatusCode)
+            if (response != null)
             {
                 string content = await response.Content.ReadAsStringAsync();
-                var resultList = JsonConvert.DeserializeObject<List<Agency>>(content);
-                AgencyList = resultList;
-                this.StateHasChanged();
+                var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
+                //currentAppointmentdetails = resultList;
+                agencyId = resultList.AgencyId.ToString();
+                appointmentType = resultList.AppointmentType.ToString();
+                appointmentDate = resultList.AppointmentDate.ToString();
+                AppointmentSlotId = resultList.AppointmentSlotId;
 
 
             }
-            else
-            {
-
-
-            }
-
-
         }
+
+
+
 
     }
 
@@ -186,13 +187,13 @@ else
         }
         else
         {
-            NavManager.NavigateTo("/appointment/appointmenteditappointmentsuccess/{accountId}/{appointmentDate}/{appointmentTime}/{queueNo}");
+            NavManager.NavigateTo("/appointment/appointmenteditappointmentsuccess/");
         }
     }
 
     private void NavigateCancel()
     {
-        NavManager.NavigateTo("/appointment/appointmentmainselection/{accountId}/{username}/{password}");
+        NavManager.NavigateTo("/appointment/appointmentviewallappointment/");
     }
 
 

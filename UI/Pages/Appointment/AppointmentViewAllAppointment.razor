@@ -105,7 +105,6 @@ else
 <button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
 <button class="btn btn-outline-dark" @onclick="@(() => modal.Show<AppointmentDeleteFail>("Delete Failed"))">Display Delete Fail Modal</button>
 @*<button class="btn btn-dark" @onclick=@GetAppointment>Appointment</button>*@
-<button class="btn btn-dark" @onclick=@EditAppointment>Appointment</button>
 @*<button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
     <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
 
@@ -273,31 +272,10 @@ else
 
     private void EditButton(Guid AppointmentId)
     {
-        // To add conditions, temporarily routing to appointment physical booking page
+        string apptid = AppointmentId.ToString();
+        NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
 
-
-        NavManager.NavigateTo($"/appointment/appointmenteditappointment/{AppointmentId}");
-
-        // Guid apptid = Guid.Parse("3ec2bc2d-88df-4850-a4f2-5f3571d180ad");
-        // NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-        /*
-        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
-
-        if (responseMessage != null)
-        {
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                string content = await responseMessage.Content.ReadAsStringAsync();
-                var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
-
-                if (results != null)
-                {
-                    NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-                }
-            }
-        }
-        */
+       
         //appointmentId = AppointmentId;
         //NavManager.NavigateTo($"/appointment/appointmenteditappointment/{appointmentId}");
         //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
@@ -306,30 +284,8 @@ else
 
     }
 
-    private async Task EditAppointment()
-    {
-        //Guid apptid = Guid.Parse("3ec2bc2d-88df-4850-a4f2-5f3571d180ad");
-        var apptid = "3ec2bc2d-88df-4850-a4f2-5f3571d180ad";
+    
 
-        NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-        //Change to GUID and look into creating New GUID once and store that ID for reuse in test
-        /* var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAppointmentByAppointmentId", apptid);
-
-         if (responseMessage != null)
-         {
-             if (responseMessage.IsSuccessStatusCode)
-             {
-                 string content = await responseMessage.Content.ReadAsStringAsync();
-                 var results = JsonConvert.DeserializeObject<AppointmentModel>(content);
-
-                 if (results != null)
-                 {
-                     NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-                 }
-             }
-         }
-        */
-    }
 
 
 
