@@ -18,13 +18,6 @@
 else
 {
     <div class="col py-3 px-lg-5 border bg-light">
-        Current Agency: @agencyId
-        Current Appointment Type: @appointmentType
-        Current Appointment Date: @appointmentDate
-        Current Slot: @AppointmentSlotId
-    </div>
-
-    <div class="col py-3 px-lg-5 border bg-light">
         New Appointment Date: <SfDatePicker TValue="DateTime?" @bind-Value="@SelectedDate" Placeholder="Select a Date" Min="@MinDate" Max="@MaxDate">
             <DatePickerEvents TValue="DateTime?" ValueChange="DateSelectedHandler"></DatePickerEvents>
         </SfDatePicker>
@@ -53,16 +46,13 @@ else
     [Parameter]
     public string appointmentId { get; set; }
 
-
     public string appointmentDate { get; set; }
-
 
     public int AppointmentSlotId { get; set; }
 
     public string appointmentType { get; set; }
 
     public string agencyId { get; set; }
-
 
     public string queueNo { get; set; }
 
@@ -85,11 +75,9 @@ else
                 string content = await response.Content.ReadAsStringAsync();
                 var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
                 //currentAppointmentdetails = resultList;
-                agencyId = resultList.AgencyId.ToString();
                 appointmentType = resultList.AppointmentType.ToString();
                 appointmentDate = resultList.AppointmentDate.ToString();
                 AppointmentSlotId = resultList.AppointmentSlotId;
-
 
             }
         }
