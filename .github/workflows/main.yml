@@ -112,10 +112,10 @@ jobs:
           push: true
           tags: eost002/ui:latest
           
-#      - name: Build StaffUI and push to docker container image repository
-#        uses: docker/build-push-action@v2
-#        with:
-#          file: ./StaffUI/Dockerfile
-#          context: .
-#          push: true
-#          tags: eost002/staffui:latest
+      - name: Build StaffUI and push to docker container image repository
+        uses: docker/build-push-action@v2
+        with:
+          file: ./StaffUI/Dockerfile
+          context: .
+          push: true
+          tags: eost002/staffui:latest
