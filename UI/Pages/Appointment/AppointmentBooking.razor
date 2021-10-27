@@ -47,7 +47,7 @@ else
     }
     if (SelectedDate != null)
     {
-        <p>DropDownList value is:<strong>@SelectedDate.Value.Date</strong></p>
+        <p>DropDownList value is:<strong>@SelectedDate.Value.ToLongDateString()</strong></p>
         <div class="col py-3 px-lg-5 border bg-light">
             Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@SlotVal" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
                 <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
@@ -256,8 +256,17 @@ else
             createAppointmentDetails.AgencyId = AgencyVal ?? default(int);
             createAppointmentDetails.AppointmentDate = SelectedDate ?? default(DateTime);
             createAppointmentDetails.AppointmentSlotId = SlotVal ?? default(int);
-            createAppointmentDetails.AppointmentState = 1;
+
             createAppointmentDetails.AppointmentType = TypeVal ?? default(int);
+            if(createAppointmentDetails.AppointmentType == 1)
+            {
+                createAppointmentDetails.AppointmentState = 101;
+            }
+            else
+            {
+                createAppointmentDetails.AppointmentState = 1;
+            }
+
             createAppointmentDetails.UserAccountId = accountInfo.accountId;
 
             var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/createAppointment", createAppointmentDetails);
