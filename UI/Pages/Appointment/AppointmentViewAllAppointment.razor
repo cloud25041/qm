@@ -45,7 +45,7 @@ else
                 {
                     if (appointment.AgencyId == agency.AgencyId)
                     {
-                        
+
                         if (appointment.AppointmentType == 1)
                         {
                             appointmentTypeName = "Physical";
@@ -59,27 +59,30 @@ else
                         DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
                         var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
 
+                        if (appointment.AppointmentState == 1 || appointment.AppointmentState == 2 || appointment.AppointmentState == 3)
+                        {
+                            <div>
+                                <table class="table table-hover">
+
+                                    <tbody>
+                                        <tr>
+                                            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
+                                            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
+                                            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.AppointmentDate.ToLongDateString()</td>
+                                            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
+                                            <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="text-align:center">@appointment.ZoomLink</td>
+                                            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">
+                                                <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
+                                                <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
 
 
-                        <div>
-                            <table class="table table-hover">
-
-                                <tbody>
-                                    <tr>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@agency.AgencyName</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@appointmentTypeName</td>
-                                        <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align:center">@appointment.AppointmentDate.ToLongDateString()</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">@tempTime</td>
-                                        <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="text-align:center">@appointment.ZoomLink</td>
-                                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align:center">
-                                            <button class="btn btn-primary" @onclick=@(() => EditButton(appointment.AppointmentId))>Edit</button>
-                                            <button class="btn btn-danger" @onclick=@((DeleteButton))>Delete</button>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
                     }
                 }
 
@@ -104,33 +107,6 @@ else
 
 <button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
 <button class="btn btn-outline-dark" @onclick="@(() => modal.Show<AppointmentDeleteFail>("Delete Failed"))">Display Delete Fail Modal</button>
-@*<button class="btn btn-dark" @onclick=@GetAppointment>Appointment</button>*@
-@*<button class="btn btn-primary" @onclick="RegisterAccount">Register</button>
-    <button class="btn btn-primary" @onclick="@(() => modal.Show<Counter>("test"))">Try modal</button>*@
-
-
-@*<div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@accountId" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@appointmentName" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@agencyArray[1]" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@service" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@location" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@appointmentTime" />
-    </div>
-    <div class="col py-3 px-lg-5 border bg-light">
-        Text: <input type="text" @bind="@appointmentId" />
-    </div>*@
-
 
 
 
@@ -225,21 +201,6 @@ else
                     i = AppointmentList.Count;
                     AppointmentList.Add(eachResults);
                     this.StateHasChanged();
-
-                    //appointmentName = appointmentName + eachResults.AppointmentId;
-                    //AppointmentList.Add(eachResults);
-                    // appointmentName = appointmentName + eachResults.AppointmentName;
-                    //agency = eachResults.AppointmentId;
-                    //agencyArray[i] = agency + i.ToString();
-
-                    //service = eachResults.Service;
-                    //serviceArray[i] = service + i.ToString();
-
-                    //appointmentDate = eachResults.AppointmentDate;
-                    //locationArray[i] = location + i.ToString();
-
-                    //appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
-                    //appointmentId = appointmentId + eachResults.AppointmentId;
                 }
 
                 this.StateHasChanged();
@@ -274,86 +235,7 @@ else
     {
         string apptid = AppointmentId.ToString();
         NavManager.NavigateTo($"/appointment/appointmenteditappointment/{apptid}");
-
-       
-        //appointmentId = AppointmentId;
-        //NavManager.NavigateTo($"/appointment/appointmenteditappointment/{appointmentId}");
-        //NavManager.NavigateTo("/appointment/appointmentvirtualbooking");
-
-        //modal.Show<AppointmentDeleteConfirmation>("Confirm Delete Appointment?");
-
     }
 
-    
-
-
-
-
-
-
-    //private async Task GetAppointment()
-    //{
-    //    List<AppointmentDetails> AppointmentList = new List<AppointmentDetails>();
-    //    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/UserQueue/GetAppointmentDetails", accountId);
-    //    if (responseMessage != null)
-    //    {
-    //        // var results = new List<AppointmentDetails>();
-    //        if (responseMessage.IsSuccessStatusCode)
-    //        {
-    //            var content = await responseMessage.Content.ReadAsStringAsync();
-    //            Console.WriteLine(content);
-    //            var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
-    //            foreach (var eachResults in results)
-    //            {
-
-    //                appointmentName = appointmentName + eachResults.AppointmentName;
-    //                //AppointmentList.Add(eachResults);
-    //                i = AppointmentList.Count;
-    //                // appointmentName = appointmentName + eachResults.AppointmentName;
-    //                agency = eachResults.Agency;
-    //                agencyArray[i] = agency + i.ToString();
-
-    //                service = eachResults.Service;
-    //                serviceArray[i] = service + i.ToString();
-
-    //                location = eachResults.Location;
-    //                locationArray[i] = location + i.ToString();
-
-    //                appointmentTime = appointmentTime + eachResults.AppointmentTime;
-    //                //appointmentId = appointmentId + eachResults.AppointmentId;
-    //                AppointmentList.Add(eachResults);
-    //            }
-
-
-    //        }
-    //        else
-    //        {
-    //            var content = await responseMessage.Content.ReadAsStringAsync();
-    //            accountId = "1234";
-    //        }
-
-
-    //    }
-    //    else
-    //    {
-    //    }
-
-    //}
-
-
-
-    //protected async override void OnAfterRender(bool firstRender)
-    //{
-    // execute conditionally for loading data, otherwise this will load
-    // every time the page refreshes
-    //  if (firstRender)
-    //{
-    // Do work to load page data and set properties
-
-    //  await GetAppointment();
-
-
-    //}
-    //}
 
 }

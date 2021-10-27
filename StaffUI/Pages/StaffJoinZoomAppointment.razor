@@ -41,7 +41,7 @@ else
                 DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
                 var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
 
-                if (appointment.AppointmentState == 3)
+                if (appointment.AppointmentState == 3 || appointment.AppointmentState == 2)
                 {
                     <div>
                         <table class="table table-hover">
