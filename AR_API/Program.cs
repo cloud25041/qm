@@ -52,8 +52,13 @@ namespace AR_API
                 try
                 {
                     IMQClient mQClient = services.GetRequiredService<IMQClient>();
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("connecting to mqtt, ip:" + mQClient.MqttBroker + " port:" + mQClient.MqttPort.ToString() + " username:" + mQClient.MqttUserId + " password:" + mQClient.MqttPassword);
                     mQClient.Connect();
-                    Task.Delay(1000).Wait();
+                    while (!mQClient.IsConnected)
+                    {
+                        Task.Delay(1000).Wait();
+                    }
                     if(mQClient.IsConnected == true)
                     {
                         mQClient.Subscribe<AppointmentConfirmedByStaffIntegrationEvent, AppointmentConfirmedByStaffIntegrationEventHandler>();
@@ -63,7 +68,6 @@ namespace AR_API
                     }
                     else
                     {
-                        var logger = services.GetRequiredService<ILogger<Program>>();
                         logger.LogError("MQ client not connected!");
                     }
                 }
