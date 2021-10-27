@@ -83,7 +83,12 @@ namespace AR_API
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseKestrel(options => { 
+                        options.ListenAnyIP(80);
+                        options.ListenAnyIP(443, options => options.UseHttps());
+                    })
+                    .UseIIS();
                 });
     }
 }
