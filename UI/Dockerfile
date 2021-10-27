@@ -6,4 +6,4 @@ FROM nginx:alpine
 WORKDIR /var/www/web
 COPY --from=build-env /app/output/wwwroot .
 COPY ./UI/nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
+EXPOSE 9010
