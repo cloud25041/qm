@@ -14,7 +14,7 @@
 
 <h3>List of Unassigned Appointments</h3>
 
-@if(_errorFlag == true)
+@if (_errorFlag == true)
 {
     <h5> Error Accepting the appointment</h5>
 }
@@ -71,6 +71,10 @@ else
         </tr>
 
     }
+
+    <div class="col py-3 px-lg-5 border bg-light">
+        <button class="btn btn-primary" @onclick=@((BackButton))>Back</button>
+    </div>
 
 
 }
@@ -132,7 +136,9 @@ else
 
                     foreach (var appointment in results)
                     {
+
                         ViewAppointmentDetails eachAppointmentDetails = new ViewAppointmentDetails();
+
                         eachAppointmentDetails.AppointmentId = appointment.AppointmentId;
                         eachAppointmentDetails.CustomerName = appointment.CustomerName;
                         eachAppointmentDetails.AppointmentDate = appointment.AppointmentDate.Date;
@@ -172,6 +178,10 @@ else
 
         }
     }
+
+    private void BackButton()
+    {
+        NavManager.NavigateTo("/staffmainselection");
+    }
+
 }
-
-

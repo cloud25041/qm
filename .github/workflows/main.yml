@@ -104,6 +104,14 @@ jobs:
           push: true
           tags: eost002/staff_api:latest
           
+      - name: Build Meeting_API and push to docker container image repository
+        uses: docker/build-push-action@v2
+        with:
+          file: ./Meeting_API/Dockerfile
+          context: .
+          push: true
+          tags: eost002/meeting_api:latest
+          
       - name: Build UI and push to docker container image repository
         uses: docker/build-push-action@v2
         with:
