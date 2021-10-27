@@ -55,7 +55,10 @@ namespace AR_API
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogInformation("connecting to mqtt, ip:" + mQClient.MqttBroker + " port:" + mQClient.MqttPort.ToString() + " username:" + mQClient.MqttUserId + " password:" + mQClient.MqttPassword);
                     mQClient.Connect();
-                    Task.Delay(1000).Wait();
+                    while (!mQClient.IsConnected)
+                    {
+                        Task.Delay(1000).Wait();
+                    }
                     if(mQClient.IsConnected == true)
                     {
                         mQClient.Subscribe<AppointmentConfirmedByStaffIntegrationEvent, AppointmentConfirmedByStaffIntegrationEventHandler>();
