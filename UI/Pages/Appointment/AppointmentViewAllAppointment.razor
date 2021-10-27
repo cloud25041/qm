@@ -55,7 +55,6 @@ else
                             appointmentTypeName = "Virtual";
                         }
 
-                        //for (appointment.AppointmentSlotId == DateTimeSlotHelper.)
                         DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
                         var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
 
@@ -154,20 +153,16 @@ else
 
     protected override async void OnInitialized()
     {
-        //accountId = "1234";
-        //AppointmentList = new List<AppointmentDetails>();
         // call local storage
         AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
         AppointmentList = new List<AppointmentDetails>();
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
         if (responseMessage != null)
         {
-            // var results = new List<AppointmentDetails>();
             if (responseMessage.IsSuccessStatusCode)
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
-                //var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
                 var results = JsonConvert.DeserializeObject<List<AppointmentDetails>>(content);
                 if (results.Count > 0)
                 {
