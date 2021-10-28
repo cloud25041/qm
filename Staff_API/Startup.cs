@@ -67,7 +67,8 @@ namespace Staff_API
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
-                    builder.WithOrigins("https://localhost:44361").WithOrigins("https://localhost:44362").AllowAnyMethod().AllowAnyHeader()));
+                    builder.WithOrigins("https://localhost:44361").WithOrigins("https://localhost:44362")
+                    .WithOrigins("http://localhost:40897").WithOrigins("http://localhost:48563").AllowAnyMethod().AllowAnyHeader()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
