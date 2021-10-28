@@ -146,7 +146,7 @@ else
 
             try
             {
-                var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/agency/CheckAgencyPinValid", accountDetails.StaffKey);
+                var checkStaffPinResponseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/agency/CheckAgencyPinValid", accountDetails.StaffKey);
                 if (checkStaffPinResponseMessage != null)
                 {
                     if (checkStaffPinResponseMessage.IsSuccessStatusCode)
@@ -158,7 +158,7 @@ else
                         {
                             accountDetails.AgencyId = staffPinResults.AgencyId;
                             // check for email and username
-                            var checkEmailAndUsernameResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/checkUsernameAndEmailAvail", accountDetails);
+                            var checkEmailAndUsernameResponseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/account/checkUsernameAndEmailAvail", accountDetails);
                             if (checkEmailAndUsernameResponseMessage != null)
                             {
                                 if (checkEmailAndUsernameResponseMessage.IsSuccessStatusCode)
@@ -169,7 +169,7 @@ else
                                     if (checkEmailAndUsernameResult.IsUsernameTaken != true && checkEmailAndUsernameResult.IsEmailTaken != true)
                                     {
                                         accountDetails.AccountId = Guid.NewGuid();
-                                        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/createaccount", accountDetails);
+                                        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/account/createaccount", accountDetails);
                                         if (responseMessage != null)
                                         {
                                             if (responseMessage.IsSuccessStatusCode)

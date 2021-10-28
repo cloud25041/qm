@@ -125,7 +125,7 @@ else
 
         virtualCounterDetails.appointmentId = AppointmentId;
         virtualCounterDetails.state = 4;
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/UpdateAppointmentState", virtualCounterDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
@@ -153,7 +153,7 @@ else
 
         virtualCounterDetails.appointmentId = AppointmentId;
         virtualCounterDetails.state = 5;
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", virtualCounterDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/UpdateAppointmentState", virtualCounterDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
@@ -183,7 +183,7 @@ else
 
         var staffAccountId = accountInfo.AccountId;
 
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByStaffAccountId", staffAccountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/GetAppointmentDetailsByStaffAccountId", staffAccountId);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
@@ -195,7 +195,7 @@ else
                 {
                     gotAppointmentFlag = true;
 
-                    var responseForUserAccount = await HttpClient.GetAsync("https://localhost:44351/api/account/getallaccount");
+                    var responseForUserAccount = await HttpClient.GetAsync(Program.staffRestApiUrl + "/api/account/getallaccount");
                     if (responseForUserAccount.IsSuccessStatusCode)
                     {
                         var contentForUserAccount = await responseForUserAccount.Content.ReadAsStringAsync();

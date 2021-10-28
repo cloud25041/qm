@@ -15,7 +15,7 @@ namespace StaffUI
 {
     public class Program
     {
-
+        public static string staffRestApiUrl = "http://staff-api.southeastasia.azurecontainer.io";
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);

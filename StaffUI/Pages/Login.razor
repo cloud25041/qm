@@ -55,7 +55,7 @@ if (_error == true)
         accountDetails.Username = _username;
         accountDetails.Password = _password;
 
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/account/GetAccountByUsernameAndVerifyPassword", accountDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/account/GetAccountByUsernameAndVerifyPassword", accountDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
@@ -85,5 +85,5 @@ if (_error == true)
 
             }
         }
-    } 
+    }
     }

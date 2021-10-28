@@ -67,7 +67,7 @@
         physicalCounterDetails.appointmentId = appointmentGuid;
         physicalCounterDetails.state = 4;
         physicalCounterDetails.StaffId = accountInfo.AccountId;
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)
@@ -97,7 +97,7 @@
         physicalCounterDetails.appointmentId = appointmentGuid;
         physicalCounterDetails.state = 5;
         physicalCounterDetails.StaffId = accountInfo.AccountId;
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", physicalCounterDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/UpdateAppointmentState", physicalCounterDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)

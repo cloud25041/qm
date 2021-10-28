@@ -114,7 +114,7 @@ else
         ViewAppointmentDetailsList = new List<ViewAppointmentDetails>();
 
         // call api to get list of appointment avaliable for that agency
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByAgencyId", accountInfo.AgencyId);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/GetAppointmentDetailsByAgencyId", accountInfo.AgencyId);
 
         if (responseMessage != null)
         {
@@ -162,7 +162,7 @@ else
         AcceptAppointmentDetails acceptAppointmentDetails = new AcceptAppointmentDetails();
         acceptAppointmentDetails.AccountId = accountInfo.AccountId;
         acceptAppointmentDetails.AppointmentId = AppointmentId;
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/AssignStaffIdToAppointment", acceptAppointmentDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.staffRestApiUrl + "/api/appointment/AssignStaffIdToAppointment", acceptAppointmentDetails);
         if (responseMessage != null)
         {
 
