@@ -76,6 +76,8 @@ else
 
     }
 
+    
+
 
 }
 
@@ -133,7 +135,7 @@ else
                 if (results == true)
                 {
                     _error = false;
-                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                    NavManager.NavigateTo("/staffmainselection");
                 }
                 else
                 {
@@ -161,7 +163,7 @@ else
                 if (results == true)
                 {
                     _error = false;
-                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                    NavManager.NavigateTo("/staffmainselection");
                 }
                 else
                 {
@@ -173,6 +175,7 @@ else
 
     }
 
+    
     protected override async void OnInitialized()
     {
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
