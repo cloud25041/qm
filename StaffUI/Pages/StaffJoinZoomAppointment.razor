@@ -41,7 +41,7 @@ else
                 DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
                 var tempTime = dateTimeSlotHelper.GetTimebySlot(appointment.AppointmentSlotId);
 
-                if (appointment.AppointmentState == 3)
+                if (appointment.AppointmentState == 3 || appointment.AppointmentState == 2)
                 {
                     <div>
                         <table class="table table-hover">
@@ -76,8 +76,12 @@ else
 
     }
 
+    
+
 
 }
+
+<button class="btn btn-dark" @onclick=@((BackButton))>Back</button>
 
 @code
 {
@@ -93,7 +97,6 @@ else
     public string userFullName { get; set; }
 
     public List<StaffAppointmentDetails> AppointmentList { get; set; }
-    //public List<Agency> AgencyList { get; set; }
 
     public List<UserAccountInfo> UserAccountInfoList { get; set; }
 
@@ -109,7 +112,11 @@ else
 
     private bool gotAppointmentFlag = false;
     #endregion
-    //private bool _loading;
+
+    private void BackButton()
+    {
+        NavManager.NavigateTo("/staffmainselection");
+    }
 
     private async Task AppointmentCompletedButton(Guid AppointmentId)
     {
@@ -128,7 +135,7 @@ else
                 if (results == true)
                 {
                     _error = false;
-                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                    NavManager.NavigateTo("/staffmainselection");
                 }
                 else
                 {
@@ -156,7 +163,7 @@ else
                 if (results == true)
                 {
                     _error = false;
-                    NavManager.NavigateTo("/staffjoinzoomappointment");
+                    NavManager.NavigateTo("/staffmainselection");
                 }
                 else
                 {
@@ -168,12 +175,9 @@ else
 
     }
 
+    
     protected override async void OnInitialized()
     {
-        //accountId = "1234";
-        //AppointmentList = new List<AppointmentDetails>();
-        // call local storage
-        //StaffAppointmentDetails accountInfo = await localStorage.GetItem<StaffAppointmentDetails>("appointment_info");
         LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
         AppointmentList = new List<StaffAppointmentDetails>();
 
@@ -182,12 +186,10 @@ else
         var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/GetAppointmentDetailsByStaffAccountId", staffAccountId);
         if (responseMessage != null)
         {
-            // var results = new List<AppointmentDetails>();
             if (responseMessage.IsSuccessStatusCode)
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
-                //var results = JsonConvert.DeserializeObject<IList<AppointmentDetails>>(content);
                 var results = JsonConvert.DeserializeObject<List<StaffAppointmentDetails>>(content);
                 if (results.Count > 0)
                 {
@@ -221,21 +223,6 @@ else
                     i = AppointmentList.Count;
                     AppointmentList.Add(eachResults);
                     this.StateHasChanged();
-
-                    //appointmentName = appointmentName + eachResults.AppointmentId;
-                    //AppointmentList.Add(eachResults);
-                    // appointmentName = appointmentName + eachResults.AppointmentName;
-                    //agency = eachResults.AppointmentId;
-                    //agencyArray[i] = agency + i.ToString();
-
-                    //service = eachResults.Service;
-                    //serviceArray[i] = service + i.ToString();
-
-                    //appointmentDate = eachResults.AppointmentDate;
-                    //locationArray[i] = location + i.ToString();
-
-                    //appointmentSlotId = appointmentSlotId + eachResults.AppointmentSlotId;
-                    //appointmentId = appointmentId + eachResults.AppointmentId;
                 }
 
                 this.StateHasChanged();
@@ -244,7 +231,6 @@ else
             else
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
-                //accountId = "1234";
             }
         }
     }

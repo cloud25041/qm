@@ -15,5 +15,7 @@ namespace StaffUI.Models
         public int AppointmentSlotID { get; set; }
         public Guid AppointmentId { get; set; }
 
+      
+
     }
 }
