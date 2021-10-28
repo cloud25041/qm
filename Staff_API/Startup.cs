@@ -81,9 +81,9 @@ namespace Staff_API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Staff_API v1"));
-                app.UseCors();
             }
 
+            app.UseCors();
             loggerFactory.AddFile(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/qm/logs/staff_api-{Date}.log");
             app.UseHttpsRedirection();
             app.UseRouting();

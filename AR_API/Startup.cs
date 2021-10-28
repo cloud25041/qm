@@ -79,12 +79,13 @@ namespace AR_API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AR_API v1"));
-                app.UseCors();
             }
 
             loggerFactory.AddFile(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/qm/logs/ar_api-{Date}.log");
 
             //app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseRouting();
 
