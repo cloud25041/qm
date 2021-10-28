@@ -72,18 +72,18 @@ else
 
         AppointmentDetails currentAppointmentdetails = new AppointmentDetails();
 
-        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentByAppointmentId", apptid);
-        {
-            if (response != null)
+            var response = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/appointment/GetAppointmentByAppointmentId", apptid);
             {
-                string content = await response.Content.ReadAsStringAsync();
-                var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
-                currentAppointmentdetails = resultList;
-                appointmentType = resultList.AppointmentType.ToString();
-                appointmentDate = resultList.AppointmentDate.ToString();
-                AppointmentSlotId = resultList.AppointmentSlotId;
-                AgencyValue = resultList.AgencyId;
-                TypeValue = resultList.AppointmentType;
+                if (response != null)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
+                    currentAppointmentdetails = resultList;
+                    appointmentType = resultList.AppointmentType.ToString();
+                    appointmentDate = resultList.AppointmentDate.ToString();
+                    AppointmentSlotId = resultList.AppointmentSlotId;
+                    AgencyValue = resultList.AgencyId;
+                    TypeValue = resultList.AppointmentType;
 
             }
         }
@@ -163,7 +163,7 @@ else
         userAgencyInput.SelectedDate = SelectedDate;
         userAgencyInput.ConcurrentUser = ConcurrentUser;
         selectedDateSlotList = new List<AvailableSlots>();
-        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/getavailableappointment", userAgencyInput);
+        var response = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/appointment/getavailableappointment", userAgencyInput);
         if (response != null)
         {
             var content = await response.Content.ReadAsStringAsync();

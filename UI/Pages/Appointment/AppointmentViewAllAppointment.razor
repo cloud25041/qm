@@ -156,7 +156,7 @@ else
         // call local storage
         AccountInfo accountInfo = await localStorage.GetItem<AccountInfo>("account_info");
         AppointmentList = new List<AppointmentDetails>();
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/appointment/GetAppointmentDetailsByAccountId", accountInfo.accountId);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)

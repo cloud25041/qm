@@ -77,7 +77,7 @@ else
                 };
 
 
-        var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/GetAccountByUsernameAndVerifyPassword", loginDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/account/GetAccountByUsernameAndVerifyPassword", loginDetails);
         if (responseMessage != null)
         {
             if (responseMessage.IsSuccessStatusCode)

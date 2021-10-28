@@ -80,7 +80,7 @@ else
             accountDetails.StaffKey = null;
 
 
-            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/checkUsernameAndEmailAvail", accountDetails);
+            var checkResponseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/account/checkUsernameAndEmailAvail", accountDetails);
 
             if (checkResponseMessage.IsSuccessStatusCode)
             {
@@ -89,7 +89,7 @@ else
                 var resultsForCheck = JsonConvert.DeserializeObject<ValidationDetails>(contentForCheck);
                 if (resultsForCheck.IsUsernameTaken == false && resultsForCheck.IsEmailTaken == false)
                 {
-                    var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/createaccount", accountDetails);
+                    var responseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/account/createaccount", accountDetails);
                     if (responseMessage != null)
                     {
                         if (responseMessage.IsSuccessStatusCode)

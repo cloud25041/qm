@@ -15,7 +15,10 @@ namespace UI
 {
     public class Program
     {
-        public static string restApiUrl = "https://localhost:44355";
+        public static string customerRestApiUrl = "http://ar-api.southeastasia.azurecontainer.io";
+        public static string staffRestApiUrl = "http://staff-api.southeastasia.azurecontainer.io";
+        //public static string customerRestApiUrl = "https://localhost:44351";
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);

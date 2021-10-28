@@ -70,7 +70,7 @@ else
         AppointmentTypeList = new List<AppointmentType>();
         AppointmentTypeList.Add(new AppointmentType() { Type = "Physical", TypeId = 1 });
         AppointmentTypeList.Add(new AppointmentType() { Type = "Virtual", TypeId = 2 });
-           
+
     }
 
     #region Fields
@@ -143,7 +143,7 @@ else
     private async void TypeSelectedHandler()
     {
         // The URL string needs to point to Staff API Controller
-        var response = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        var response = await HttpClient.GetAsync(Program.staffRestApiUrl + "/api/appointment/getagencyinfolist");
         if (response != null)
         {
             string content = await response.Content.ReadAsStringAsync();
@@ -192,13 +192,13 @@ else
             }
         }
         DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
-        UserAgencyInput userAgencyInput = new UserAgencyInput();    
+        UserAgencyInput userAgencyInput = new UserAgencyInput();
         userAgencyInput.AgencyId = AgencyVal;
         userAgencyInput.AppointmentTypeId = TypeVal;
         userAgencyInput.SelectedDate = SelectedDate;
         userAgencyInput.ConcurrentUser = ConcurrentUser;
         selectedDateSlotList = new List<AvailableSlots>();
-        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/getavailableappointment", userAgencyInput);
+        var response = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/appointment/getavailableappointment", userAgencyInput);
         if (response != null)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -206,7 +206,7 @@ else
             //List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
             foreach (var result in resultList)
             {
-                
+
                 AvailableSlots availableSlots = new AvailableSlots() { Date = result.Date, Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId), SlotId = result.SlotId };
                 selectedDateSlotList.Add(availableSlots);
 
@@ -244,7 +244,7 @@ else
 
             createAppointmentDetails.UserAccountId = accountInfo.accountId;
 
-            var checkResponseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/account/createAppointment", createAppointmentDetails);
+            var checkResponseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/account/createAppointment", createAppointmentDetails);
             if (checkResponseMessage.IsSuccessStatusCode)
             {
                 if (checkResponseMessage != null)

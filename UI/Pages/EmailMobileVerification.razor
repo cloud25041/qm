@@ -54,7 +54,7 @@ else
         };
         _loading = true;
         this.StateHasChanged();
-        var responseMessage = await HttpClient.PostAsJsonAsync(Program.restApiUrl + "/api/account/verifycode", verificationCodeDetails);
+        var responseMessage = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/account/verifycode", verificationCodeDetails);
         if (responseMessage.IsSuccessStatusCode)
         {
             _verified = true;
