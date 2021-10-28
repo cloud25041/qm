@@ -67,6 +67,7 @@ namespace AR_API
                 options.AddDefaultPolicy(builder =>
                     builder.WithOrigins("https://localhost:44361").WithOrigins("https://localhost:44362")
                     .WithOrigins("http://localhost:40897").WithOrigins("http://localhost:48563")
+                    .AllowAnyOrigin()
                     .AllowAnyMethod().AllowAnyHeader()));
         }
 
