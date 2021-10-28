@@ -53,19 +53,14 @@ else
                 <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
             </SfDropDownList>
         </div>
-        <p>DropDownList value is:<strong>@SlotVal</strong></p>
+        //<p>DropDownList value is:<strong>@SlotVal</strong></p>
 
-    }
-    if (_display == true)
-    {
-        <p>Date is: @test1</p>
-        <p>Time slot is: @test2</p>
     }
     <div class="col py-3">
         <button class="btn btn-primary" @onclick="NavigateBook">Book</button>
         <button class="btn btn-secondary" @onclick="NavigateCancel">Cancel</button>
     </div>
-    <button class="btn btn-secondary" @onclick="@(() => modal.Show<AppointmentBookingFail>("Booking has Failed"))">Display Fail Modal</button>
+    //<button class="btn btn-secondary" @onclick="@(() => modal.Show<AppointmentBookingFail>("Booking has Failed"))">Display Fail Modal</button>
 }
 
 @code
@@ -75,19 +70,7 @@ else
         AppointmentTypeList = new List<AppointmentType>();
         AppointmentTypeList.Add(new AppointmentType() { Type = "Physical", TypeId = 1 });
         AppointmentTypeList.Add(new AppointmentType() { Type = "Virtual", TypeId = 2 });
-
-
-        //var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/userqueue/getagencyappointmentinformation", agencyId);
-        ////var response = await HttpClient.GetAsync("https://localhost:44355/api/userqueue/getagencyappointmentinformation");
-        //if (response != null)
-        //{
-        //    string content = await response.Content.ReadAsStringAsync();
-        //    var resultList = JsonConvert.DeserializeObject<IList<AvailableSlots>>(content);
-        //    availableSlotList = resultList;
-        //    _detailPickClickFlag = true;
-        //    this.StateHasChanged();
-
-        //}
+           
     }
 
     #region Fields
@@ -100,10 +83,7 @@ else
     public int? AgencyVal;
     public int? ConcurrentUser;
 
-    public DateTime? test1;
-    public string test2;
     private string errorMessage;
-    private bool _display = false;
 
     #endregion
 
@@ -212,7 +192,7 @@ else
             }
         }
         DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
-        UserAgencyInput userAgencyInput = new UserAgencyInput();
+        UserAgencyInput userAgencyInput = new UserAgencyInput();    
         userAgencyInput.AgencyId = AgencyVal;
         userAgencyInput.AppointmentTypeId = TypeVal;
         userAgencyInput.SelectedDate = SelectedDate;
@@ -223,17 +203,12 @@ else
         {
             var content = await response.Content.ReadAsStringAsync();
             var resultList = JsonConvert.DeserializeObject<List<AvailableSlots>>(content);
-            List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
+            //List<AvailableSlots> listOfNewAvailableSlots = new List<AvailableSlots>();
             foreach (var result in resultList)
             {
-                //var tempValue = result;
-                //tempValue.Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId);
-                //listOfTimeInString.Add(dateTimeSlotHelper.GetTimebySlot(result.SlotId));
-                //availableSlotList.Add(tempValue);
-
+                
                 AvailableSlots availableSlots = new AvailableSlots() { Date = result.Date, Time = dateTimeSlotHelper.GetTimebySlot(result.SlotId), SlotId = result.SlotId };
                 selectedDateSlotList.Add(availableSlots);
-                //listOfNewAvailableSlots.Add(availableSlots);
 
             }
         }
@@ -300,7 +275,7 @@ else
 
     private void NavigateCancel()
     {
-        NavManager.NavigateTo("/appointment/appointmentmainselection/{accountId}/{username}/{password}");
+        NavManager.NavigateTo("/appointment/appointmentmainselection");
     }
 
 

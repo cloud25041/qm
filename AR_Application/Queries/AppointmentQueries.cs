@@ -58,7 +58,7 @@ namespace AR_Application.Queries
                 int[] count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                 foreach (var appointment in appointmentList)
                 {
-                    count[appointment.AppointmentSlotId]++;
+                    count[(appointment.AppointmentSlotId-1)]++;
                 }
                 for (int i=0; i <= 15; i++)
                 {

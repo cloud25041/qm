@@ -6,7 +6,7 @@
 @using UI.Models;
 @inject LocalStorage.ILocalStorageService localStorage;
 
-<h3>Booked a physical appointment successfully!</h3>
+<h3>Booked an appointment successfully!</h3>
 
 @if (_loading)
 {
@@ -15,7 +15,7 @@
 else
 {
     <div class="col py-3 px-lg-5 border bg-light">
-        Queue No : @agencyName
+        Agency Name : @agencyName
     </div>
 
     <div class="col py-3 px-lg-5 border bg-light">
@@ -23,7 +23,7 @@ else
     </div>
 
     <div class="col py-3 px-lg-5 border bg-light">
-        Appointment Date: @appointmentTime
+        Appointment Time: @appointmentTime
     </div>
 
 
