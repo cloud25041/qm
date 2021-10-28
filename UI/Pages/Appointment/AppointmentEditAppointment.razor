@@ -25,13 +25,13 @@ else
 
     if (SelectedDate != null)
     {
-        <p>DropDownList value is:<strong>@SelectedDate.Value.Date</strong></p>
+
         <div class="col py-3 px-lg-5 border bg-light">
             Available Time: <SfDropDownList TItem="AvailableSlots" TValue="int?" @bind-Value="@SlotValue" DataSource="@selectedDateSlotList" Placeholder="Select a Time">
                 <DropDownListFieldSettings Text="Time" Value="SlotId"></DropDownListFieldSettings>
             </SfDropDownList>
         </div>
-        <p>DropDownList value is:<strong>@SlotValue</strong></p>
+
 
     }
 
@@ -43,94 +43,61 @@ else
 
 @code
 {
-        [Parameter]
-        public string appointmentId { get; set; }
+    [Parameter]
+    public string appointmentId { get; set; }
 
-        public string _appointmentId;
+    //public string _appointmentId;
 
-        public string appointmentDate { get; set; }
+    public string appointmentDate { get; set; }
 
-        public int AppointmentSlotId { get; set; }
+    public int AppointmentSlotId { get; set; }
 
-        public string appointmentType { get; set; }
+    public string appointmentType { get; set; }
 
-        public string agencyId { get; set; }
+    public string agencyId { get; set; }
 
-        public string queueNo { get; set; }
+    public string queueNo { get; set; }
 
-        public AppointmentDetails currentAppointmentdetails { get; set; }
-        public IList<AvailableSlots> availableSlotList { get; set; }
-        public IList<AvailableSlots> selectedDateSlotList { get; set; }
-        public IList<Agency> AgencyList { get; set; }
 
-        /*
-        public class AppointmentDetails
+    public AppointmentDetails currentAppointmentdetails { get; set; }
+    public IList<AvailableSlots> availableSlotList { get; set; }
+    public IList<AvailableSlots> selectedDateSlotList { get; set; }
+    public IList<Agency> AgencyList { get; set; }
+
+
+    protected override async void OnInitialized()
+    {
+
+        var apptid = Guid.Parse(appointmentId);
+
+        AppointmentDetails currentAppointmentdetails = new AppointmentDetails();
+
+        var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentByAppointmentId", apptid);
         {
-            public Guid appointmentId { get; set; }
-            public DateTime AppointmentDate { get; set; }
-            public string UserAccountId { get; set; }
-        }
-        */
-        /*
-        private async Task DisplayCurrentAppointment ()
-        {
-            LoginDetails accountInfo = await localStorage.GetItem<LoginDetails>("account_info");
-            AppointmentDetails appointmentDetails = new AppointmentDetails();
-            Guid appointmentGuid = Guid.Parse(_appointmentId);
-            appointmentDetails.appointmentId = appointmentGuid;
-            appointmentDetails.UserAccountId = accountInfo.AccountId;
-            var responseMessage = await HttpClient.PostAsJsonAsync("https://localhost:44310/api/appointment/UpdateAppointmentState", appointmentDetails);
-            if (responseMessage != null)
+            if (response != null)
             {
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    string content = await responseMessage.Content.ReadAsStringAsync();
-                    var results = JsonConvert.DeserializeObject<AppointmentDetails>(content);
-
-                }
-            }
-        }
-        */
-
-        protected override async void OnInitialized()
-        {
-
-            var apptid = Guid.Parse(appointmentId);
-
-            AppointmentDetails currentAppointmentdetails = new AppointmentDetails();
-
-            var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/GetAppointmentByAppointmentId", apptid);
-            {
-                if (response != null)
-                {
-                    string content = await response.Content.ReadAsStringAsync();
-                    var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
-                    currentAppointmentdetails = resultList;
-                    appointmentType = resultList.AppointmentType.ToString();
-                    appointmentDate = resultList.AppointmentDate.ToString();
-                    AppointmentSlotId = resultList.AppointmentSlotId;
-                    AgencyValue = resultList.AgencyId;
-                    TypeValue = resultList.AppointmentType;
-
-                }
-            }
-            // The URL string needs to point to Staff API Controller
-            var responseAgencyInfo = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
-            if (responseAgencyInfo != null)
-            {
-                string content = await responseAgencyInfo.Content.ReadAsStringAsync();
-                var results = JsonConvert.DeserializeObject<List<Agency>>(content);
-                AgencyList = results;
-                this.StateHasChanged();
+                string content = await response.Content.ReadAsStringAsync();
+                var resultList = JsonConvert.DeserializeObject<AppointmentDetails>(content);
+                currentAppointmentdetails = resultList;
+                appointmentType = resultList.AppointmentType.ToString();
+                appointmentDate = resultList.AppointmentDate.ToString();
+                AppointmentSlotId = resultList.AppointmentSlotId;
+                AgencyValue = resultList.AgencyId;
+                TypeValue = resultList.AppointmentType;
 
             }
         }
+        // The URL string needs to point to Staff API Controller
+        var responseAgencyInfo = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        if (responseAgencyInfo != null)
+        {
+            string content = await responseAgencyInfo.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<List<Agency>>(content);
+            AgencyList = results;
+            this.StateHasChanged();
 
-
-
-
-    
-
+        }
+    }
 
 
     private bool _loading;
@@ -214,8 +181,7 @@ else
 
     }
 
-
-    private void NavigateBook()
+    private async void NavigateBook()
     {
         if (SelectedDate == null || SlotValue == null)
         {
@@ -224,7 +190,28 @@ else
         }
         else
         {
-            NavManager.NavigateTo("/appointment/appointmenteditappointmentsuccess/");
+            DateTimeSlotHelper dateTimeSlotHelper = new DateTimeSlotHelper();
+            //var appointmentTime = dateTimeSlotHelper.GetTimebySlot(AppointmentSlotId);
+            EditAppointmentDetails editAppointment = new EditAppointmentDetails();
+            var apptid = Guid.Parse(appointmentId);
+            editAppointment.AppointmentId = apptid;
+            editAppointment.AppointmentDate = SelectedDate ?? default(DateTime);
+            editAppointment.AppointmentSlotId = SlotValue ?? default(int);
+            var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/editappointmentdateandslot", editAppointment);
+            if (response != null)
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    var results = JsonConvert.DeserializeObject<bool>(content);
+                    if (results == true)
+                    {
+                        NavManager.NavigateTo($"/appointment/appointmentviewallappointment/");
+                    }
+                }
+            }
+
+            ;
         }
     }
 

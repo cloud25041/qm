@@ -105,8 +105,11 @@ namespace AR_API.Controllers
 
         [Route("api/appointment/editappointmentdateandslot")]
         [HttpPost]
-        public async Task<bool> EditAppointmentDateAndSlot(Guid appointmentId, DateTime date, int slot)
+        public async Task<bool> EditAppointmentDateAndSlot(EditAppointmentDetails editAppointmentDetails)
         {
+            var appointmentId = editAppointmentDetails.AppointmentId;
+            var date = editAppointmentDetails.AppointmentDate;
+            var slot = editAppointmentDetails.AppointmentSlotId;
             return await _mediator.Send(new EditAppointmentDateAndSlotCommand(appointmentId, date, slot));
         }
 
