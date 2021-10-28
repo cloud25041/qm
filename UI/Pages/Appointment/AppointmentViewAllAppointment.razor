@@ -168,7 +168,7 @@ else
                 {
                     gotAppointmentFlag = true;
 
-                    var responseForAgency = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+                    var responseForAgency = await HttpClient.GetAsync(Program.staffRestApiUrl + "/api/appointment/getagencyinfolist");
                     if (responseForAgency.IsSuccessStatusCode)
                     {
                         var contentForAgency = await responseForAgency.Content.ReadAsStringAsync();

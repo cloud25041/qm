@@ -88,7 +88,7 @@ else
             }
         }
         // The URL string needs to point to Staff API Controller
-        var responseAgencyInfo = await HttpClient.GetAsync("https://localhost:44310/api/appointment/getagencyinfolist");
+        var responseAgencyInfo = await HttpClient.GetAsync(Program.staffRestApiUrl + "/api/appointment/getagencyinfolist");
         if (responseAgencyInfo != null)
         {
             string content = await responseAgencyInfo.Content.ReadAsStringAsync();
