@@ -197,7 +197,7 @@ else
             editAppointment.AppointmentId = apptid;
             editAppointment.AppointmentDate = SelectedDate ?? default(DateTime);
             editAppointment.AppointmentSlotId = SlotValue ?? default(int);
-            var response = await HttpClient.PostAsJsonAsync("https://localhost:44351/api/appointment/editappointmentdateandslot", editAppointment);
+            var response = await HttpClient.PostAsJsonAsync(Program.customerRestApiUrl + "/api/appointment/editappointmentdateandslot", editAppointment);
             if (response != null)
             {
                 if (response.IsSuccessStatusCode)
