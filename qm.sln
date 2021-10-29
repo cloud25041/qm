@@ -55,13 +55,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{5C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "EventBus\EventBus.csproj", "{30675364-7F39-4760-A319-1C4075C9F7D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meeting_API", "Meeting_API\Meeting_API.csproj", "{24D05EAE-EB94-400F-BCA7-4F9D7060AC22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meeting_API", "Meeting_API\Meeting_API.csproj", "{24D05EAE-EB94-400F-BCA7-4F9D7060AC22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meeting_Infrastructure", "Meeting_Infrastructure\Meeting_Infrastructure.csproj", "{DCDE550C-797C-4505-AD77-795BBC33CE76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meeting_Infrastructure", "Meeting_Infrastructure\Meeting_Infrastructure.csproj", "{DCDE550C-797C-4505-AD77-795BBC33CE76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meeting_Application", "Meeting_Application\Meeting_Application.csproj", "{518F695E-6675-4F12-B811-CB9D19B607F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meeting_Application", "Meeting_Application\Meeting_Application.csproj", "{518F695E-6675-4F12-B811-CB9D19B607F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meeting_Domain", "Meeting_Domain\Meeting_Domain.csproj", "{DECA5749-1B98-486A-82CD-47A6291521BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meeting_Domain", "Meeting_Domain\Meeting_Domain.csproj", "{DECA5749-1B98-486A-82CD-47A6291521BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D79B3D00-9E8E-4089-8266-1892F624ACD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AR_Tests", "AR_Tests\AR_Tests.csproj", "{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +137,10 @@ Global
 		{DECA5749-1B98-486A-82CD-47A6291521BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DECA5749-1B98-486A-82CD-47A6291521BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DECA5749-1B98-486A-82CD-47A6291521BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +166,7 @@ Global
 		{DCDE550C-797C-4505-AD77-795BBC33CE76} = {426E4162-13F6-44B4-8FF3-39B89A4AFD63}
 		{518F695E-6675-4F12-B811-CB9D19B607F6} = {426E4162-13F6-44B4-8FF3-39B89A4AFD63}
 		{DECA5749-1B98-486A-82CD-47A6291521BE} = {426E4162-13F6-44B4-8FF3-39B89A4AFD63}
+		{5117BFC1-D6C5-49F8-AA67-F7BD0225ECFC} = {D79B3D00-9E8E-4089-8266-1892F624ACD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {126FD805-95D9-434C-9532-11E59DD7F564}
