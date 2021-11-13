@@ -128,7 +128,7 @@ jobs:
           push: true
           tags: eost002/staffui:latest
   
-  build_to_azure_app_service:
+  staff_build_to_azure_app_service:
     runs-on: windows-latest
 
     steps:
@@ -152,9 +152,9 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
-  deploy_to_azure_app_service:
+  staff_deploy_to_azure_app_service:
     runs-on: windows-latest
-    needs: build_to_azure_app_service
+    needs: staff_build_to_azure_app_service
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -172,4 +172,50 @@ jobs:
           app-name: 'staffui12345'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0312F93FF78F4E50A95D9376051582B7 }}
+          package: .
+  
+  user_build_to_azure_app_service:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+          include-prerelease: true
+
+      - name: Build with dotnet
+        run: dotnet build ./UI/UI.csproj --configuration Release
+
+      - name: dotnet publish
+        run: dotnet publish ./UI/UI.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+  user_deploy_to_azure_app_service:
+    runs-on: windows-latest
+    needs: user_build_to_azure_app_service
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'ui12345'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38208BEA8E904AD1ACD9A835790C4189 }}
           package: .
